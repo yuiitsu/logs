@@ -1,0 +1,37 @@
+---
+layout: default
+title: UBUNTU下安装apahce/mysql/php相关
+---
+<h2 class="first_title">{{ page.title  }}</h2>
+<p class="posted_info">posted by 傅唯一 on {{ page.date | date:"%Y-%m-%d"  }}</p>
+<div class="postcontent">
+	<p>UBUNTU下安装apahce/mysql/php相关</p>
+	<p>版本：12.10</p>
+	<p><strong>安装apache2</strong></p>
+	<pre>sudo apt-get install apache2</pre>
+	<p>安装PHP5</p>
+	<pre>sudo apt-get install php5</pre>
+	<p style="color:#ff0000;">注：现在已经不在需要安装libapache2-mod-php5了</p>
+	<p><strong>安装MYSQL</strong></p>
+	<pre>sudo apt-get install mysql-server</pre>
+	<p><strong>让apache，php支持mysql</strong></p>
+	<pre>
+		sudo apt-get install libapache2-mod-auth-mysql
+
+		sudo apt-get install php5-mysql
+	</pre>
+	<p><strong>安装GD库</strong></p>
+	<pre>sudo apt-get install php5-gd</pre >
+	<p><strong>开启rewrite</strong></p>
+	<pre>
+		sudo a2enmod rewrite 开启 Mod_rewrite 模块
+		vi /etc/apache2/sites-enabled/000-default 找到相应的目录将 AllowOverride none 改为 AllowOverride All;
+
+	</pre>
+	<p><strong>设置虚拟机</strong></p>
+	<p>虚拟机的配置文件都放在/etc/apache2/sites-available目录下，里面有个default文件，复制它，修改内容</p>
+	<p>cd /etc/apache2/sites-available</p>
+	<p>cp default <yourname></p>
+	<p>vi <yourname></p>
+	<p>default的内容</p>
+</div>
