@@ -3,7 +3,7 @@ layout: default
 title: 傅唯一的日志
 ---
 {% for post in site.posts limit:1 %}
-<h2><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{ post.title  }}</a></h2>
+<h2 class="first_title"><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{ post.title  }}</a></h2>
 <p class="posted_info">posted by 傅唯一 on {{ post.date | date:"%Y-%m-%d"  }}</p>
 {% endfor %}
 <div class="news">
