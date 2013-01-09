@@ -1,11 +1,22 @@
 ---
 layout: default
-title: My Logs
+title: 傅唯一的日志
 ---
-<h2>{{page.title}}</h2>
-<p>new posts</p>
-<ul>
-	{% for post in site.posts %}
-		<li>{{post.date | date: "%Y %m %d"}} <a href="{{site.baseurl}}{{post.url}}">{{post.title}}</a></li>
-	{% endfor %}
-</ul>
+<h2><a href="">MAC如何删除开机自启动程序</a></h2>
+<p class="posted_info">posted by 傅唯一 on 2013-01-09 17:09:27</p>
+<div class="news">
+	<h3>最新日志</h3>
+	<ul>
+		{% for post in site.posts %}
+		<li><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></li>
+		{% endfor  %}
+	</ul>
+</div>
+<div class="links">
+	<h3>相关网站</h3>
+	<ul>
+		<li><a href="http://www.eebang.cn" target="_blank">衣帮网</a></li>
+		<li><a href="http://www.fuweiyi.com" target="_blank">fuweiyi.com</a></li>
+		<li><a href="http://www.ruanyifeng.com/blog/" target="_blank">阮一峰的网络日志</a></li>
+	</ul>
+</div>
