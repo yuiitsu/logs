@@ -1,6 +1,7 @@
-body{background-color:#ededed;padding:0px;margin:0px;font-family:Tahoma;}
+body{background-color:#ededed;padding:0px;margin:0px;font-family:"微软雅黑",Helvetica,Arial,Tahoma,sans-serif;Tahoma;}
 .left{float:left;}
 .radius{background:#fff;border-bottom: 1px solid #E4E5E7;border-radius: 5px 5px 5px 5px;border-right: 1px solid #E4E5E7;box-shadow: 1px 1px 2px rgba(102, 102, 102, 0.1);}
+.blank10{clear:both;height:10px;font-size:0px;overflow:hidden;}
 .blank20{clear:both;height:20px;}
 .wrap{width:980px;margin:0 auto;}
 .header{width:100%;height:50px;border-radius: 0px 0px 5px 5px;}
@@ -16,6 +17,8 @@ body{background-color:#ededed;padding:0px;margin:0px;font-family:Tahoma;}
 .posted_info{font-size:12px;color:#666;}
 .news{}
 .news h3{padding:0px;margin:0px;height:30px;line-height:30px;border-bottom:1px solid #ededed;}
+.news h3 .more{float:right;text-decoration:none;font-size:12px;color:#666;}
+.news h3 .more:hover{color:#009900;}
 .news ul{}
 .news ul li{height:28px;line-height:28px;border-bottom:1px dotted #ededed;}
 .news ul li a{color:#444;text-decoration: none;}
