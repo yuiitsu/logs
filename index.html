@@ -15,7 +15,7 @@ title: 傅唯一的日志
 	{% for post in paginator.posts %}
 	<h4><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></h4>
 	<div class="index_des">
-		{{ post.content | strip_html | truncatewords:100 }}
+		{{ post.content | strip_html | truncate: 100 }}
 	</div>
 	<p class="more"><a href="{{ site:baseurl }}{{ post.url }}" target="_blank">Read more...</a></p>
 	{% endfor %}
