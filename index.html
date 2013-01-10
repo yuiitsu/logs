@@ -9,7 +9,7 @@ title: 傅唯一的日志
 <div class="news">
 	<h3><a href="{{ site:baseurl }}/lists.html" class="more">更多</a>最新日志</h3>
 	<ul>
-		{% for post in paginator.posts %}
+		{% for post in site.posts limit:8 %}
 		<li><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></li>
 		{% endfor  %}
 	</ul>
