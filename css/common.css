@@ -1,5 +1,6 @@
 body{background-color:#ededed;padding:0px;margin:0px;font-family:"微软雅黑",Helvetica,Arial,Tahoma,sans-serif;Tahoma;}
 .left{float:left;}
+.right{float:right;}
 .radius{background:#fff;border-bottom: 1px solid #E4E5E7;border-radius: 5px 5px 5px 5px;border-right: 1px solid #E4E5E7;box-shadow: 1px 1px 2px rgba(102, 102, 102, 0.1);}
 .blank10{clear:both;height:10px;font-size:0px;overflow:hidden;}
 .blank20{clear:both;height:20px;}
