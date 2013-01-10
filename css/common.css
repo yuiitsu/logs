@@ -17,7 +17,7 @@ h2.first_title a{color:#000;text-decoration: none;}
 h2.first_title a:hover{color:#009900;}
 .posted_info{font-size:12px;color:#666;}
 .content_h2{padding:10px 0px 10px 0px;border-bottom:1px solid #ededed;}
-.content_pre{overflow:auto;}
+.content_pre{overflow:auto;background:#ededed;padding:10px;}
 .page{color:#666;text-decoration:none;}
 .page:hover{color:#009900;}
 .news{}
