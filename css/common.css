@@ -32,7 +32,7 @@ body{background-color:#ededed;padding:0px;margin:0px;font-family:"微软雅黑",
 .links ul li{height:28px;line-height:28px;border-bottom:1px dotted #ededed;float:left;margin-right:10px;}
 .links ul li a{color:#444;text-decoration: none;}
 .links ul li a:hover{color:#009900;}
-.postbox{width:100%;}
+.postbox{width:100%;padding:10px;}
 .post_links{background-color:#ededed;padding:5px;}
 .post_links h3{height:30px;line-height:30px;border-bottom:1px solid #fff;}
 .post_links ul{}
