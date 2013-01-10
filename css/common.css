@@ -16,6 +16,8 @@ body{background-color:#ededed;padding:0px;margin:0px;font-family:"微软雅黑",
 .content h2.first_title a:hover{color:#009900;}
 .posted_info{font-size:12px;color:#666;}
 .content_h2{height:30px;line-height:30px;border-bottom:1px solid #ededed;}
+.page{color:#666;text-decoration:none;}
+.page:hover{color:#009900;}
 .news{}
 .news h3{padding:0px;margin:0px;height:30px;line-height:30px;border-bottom:1px solid #ededed;}
 .news h3 .more{float:right;text-decoration:none;font-size:12px;color:#666;}
