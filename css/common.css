@@ -25,7 +25,7 @@ body{background-color:#ededed;padding:0px;margin:0px;font-family:"微软雅黑",
 .index_lists h4{margin:0px;padding:5px 0px 10px 0px;border-bottom:1px solid #ccc;}
 .index_lists h4 a{font-size:16px;color:#444;text-decoration: none;}
 .index_lists h4 a:hover{color:#009900;}
-.index_lists .index_des{border-top:1px solid #fefefe;padding-top:10px;}
+.index_lists .index_des{border-top:1px solid #fefefe;padding-top:10px;color:#888;}
 .links{}
 .links h3{padding:0px;margin:0px;height:30px;line-height:30px;border-bottom:1px solid #ededed;}
 .links ul{list-style: none;}
