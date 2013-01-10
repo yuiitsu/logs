@@ -2,23 +2,23 @@
 layout: default
 title: 傅唯一的日志
 ---
-{% for post in site.posts limit:1 %}
+{% for post in site.posts.first %}
 <h2 class="first_title"><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{ post.title  }}</a></h2>
 <p class="posted_info">posted by 傅唯一 on {{ post.date | date:"%Y-%m-%d"  }}</p>
 {% endfor %}
 <div class="news">
 	<h3><a href="{{ site:baseurl }}/blog/" class="more">更多</a>最新日志</h3>
 	<ul>
-		{% for post in site.posts limit:8 %}
+		{% for post in paginator.posts %}
 		<li><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></li>
 		{% endfor  %}
 	</ul>
-</div>
-<div class="links">
-	<h3>相关网站</h3>
-	<ul>
-		<li><a href="http://www.eebang.cn" target="_blank">衣帮网</a></li>
-		<li><a href="http://www.fuweiyi.com" target="_blank">fuweiyi.com</a></li>
-		<li><a href="http://www.ruanyifeng.com/blog/" target="_blank">阮一峰的网络日志</a></li>
-	</ul>
+	<div>
+                {% if paginator.previous_page %}
+                $laquo;$nbsp;<a href="{{ site:baseurl  }}/page{{ paginator.preious_page  }}" class="page">Previous</a>
+                {% endif %}
+                {% if paginator.next_page %}
+                <a href="{{ site:baseurl  }}/page{{ paginator.next_page  }}" class="page">Next</a>
+                {% endif %}
+        </div>
 </div>
