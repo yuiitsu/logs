@@ -1,0 +1,36 @@
+---
+layout: post
+title: 关于github pages构建失败
+category: github
+description: 分类列表的操作
+---
+<p>
+早些时候，在更新本page的时候，出现构建失败的情况，其它开始不知道是构建失败，因为用git操作的时候，是没有提示的，而且更新的文件都已经上传到了github的项目里，
+所以开始不知所以，google了老半天，也没能找到问题的所在。
+后来打开注册的email，看到github发来的邮件，提示是构建失败：
+<pre class="content_pre">
+The page build failed with the following error: page build failed
+</pre>
+根据这条信息再进行搜索，明白是因为代码有问题。跟着回想之前的修改，
+把最后的几次修改去掉，再次push，正常了。原来是在读取文章列表的时候，
+为了显示摘要，从别的page代码里拷贝了一段代码，但这段代码显然不太适合我这里，
+所以出错了。
+</p>
+<p>
+当然，这只是我遇到的情况，可能还有很多别的愿因，可以使用jekyll来进行调试，但我的MAC在安装jekyll的时候报错，没有找到原因，网上相关的信息也很少，所以暂时放弃。
+关于使用jekyll进行调试，可以看看这篇博文：<a href="http://youngsterxyf.github.com/BlackWhite/2013/01/08/fix-github-pages-builds-failed/" target="_blank">github pages构建失败问题解决</a>
+</p>
+<h2 class="content_h2">
+文章列表显示摘要，最简单的方法
+</h2>
+<p>
+在文章头里，添加一个description，然后在列表里可以直接调用post.description，
+来显示。这样做有一个很明显的好处，摘要想写什么写什么，也不会有字数问题，
+坏处也很明显，你得多写点，或是复制一点内容。示例：
+<pre class="content_pre">
+	---
+	layout: default
+	description: 这里是文章摘要哦
+	---
+</pre>
+</p>
