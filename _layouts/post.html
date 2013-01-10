@@ -7,6 +7,13 @@
             <div class="postcontent">
 			{{ content}}
             </div>
+		<div class="likepost">
+			<ul>
+				{% for v in page.categories limit:5  %}
+				<li><a href="{{ site:baseurl  }}{{ v.url  }}">{{ v.title  }}</a></li>
+				{% endfor  %}
+			</ul>
+		</div>
 			<div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
