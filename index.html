@@ -2,10 +2,9 @@
 layout: default
 title: 傅唯一的日志
 ---
-{% for post in site.posts.first %}
-<h2 class="first_title"><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{ post.title  }}</a></h2>
-<p class="posted_info">posted by 傅唯一 on {{ post.date | date:"%Y-%m-%d"  }}</p>
-{% endfor %}
+{% assign first=site.posts.first %}
+<h2 class="first_title"><a href="{{ site:baseurl  }}{{ first.url  }}" target="_blank">{{ first.title  }}</a></h2>
+<p class="posted_info">posted by 傅唯一 on {{ first.date | date:"%Y-%m-%d"  }}</p>
 <div class="news">
 	<h3><a href="{{ site:baseurl }}/blog/" class="more">更多</a>最新日志</h3>
 	<ul>
