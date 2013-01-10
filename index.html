@@ -6,7 +6,7 @@ title: 傅唯一的日志
 <h2 class="first_title"><a href="{{ site:baseurl  }}{{ first.url  }}" target="_blank">{{ first.title  }}</a></h2>
 <p class="posted_info">posted by 傅唯一 on {{ first.date | date:"%Y-%m-%d"  }}</p>
 <div class="news">
-	<h3>列表({{ paginator.total_posts}})</h3>
+	<h3>日志列表({{ paginator.total_posts}})</h3>
 	<ul>
 		{% for post in paginator.posts %}
 		<li><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></li>
