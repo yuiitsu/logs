@@ -1,4 +1,4 @@
 baseurl: /logs
-
+url: http://onlyfu.github.com
 paginate: 2
 paginate_files: lists.html
