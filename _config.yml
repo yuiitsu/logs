@@ -1,5 +1,4 @@
 baseurl: /logs
 
 paginate: 2
-paginate_files: 
-  - lists.html
+paginate_files: lists.html
