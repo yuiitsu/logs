@@ -5,7 +5,7 @@ title: 傅唯一的日志
 <div class="news">
 	<h3>所有日志</h3>
 	<ul>
-		{% for post in paginator.posts limit:2 %}
+		{% for post in paginator.posts %}
 		<li><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></li>
 		{% endfor  %}
 	</ul>
