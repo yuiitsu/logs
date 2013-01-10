@@ -8,7 +8,8 @@ body{background-color:#ededed;padding:0px;margin:0px;font-family:"微软雅黑",
 .header h2{height:50px;line-height:50px;float:left;margin:0px;padding:0px;padding-left:20px;}
 .header h2 a{text-decoration: none;color:#009900;font-weight:700px;}
 .main{width:100%;padding-top:10px;}
-.side{width:230px;padding:10px;}
+.sidebar{width:250px;}
+.side{width:230px;padding:10px;margin-bottom:10px;}
 .side h2{margin:0 auto;font-size:14px;border-bottom:1px solid #ededed;height:30px;line-height:30px;}
 .content{width:698px;margin-left:10px;display:inline;padding:10px;}
 .content h2.first_title{margin:0px;padding:0px;height:50px;line-height:50px;border-bottom:1px solid #ededed;font-weight:900px;}
