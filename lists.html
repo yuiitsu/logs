@@ -1,0 +1,20 @@
+---
+layout: default
+title: 傅唯一的日志
+---
+<div class="news">
+        <h3>所有日志({{ paginator.total_posts  }})</h3>
+        <ul>
+                {% for post in paginator.posts %}
+                <li><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></li>
+                {% endfor %}
+        </ul>
+        <div>
+                {% if paginator.previous_page %}
+                $laquo;$nbsp;<a href="{{ site:baseurl  }}/lists/page{{ paginator.preious_page  }}" class="page">Previous</a>
+                {% endif %}
+                {% if paginator.next_page %}
+                <a href="{{ site:baseurl  }}/lists/page{{ paginator.next_page  }}" class="page">Next</a>
+                {% endif %}
+        </div>
+</div>
