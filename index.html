@@ -6,12 +6,25 @@ title: 傅唯一的日志
 <h2 class="first_title"><a href="{{ site:baseurl  }}{{ first.url  }}" target="_blank">{{ first.title  }}</a></h2>
 <p class="posted_info">posted by 傅唯一 on {{ first.date | date:"%Y-%m-%d"  }}</p>
 <div class="news">
-	<h3><a href="{{ site:baseurl }}/blog/" class="more">更多</a>最新日志</h3>
+	<h3>列表</h3>
 	<ul>
 		{% for post in paginator.posts %}
 		<li><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></li>
 		{% endfor  %}
 	</ul>
+	{% for post in paginator.posts %}
+	<h4><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></h4>
+	<div class="index_des">
+	{% if post.summary %}
+		{{ post.summary | strip_html | truncatewords:150 }}
+	{% elseif post.description %}
+		{{ post.description | strip_html | truncatewords:100 }}
+	{% else%}
+		{{ post.content | strip_html | truncatewords:100 }}
+	{% endif %}
+	</div>
+	<p class="more"><a href="{{ site:baseurl }}{{ post.url }}" target="_blank">Read more...</a></p>
+	{% endfor %}
 	<div>
                 {% if paginator.previous_page %}
 		{% if paginator.previous_page>1  %}
