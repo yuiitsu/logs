@@ -4,7 +4,7 @@ name: mac
 ---
 <div class="news">
 	<h3>{{ page.name }}({{ site.categories[page.name] | size }})</h3>
-	{% for post in site.categories[page.naem] %}
+	{% for post in site.categories[page.name] %}
 	<div class="index_lists radius">
 		<h4><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></h4>
 		<div class="index_des">
