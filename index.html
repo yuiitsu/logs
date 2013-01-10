@@ -7,7 +7,7 @@ title: 傅唯一的日志
 <p class="posted_info">posted by 傅唯一 on {{ post.date | date:"%Y-%m-%d"  }}</p>
 {% endfor %}
 <div class="news">
-	<h3><a href="{{ site:baseurl }}/lists/" class="more">更多</a>最新日志</h3>
+	<h3><a href="{{ site:baseurl }}/blog/" class="more">更多</a>最新日志</h3>
 	<ul>
 		{% for post in site.posts limit:8 %}
 		<li><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></li>
