@@ -1,6 +1,4 @@
 baseurl: /logs
-url: http://onlyfu.github.com
 paginate: 10
-paginate_files: blog.html
 
 image: /logs/images/my01.jpg
