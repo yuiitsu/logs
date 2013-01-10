@@ -20,16 +20,10 @@ body{background-color:#ededed;padding:0px;margin:0px;font-family:"微软雅黑",
 .page{color:#666;text-decoration:none;}
 .page:hover{color:#009900;}
 .news{}
-.news h3{padding:0px;margin:0px;height:30px;line-height:30px;border-bottom:1px solid #ededed;}
-.news h3 .more{float:right;text-decoration:none;font-size:12px;color:#666;}
-.news h3 .more:hover{color:#009900;}
-.news ul{}
-.news ul li{height:28px;line-height:28px;border-bottom:1px dotted #ededed;}
-.news ul li a{color:#444;text-decoration: none;}
-.news ul li a:hover{color:#009900;}
+.news h3{padding:0px;margin:0px;height:30px;line-height:30px;margin-bottom:10px;}
 .index_lists{padding:5px;background:#ededed;margin-bottom:10px;}
-.index_lists h4{padding:5px 0px 10px 0px;border-bottom:1px solid #ccc;}
-.index_lists h4 a{font-size:16px;color:#444;}
+.index_lists h4{margin:0px;padding:5px 0px 10px 0px;border-bottom:1px solid #ccc;}
+.index_lists h4 a{font-size:16px;color:#444;text-decoration: none;}
 .index_lists h4 a:hover{color:#009900;}
 .index_lists .index_des{border-top:1px solid #fefefe;padding-top:10px;}
 .links{}
