@@ -4,61 +4,74 @@ title: jekyll为文章设置分类及相关文章读取
 category: github
 description: 分类列表的操作
 ---
-<p>首先，你得安装好<a href="http://git-scm.com/book/en/Getting-Started-Installing-Git" target="_blank">git</a>，然后建立你的主目录，里面需包含一些文件及文件夹</p>
+<p>
+jekyll为文章设置分类非常的简单，只需要在文章的开头添加上category即可
+</p>
 <h2 class="content_h2">
-基本文件结构
+为文章添加分类
 </h2>
 <p>
+使用<span class="content_words">category</span>和<span class="content_words">categories</span>可添加一个或多个分类
+</p>
+<p>
+添加一个分类：
 <pre>
-	/base
-		|-- _config.yml  //配置文件
-		|-- _layouts     //模板目录
-		|-- index.html   //首页文件
-		
+	---
+	layout: default
+	category: github  //添加一个分类
+	---
+</pre>
+添加多个分类：
+<pre>
+	---
+	layout: default
+	categories:  //添加了3个分类，github,mac,linux
+	- github
+	- mac
+	- linux
+	---
+</pre>
+关于cateogry的使用，可以参考：<a href="https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter" target="_blank">https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter</a>
+</p>
+<h2 classs="content_h2">
+读取分类列表
+</h2>
+<p>
+为文章设置好分类之后，就可以读取分类列表了。
+所有的分类都在site.categories里，所以只遍历它，就可以把分类读取出来，
+其中: category | fist 为分类名称,category | last | size 为该分类下文章数量。
+如：
+<pre>
+	｛％ for category in site.categories ％｝
+	&lt;li&gt;&lt;a href="/｛｛ category | first ｝｝.html"&gt;｛｛ category | first ｝｝(｛｛ category | last | size ｝｝)&lt;/a&gt;&lt;/li&gt;
+	｛％ endfor ％｝
 </pre>
 </p>
-<p>
-其实里面除了_config.yml是必须的，其它的都不是，你完全可以用其它的名字。当然页面都是静态的，可以使用html或是markdown格式的文件。
-</p>
 <h2 class="content_h2">
-_config.yml内容
+读取各分类下的文章列表
 </h2>
 <p>
-_config.yml有许多的设置，但基本上都可以使用它的默认设置，不用你写，但baseurl是必须指定的，因为它得确认你的项目目录，写法如下：
-</p>
-<p>
+首先，在根目录下建分类文件，如，有一个分类叫:mac，那就可以在根目录下建一个mac.html文件，这个文件头除了layout，再加一个name，和分类名称一样，如：
 <pre>
-	baseurl: /你的目录
+	---
+	layout: default
+	name: mac
+	---
 </pre>
+有这个这个name，后面就可以用page.name来调用它，为什么要调用它，后面再讲。
 </p>
 <p>
-这样写是在你使用github的链接地址访问的情况，如果你有域名，那这里就只需要/，而不要带你的目录了
-</p>
-<p>
-关于_config.yml的其它设置，请看<a href="https://github.com/mojombo/jekyll/wiki/Configuration" target="_blank">官方</a>
-</p>
-<p>
-关于基本的操作，可以查看<a href="http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html" target="_blank">搭建一个免费的，无限流量的Blog</a>
-</p>
-<h2 class="content_h2">
-git 发布基本命令
-</h2>
-<ul>
-	<li>进入根目录</li>
-	<li>初始化该目录：$ git init</li>
-	<li>创建一个没有父节点的分支gh-pages：$ git checkout --orphan gh-pages</li>
-	<li>把内容加入到本地库里：$ git add .（点代表所有文件，你还可以针对某一个文件进行，把.换成路径和文件名就可以了）</li>
-	<li>$ git commit -m "first post"</li>
-	<li>推送到github：$ git remote add origin https://github.com/你github上的名字/你的项目名字.git（这句只用执行一次）</li>
-	<li>$ git push origin gh-pages</li>
-</ul>
-<h2 class="content_h2">
-git 克隆命令
-</h2>
-<ul>
-	<li>进入根目录</li>
-	<li>$ git pull https://github.com/你github上的名字/你的项目名字.git</li>
-</ul>
-<p>
-上传完后，需要等待10分钟左右才能正常访问，但实际上要不了10分钟。
+为了照顾多个分类，所以我们再建一个包含文件，取名叫: category.html，
+自然这个文件是放在_includes目录下的。category.html内容：
+<pre>
+	分类：｛｛ page.name ｝｝
+	文章数：｛｛ site.categories[page.name] | size ｝｝
+	列表：
+	｛％ for post in site.categories[page.name] ％｝
+	//和读取post一样
+	｛％ endfor ％｝
+</pre>
+可以看出，site.categories就是利用page.name来读取对应分类下的文章的。
+相关文章和此类似，目的就是读取同一分类下的文章，也是利用site.categories来获取，
+只是不需要用page.name，因为文章里有分类的设置，直接用page.category就可以了。
 </p>
