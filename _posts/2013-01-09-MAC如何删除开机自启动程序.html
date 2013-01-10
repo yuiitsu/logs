@@ -2,31 +2,27 @@
 layout: post
 title: MAC如何删除开机自启动程序
 ---
-<h2 class="first_title">{{ page.title  }}</h2>
-<p class="posted_info">posted by 傅唯一 on {{ page.date | date:"%Y-%m-%d"  }}</p>
-<div class="postcontent">
-	<p>最近，razer的设置程序把我搞得一头雾水，因为我发现在MAC上，这款程序经常不能保存我的配置，还经常开机自己打开界面，所以我不得不取消登录。取消后发现，DeathdAdder3500根本不需要这个程序来配置设置，在MAC用起来就已经很不错了，所以，我打算删除它。</p>
-	<p>删除它的程序很容易，因为MAC很容易，直接拉黑就行了，不过却发现，开机后，它的启动小图标依然在任务栏上，显然MAC的开机自启动程序列表里肯定有它的身影，但这个要怎么取消还真没弄过。google了一下，一般提供的方法很显而易见的：</p>
-	<p><strong>打开用户群组偏好设置（可以在「系统偏好」设置里选择「用户与群组」（图1），也可以屏幕右上角点自己的名字选择「用户与群组偏好设置」（图2））</strong></p>
-	<p><img src="http://www.fuweiyi.com/blog/wp-content/uploads/2013/01/258A046F-221B-4129-9BAD-7C5C46D300CD.jpg" alt="pic1" /></p>
-	<p style="text-align:center;">(图1)</p>
-	<p><img src="http://www.fuweiyi.com/blog/wp-content/uploads/2013/01/屏幕快照-2013-01-09-上午10.33.45.png" alt="pic1" /></p>
-	<p style="text-align:center;">(图2)</p>
-	<p>选择自己帐户=>选择登录项=>选中不想开机自启动的程序=>点击下面的减（-）号（图3）</p>
-	<p><img src="http://www.fuweiyi.com/blog/wp-content/uploads/2013/01/屏幕快照-2013-01-09-上午10.38.43.png" alt="pic1" /></p>
-	<p style="text-align:center;">(图3)</p>
-	<p>这种方法只能取消上面列出来的程序，但有些程序并没有在这个列表里显示，比如razer的驱动配置程序，所以，这个办法行不太通。之后查询命令行的操作，找到了对应的方法：</p>
-	<p>有些程序在安装的时候，会生成一个或几个plist文件，用来执行开机自启动，这样的文件一般放在3个位置</p>
-	<p>/Library/LaunchDaemons/<br/>
-		/Library/LaunchAgents/<br/>
-		~/Library/LaunchAgents/
-	</p>
-	<p>这里有两个LaunchAgents，一个是根目录下，一个用户目录，一般打开终端后，用ls -l命令就可以看到一个Library，进入后，就能看到一个LaunchAgents目录。如果用cd /Library即可进入根目录下的Library目录，里面就有LaunchDaemons和另一个LaunchAgents目录，里面都有一些plist文件，razer的plist文件就在/Library/LaunchAgents/目录里（图4）。</p>
-	<p><img src="http://www.fuweiyi.com/blog/wp-content/uploads/2013/01/屏幕快照-2013-01-09-上午10.49.13.png" alt="pic1" /></p>
-	<p style="text-align:center;">(图4)</p>
-	<p>找到文件后，这里需要使用launchctl命令来取消它</p>
-	<p>launchctl unload com.razer.rzupdater.plist</p>
-	<p>launchctl unload com.razerzone.rzdeviceengine.plist</p>
-	<p>执行完两条命令后，任务栏上的razer图标就不见了，再开机也不会再启动。</p>
-	<p>后话：这个问题，说明MAC在处理自启动的问题时，还不够方便。还有就是razer的程序不够友好。</p>
-</div>
+<p>最近，razer的设置程序把我搞得一头雾水，因为我发现在MAC上，这款程序经常不能保存我的配置，还经常开机自己打开界面，所以我不得不取消登录。取消后发现，DeathdAdder3500根本不需要这个程序来配置设置，在MAC用起来就已经很不错了，所以，我打算删除它。</p>
+<p>删除它的程序很容易，因为MAC很容易，直接拉黑就行了，不过却发现，开机后，它的启动小图标依然在任务栏上，显然MAC的开机自启动程序列表里肯定有它的身影，但这个要怎么取消还真没弄过。google了一下，一般提供的方法很显而易见的：</p>
+<p><strong>打开用户群组偏好设置（可以在「系统偏好」设置里选择「用户与群组」（图1），也可以屏幕右上角点自己的名字选择「用户与群组偏好设置」（图2））</strong></p>
+<p><img src="http://www.fuweiyi.com/blog/wp-content/uploads/2013/01/258A046F-221B-4129-9BAD-7C5C46D300CD.jpg" alt="pic1" /></p>
+<p style="text-align:center;">(图1)</p>
+<p><img src="http://www.fuweiyi.com/blog/wp-content/uploads/2013/01/屏幕快照-2013-01-09-上午10.33.45.png" alt="pic1" /></p>
+<p style="text-align:center;">(图2)</p>
+<p>选择自己帐户=>选择登录项=>选中不想开机自启动的程序=>点击下面的减（-）号（图3）</p>
+<p><img src="http://www.fuweiyi.com/blog/wp-content/uploads/2013/01/屏幕快照-2013-01-09-上午10.38.43.png" alt="pic1" /></p>
+<p style="text-align:center;">(图3)</p>
+<p>这种方法只能取消上面列出来的程序，但有些程序并没有在这个列表里显示，比如razer的驱动配置程序，所以，这个办法行不太通。之后查询命令行的操作，找到了对应的方法：</p>
+<p>有些程序在安装的时候，会生成一个或几个plist文件，用来执行开机自启动，这样的文件一般放在3个位置</p>
+<p>/Library/LaunchDaemons/<br/>
+	/Library/LaunchAgents/<br/>
+	~/Library/LaunchAgents/
+</p>
+<p>这里有两个LaunchAgents，一个是根目录下，一个用户目录，一般打开终端后，用ls -l命令就可以看到一个Library，进入后，就能看到一个LaunchAgents目录。如果用cd /Library即可进入根目录下的Library目录，里面就有LaunchDaemons和另一个LaunchAgents目录，里面都有一些plist文件，razer的plist文件就在/Library/LaunchAgents/目录里（图4）。</p>
+<p><img src="http://www.fuweiyi.com/blog/wp-content/uploads/2013/01/屏幕快照-2013-01-09-上午10.49.13.png" alt="pic1" /></p>
+<p style="text-align:center;">(图4)</p>
+<p>找到文件后，这里需要使用launchctl命令来取消它</p>
+<p>launchctl unload com.razer.rzupdater.plist</p>
+<p>launchctl unload com.razerzone.rzdeviceengine.plist</p>
+<p>执行完两条命令后，任务栏上的razer图标就不见了，再开机也不会再启动。</p>
+<p>后话：这个问题，说明MAC在处理自启动的问题时，还不够方便。还有就是razer的程序不够友好。</p>

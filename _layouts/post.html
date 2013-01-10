@@ -2,7 +2,11 @@
 	<div class="main">
 		{% include sidebar.html  %}
 		<div class="content radius left">
+            <h2 class="first_title">{{ page.title  }}</h2>
+            <p class="posted_info">posted by 傅唯一 on {{ page.date | date:"%Y-%m-%d"  }}</p>
+            <div class="postcontent">
 			{{ content}}
+            </div>
 			<div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
