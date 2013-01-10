@@ -8,8 +8,9 @@
 			{{ content}}
             </div>
 		<div class="likepost">
+			<h2>相关日志</h2>
 			<ul>
-				{% for v in page.categories limit:5  %}
+				{% for v in site.categories[page.category] limit:5  %}
 				<li><a href="{{ site:baseurl  }}{{ v.url  }}">{{ v.title  }}</a></li>
 				{% endfor  %}
 			</ul>
