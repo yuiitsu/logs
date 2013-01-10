@@ -15,14 +15,14 @@ jekyll为文章设置分类非常的简单，只需要在文章的开头添加�
 </p>
 <p>
 添加一个分类：
-<pre>
+<pre class="content_pre">
 	---
 	layout: default
 	category: github  //添加一个分类
 	---
 </pre>
 添加多个分类：
-<pre>
+<pre class="content_pre">
 	---
 	layout: default
 	categories:  //添加了3个分类，github,mac,linux
@@ -41,7 +41,7 @@ jekyll为文章设置分类非常的简单，只需要在文章的开头添加�
 所有的分类都在site.categories里，所以只遍历它，就可以把分类读取出来，
 其中: category | fist 为分类名称,category | last | size 为该分类下文章数量。
 如：
-<pre>
+<pre class="content_pre">
 	｛％ for category in site.categories ％｝
 	&lt;li&gt;&lt;a href="/｛｛ category | first ｝｝.html"&gt;｛｛ category | first ｝｝(｛｛ category | last | size ｝｝)&lt;/a&gt;&lt;/li&gt;
 	｛％ endfor ％｝
@@ -52,7 +52,7 @@ jekyll为文章设置分类非常的简单，只需要在文章的开头添加�
 </h2>
 <p>
 首先，在根目录下建分类文件，如，有一个分类叫:mac，那就可以在根目录下建一个mac.html文件，这个文件头除了layout，再加一个name，和分类名称一样，如：
-<pre>
+<pre class="content_pre">
 	---
 	layout: default
 	name: mac
@@ -63,7 +63,7 @@ jekyll为文章设置分类非常的简单，只需要在文章的开头添加�
 <p>
 为了照顾多个分类，所以我们再建一个包含文件，取名叫: category.html，
 自然这个文件是放在_includes目录下的。category.html内容：
-<pre>
+<pre class="content_pre">
 	分类：｛｛ page.name ｝｝
 	文章数：｛｛ site.categories[page.name] | size ｝｝
 	列表：
