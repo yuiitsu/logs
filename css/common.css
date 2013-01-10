@@ -21,7 +21,7 @@ body{background-color:#ededed;padding:0px;margin:0px;font-family:"微软雅黑",
 .page:hover{color:#009900;}
 .news{}
 .news h3{padding:0px;margin:0px;height:30px;line-height:30px;margin-bottom:10px;}
-.index_lists{padding:5px;background:#ededed;margin-bottom:10px;}
+.index_lists{padding:10px;background:#ededed;margin-bottom:10px;}
 .index_lists h4{margin:0px;padding:5px 0px 10px 0px;border-bottom:1px solid #ccc;}
 .index_lists h4 a{font-size:16px;color:#444;text-decoration: none;}
 .index_lists h4 a:hover{color:#009900;}
