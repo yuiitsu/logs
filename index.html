@@ -13,10 +13,11 @@ title: 傅唯一的日志
 		<div class="index_des">
 			<div class="index_img">
 				{% if post.img %}
-				<img src="/images/{{ post.img }}" alt="" />
+				<img src="{{ site:baseurl }}/images/{{ post.img }}" alt="" />
 				{% endif %}
 			</div>
 			{{ post.description }}
+			<div class="blank10"></div>
 		</div>
 	</div>
 	{% endfor %}
