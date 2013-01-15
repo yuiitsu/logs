@@ -30,6 +30,7 @@ h2.first_title a:hover{color:#009900;}
 .index_lists h4 a{font-size:16px;color:#444;text-decoration: none;}
 .index_lists h4 a:hover{color:#009900;}
 .index_lists .index_des{border-top:1px solid #fefefe;padding-top:10px;color:#888;}
+.index_lists .index_img{float:left;margin:0px 10px 10px 0px;width:180px;height:180px;overflow:hidden;background-color:#fefefe;border:1px solid #ccc;}
 .links{}
 .links h3{padding:0px;margin:0px;height:30px;line-height:30px;border-bottom:1px solid #ededed;}
 .links ul{list-style: none;}
