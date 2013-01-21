@@ -1,0 +1,19 @@
+---
+layout: post
+title: github pages被墙，目前的应对方式
+category: github
+description: 最近几天，.github.com被强掉了，原因就不管它了，.github.com被强之后，很多pages就不能使用了，特别是没有使用域名，只使用了github二级域名的站基本上都不能访问，使用CNAME指向的域名也不能访问，要怎么应对呢，目前也是有办法的。 
+img: 201301/1501.jpeg
+---
+<p>
+最近几天，.github.com被强掉了，原因就不管它了，.github.com被强之后，很多pages就不能使用了，特别是没有使用域名，只使用了github二级域名的站基本上都不能访问，使用CNAME指向的域名也不能访问，要怎么应对呢，目前也是有办法的。
+</p>
+<p>
+因为这次只是墙了.github.com，IP并不在之列，所以，只要将你的域名，建一条A记录，指向IP，204.232.175.78。然后，如果没有CNAME文件的，需要新建一个CNAME文件，里面写上你的域名，保存到项目的根目录，然后push到github上，这样子等几分钟后，基本上就能正常访问了。
+</p>
+<p>
+阮一峰的文章<a href="http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html" target="_blank">http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html</a>说，二级域名需要建立CNAME记录，一级域名才建立A记录，其实都可以建立A记录，像我的二级域名blog.fuweiyi.com，就是建立的A记录。开始建立的是CNAME，指向onlyfu.github.com，显然被墙掉了。
+</p>
+<p>
+本文希望能对你有所帮助
+</p>
