@@ -1,0 +1,41 @@
+---
+layout: post
+title: HTML5 file api 实现上传进度条
+category: HTML5
+description: HTML5中实现上传进度条的显示，基本上都要基于AJAX，在HTML5的规范中，XMLHttpRequest有了新的版本XMLHttpRequest Level 2，它提供了不少新的特性，其中HTML5 Progress Event规范提供了显示上传进度的相关信息 
+img: html5.jpg
+---
+<p>
+HTML5中实现上传进度条的显示，基本上都要基于AJAX，在HTML5的规范中，XMLHttpRequest有了新的版本XMLHttpRequest Level 2，它提供了不少新的特性，其中HTML5 Progress Event规范提供了显示上传进度的相关信息
+</p>
+<pre class="content_pre">
+total – 总的字节数
+loaded – 到目前为止上传的字节数
+lengthComputable – 可计算的已上传字节数
+</pre>
+<p>
+这样子，只需要为XMLHttpRequest.upload添加上progress事件的监听，就可以利用total和loaded计算出上传的字节百分比，从而实现上传进度的显示。
+</p>
+<pre class="content_pre">
+var _upload=new XMLHttpRequest();
+_upload.upload.addEventListener('progress',uploadProgress,false);
+</pre>
+<p>
+该句代码的意思即为，触发progress事件时，执行uploadProgress方法。
+</p>
+<pre class="content_pre">
+function uploadProgress(evt){
+	if(evt.lengthComputable){
+		var percentComplate=Math.round(evt.loaded*100/evt.total); //上传字节数的百分比
+	}
+}
+</pre>
+<p>
+得到这个百分比，就可以直接显示上传进度的百分比，也可以根据数值显示制作进度条了。
+</p>
+<p>
+关于XMLHttpRequest Level 2，可参考http://www.w3.org/TR/XMLHttpRequest2/#event-xhr-loadstart
+</p>
+<p>
+HTML5 Progress Event返回的3个值，可以参考：http://dvcs.w3.org/hg/progress/raw-file/tip/Overview.html
+</p>
