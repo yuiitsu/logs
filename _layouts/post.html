@@ -3,7 +3,7 @@
 		<div class="postbox radius">
             <h2 class="first_title">{{ page.title  }}</h2>
             <p class="posted_info">
-                posted by 傅唯一 on {{ page.date | date:"%Y-%m-%d"  }} 分类: <a href="{{ site:baseurl }}/categorys/{{ page.category }}.html">{{ page.category }}</a>
+                posted by 傅唯一 on {{ page.date | date:"%Y-%m-%d"  }} 分类: <a href="{{ site:url }}/categorys/{{ page.category }}.html">{{ page.category }}</a>
             </p>
             <div class="postcontent">
 			{{ content}}
