@@ -1,0 +1,31 @@
+---
+layout: post
+title: 更新OSX Mountain Lion后，Apache和PHP相关问题
+category: mac
+description: 半夜，买了OSX Mountain Lion，早上起来已经下载好了，到公司就开始安装，估计花了30分钟时间，速度还不错。
+img: 201301/1502.jpg
+---
+<p>
+半夜，买了OSX Mountain Lion，早上起来已经下载好了，到公司就开始安装，估计花了30分钟时间，速度还不错。
+</p>
+<p>
+听说这次的10.8比这前的10.7速度要快，但进入系统顿时感觉不管开什么程序都有点慢，不过估计是刚装好的关系，用了一会小儿，重启系统，速度明显要快许多。鼠标的移动好像也要灵敏不少，不知道这是不是心里作用。
+</p>
+<p>
+好了，还是说apache和php。
+</p>
+<p>
+OSX Mountain Lion的apache和之前一样是默认安装的，但不用再去偏好设置的共享里勾ＷＥＢ共享了，反正我是没看到这一个条目。直接运行http://localhost就能看到正常工作的页面。 只是配置被重置了，你得再重新配一次，包括PHP的DLL你也得把＃去掉，不然PHP都不会跑。
+</p>
+<p>
+更新系统以后，PHP被重置了，以前的配置和APACHE一样，没了，重新弄，也就是将/etc/php.ini.default复制成/etc/php.ini，这就不说了，可以看看MAC OS X 中配置Apache+MySQL+PHP及rewrite、虚拟机
+</p>
+<p>
+很简单的事情，做开发，可以把报错开一开，默认是关闭的，display_error=on
+</p>
+<p>
+还有短标签也是关闭的，short_open_tag = On
+</p>
+<p>
+OSX Mountain Lion才用一会儿，也没啥别的体验，多用段时间再看看有啥不同的感觉。PS：桌面比以前那个好看
+</p>
