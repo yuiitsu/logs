@@ -2,7 +2,7 @@
 	<h3>{{ page.name }}({{ site.categories[page.name] | size }})</h3>
 	{% for post in site.categories[page.name] %}
 	<div class="index_lists radius">
-		<h4><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}} <cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite> </a></h4>
+		<h4><cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}}</a></h4>
 		<div class="index_des">
 			{{ post.description }}
 		</div>
