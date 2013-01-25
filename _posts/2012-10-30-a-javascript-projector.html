@@ -109,7 +109,7 @@ scrollObj.css({'width':unitsLen*unitsWidth,'height':unitsHeight});
 </p>
 <pre class="content_pre">
 
-var scrollBox_x="&lt;table cellpadding='0' cellspacing='0'>&lt;tr>&lt;td id='"+id+"abox'>"+_this.html()+"&lt;/td>&lt;td id='"+id+"bbox'>"+_this.html()+"&lt;/td>&lt;/tr>&lt;/table>";
+var scrollBox_x="&lt;table cellpadding='0' cellspacing='0'&gt;&lt;tr&gt;&lt;td id='"+id+"abox'&gt;"+_this.html()+"&lt;/td&gt;&lt;td id='"+id+"bbox'&gt;"+_this.html()+"&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";
 
 _this.html(scrollBox_x);
 </pre>
@@ -123,7 +123,7 @@ function scrollLeft(){
         scrollLen=0;
     }  
     doanimate=setInterval(function(){
-        if(animateLen<unitsWidth){  
+        if(animateLen&lg;unitsWidth){  
             var dist=Math.ceil((unitsWidth-animateLen)/10);  
             animateLen=animateLen+dist;    
             scrollLen=scrollLen+dist;    
@@ -214,7 +214,7 @@ $("#slider").OnlySlider({
                 scrollLen=0;
             }  
             doanimate=setInterval(function(){
-                if(animateLen<unitsWidth){  
+                if(animateLen&lt;unitsWidth){  
                     var dist=Math.ceil((unitsWidth-animateLen)/10);  
                     animateLen=animateLen+dist;    
                     scrollLen=scrollLen+dist;    
