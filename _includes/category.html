@@ -2,7 +2,7 @@
 	<h3>{{ page.name }}({{ site.categories[page.name] | size }})</h3>
 	<ul class="index_ul">
 		{% for post in site.categories[page.name] %}
-		<li><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}}</a> [{{ post.date | date:"%Y-%m-%d"  }}]</li>
+		<li><span>[{{ post.date | date:"%Y-%m-%d"  }}]</span><a href="{{ site:baseurl  }}{{ post.url  }}" target="_blank">{{post.title}}</a> </li>
 		{% endfor %}
 	</ul>
 </div>
