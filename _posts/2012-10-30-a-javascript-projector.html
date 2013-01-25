@@ -1,0 +1,234 @@
+---
+layout: post
+title: 【JS】幻灯片，无缝循环滚动小解
+category: javascript
+description: 所谓无缝循环滚动，其实很好理解，就是朝一个方向一直滚下去，最后一张滚完了接着开始的第一张继续滚，反反复复永不停止。网络上有很多现成的代码，随便找一个就有很好的效果，特别是JQuery版本的。
+img: 201301/2506.jpg
+---
+<p>
+所谓无缝循环滚动，其实很好理解，就是朝一个方向一直滚下去，最后一张滚完了接着开始的第一张继续滚，反反复复永不停止。
+</p>
+<p>
+网络上有很多现成的代码，随便找一个就有很好的效果，特别是JQuery版本的。
+</p>
+<p>
+这里只是对此效果的一些想法与实现过程的描述。开始之前，说说浏览器的性能问题，就当是第一部分，对后面使用动画效果的方法有一定的帮助。
+</p>
+<h2 class="content_h2">
+一、JS滚动图片动画效果和浏览器的CPU使用率
+</h2>
+<p>
+关于CPU使用率，其实一直都没有关注过，一直觉得这样的小东西根本不会有多大的区别，但最近有用户反应浏览器有卡死的现象，这才关注了一下。
+</p>
+<p>
+在这里我不得不吐槽一下360浏览器，停留在同一页面上，它的CPU使用率一般都是其它浏览器的2倍，而报告浏览器卡死的几位用户全都是使用的360浏览器。虽然我不能确定这和它的CPU使用率有关系，但这确实是一个问题。
+</p>
+<p>
+我仔细对比了一下几个首页的停留时的CPU使用率，淘宝首页在360浏览器里，CPU使用率瞬间峰值有60%+，我自己的页面可以上30%，还有一个内容较少的页面只有12%的最高值。经过一此对比，可以得出增加CPU使用率的一些原因：
+</p>
+<blockquote class="content_quote">
+和页面文档的内容多少（长度）有直接关系。内容越多，特别是图片越多，滚动效果越多，CPU使用率的峰值就越高<br/>
+滚动图片的大小也有一定的关系，越大的图片，CPU使用率越高<br/>
+滚动的方法有直接关系。这个接下来详细说明
+</blockquote>
+<p>
+滚动一般使用的方法有两种：
+</p>
+<blockquote class="content_quote">
+使用绝对定位后的left和top值。这需要CSS的操作<br/>
+利用父结点对象的scroll值来移动。这可以使用CSS操作，也可以直接使用对象的scroll值来操作，如scrollLeft()。<br/>
+</blockquote>
+<p>
+目前绝大多数的实现方法都使用了JQuery的animate的方法，这个方法做出来的动画效果好，非常的平滑，但有一点就是CPU使用率比较高，特别是使用animate操作left和top值的时候，如：
+</p>
+<pre class="content_pre">
+obj.animate({'left' : '300px' });
+</pre>
+<p>
+对比了一下直接操作父对象的scroll值，在同一页面，同一组滚动图片下，CPU使用率少了10%，我自己的页面在IE8下，使用率峰值只有2%，而利用animate操作LEFT值有12%左右，说明这样的操作性能更优秀一些。如：
+</p>
+<pre class="content_pre">
+obj.scrollLeft(300);
+</pre>
+<p>
+那最后决定就使用scroll的方法
+</p>
+<h2 class="content_h2">
+二、无缝循环滚动原理
+</h2>
+<p>
+实现方法有很多，但我觉得最好理解和操作的方法是【克隆】。意思就是将要滚动的内容复制一份排列到原内容的后面。若是向左滚动，就复制到右侧，若是向上滚动，就复制到下方。向右和向下滚同理。
+</p>
+<p>
+那么在滚动的时候，本体和克隆会一起滚动起来，当本体的最后一像素滚过去的一瞬间，重置滚动对象的LEFT值或scroll值（视滚动方向决定，不特别说明都以向左滚动为例）为0，那么在视觉上，本体和克隆是一模一样的，本体的最后一像素结束也就是克隆的第一像素开始进入隐藏区域，这时候将滚动对象重置，也就是让本体的第一像素开始进入隐藏区域，所以是感觉不到变化的。如图：
+</p>
+<h2 class="content_h2">
+三、具体实现
+</h2>
+<p>
+1、HTML部分
+</p>
+<p>
+页面代码很简单，只需要一个父对象，固定宽高，设置overflow:hidden，如：
+</p>
+<pre class="content_pre">
+&lt;style&gt;
+#slider{width:300px;height:100px;overflow:hidden;}
+#slider ul{width:600px;height:100px;}
+#slider ul li{width:300px;height:100px;float:left;}
+&lt;/style&gt;
+&lt;div id="slider"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href=""&gt;&lt;img src="1.jpg" alt="" /&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=""&gt;&lt;img src="2.jpg" alt="" /&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+<p>
+2、JS部分
+</p>
+<p>
+首页，需要取得滚动对象的宽高，因为对象的数量是不确定的，为了能让程序适应变化，所以这一步是必须的
+</p>
+<pre class="content_pre">
+var id=_this.attr('id');
+var scrollObj=_this.find('ul');
+var scrollUnits=scrollObj.find('li');
+var unitsWidth=scrollUnits.eq(0).width();
+var unitsHeight=scrollUnits.eq(0).height();
+var unitsLen=scrollUnits.length;
+</pre>
+<p>
+设置滚动对象的宽，因为要克隆一份到它的后面，如果宽度不是刚刚好，就会造成断开的情况，达不到无缝滚动的效果
+</p>
+<pre class="content_pre">
+scrollObj.css({'width':unitsLen*unitsWidth,'height':unitsHeight});
+</pre>
+<p>
+接下来就是克隆，这里使用&lt;table&gt;来做容器，只是个示例，你可以使用任何你觉得可以的方法
+</p>
+<pre class="content_pre">
+
+var scrollBox_x="&lt;table cellpadding='0' cellspacing='0'>&lt;tr>&lt;td id='"+id+"abox'>"+_this.html()+"&lt;/td>&lt;td id='"+id+"bbox'>"+_this.html()+"&lt;/td>&lt;/tr>&lt;/table>";
+
+_this.html(scrollBox_x);
+</pre>
+<p>
+之后建立滚动方法，先看代码（向左滚动）
+</p>
+<pre class="content_pre">
+function scrollLeft(){
+    if(_this.scrollLeft()==$("#"+id+"abox").outerWidth()) {
+        _this.scrollLeft(0);
+        scrollLen=0;
+    }  
+    doanimate=setInterval(function(){
+        if(animateLen<unitsWidth){  
+            var dist=Math.ceil((unitsWidth-animateLen)/10);  
+            animateLen=animateLen+dist;    
+            scrollLen=scrollLen+dist;    
+            _this.scrollLeft(scrollLen);
+        }else{  
+            clearInterval(doanimate);
+            animateLen=0;
+        }  
+    },30);
+    setTimeout(scrollLeft,setting.speed);
+}
+</pre>
+<p>
+效果很简单，就是移动一张片后，停几秒，再移动到下一张，按前面讲的，这里使用的是_this.scrollLeft(scrollLen);来移动。
+</p>
+<p>
+setInterval的作用就是实现滚动的效果，setTimeout用来暂停执行。其实这里可以理解为两个动画效果，就像flash一样，动画里包含动画。
+</p>
+<p>
+_this.scrollLeft()==$(“#”+id+”abox”).outerWidth()
+</p>
+<p>
+判断父对象的scrollLeft值是否等于克隆后的滚动对象宽度。也就是所有的滚动单元对象是否滚完了，如果相当，表示滚到头了，这时候就重置父对象的scrollLeft值，让它跳回到本体的第一像素位置，实现无缝滚动。
+</p>
+<p>
+scrollLen为需滚动的宽度，程序不停的滚，这个值就累加，到头的时候都需要重置为0.
+</p>
+<p>
+animateLen为滚动单元的长度，也就是一张图片的宽度，这个值是为每次只滚一张图片准备的，不然程序不知道到底要滚多远才停下。
+</p>
+<p>
+所以当animateLen==unitsWidth（滚动单元的长度==单张图片宽度）的时候，停止滚动动画clearInterval(doanimate);且重置滚动单元的长度animateLen=0;为滚下一张图片做准备。
+</p>
+<p>
+var dist=Math.ceil((unitsWidth-animateLen)/10);这一行是计算滚动的步长，这里特别加了一点缓冲的效果
+</p>
+<p>
+animateLen=animateLen+dist;
+</p>
+<p>
+scrollLen=scrollLen+dist;
+</p>
+<p>
+滚动单元长度和滚动的宽度都加步长，最后设置scrollLeft值，_this.scrollLeft(scrollLen);做这样的循环到（滚动单元的长度==单张图片宽度）停止，就实现了滚动的动画
+</p>
+<p>
+doScroll=setTimeout(scrollLeft,setting.speed);
+</p>
+<p>
+让动画运行起来。这里有参数：setting.speed为每一张图片滚动的总时间，包含动画的时间，所以如果这里设置为2秒，那这2秒不是指停顿的时间为2秒，而是从开始动到下一张开始动的总时间。
+</p>
+<p>
+3、调用
+</p>
+<pre class="content_pre">
+$("#slider").OnlySlider({
+    speed:4000
+});
+</pre>
+<p>
+4、完整代码：
+</p>
+<pre class="content_pre">
+(function($){
+    $.fn.OnlySlider=function(setting){
+        var setting = $.extend(setting);
+        var _this=$(this);
+
+        var id=_this.attr('id');
+        var scrollObj=_this.find('ul');
+        var scrollUnits=scrollObj.find('li');
+        var unitsWidth=scrollUnits.eq(0).width();
+        var unitsHeight=scrollUnits.eq(0).height();
+        var unitsLen=scrollUnits.length;
+        var doScroll,doanimate,animateLen=0,scrollLen=0;
+
+        scrollObj.css({'width':unitsLen*unitsWidth,'height':unitsHeight});
+
+        var scrollBox_x="&lt;table cellpadding='0' cellspacing='0'&gt;&lt;tr&gt;&lt;td id='"+id+"abox'&gt;"+_this.html()+"&lt;/td&gt;&lt;td id='"+id+"bbox'&gt;"+_this.html()+"&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;";  
+        _this.html(scrollBox_x);
+
+        doScroll=setTimeout(scrollLeft,setting.speed);
+
+        function scrollLeft(){
+
+            if(_this.scrollLeft()==$("#"+id+"abox").outerWidth()) {
+                _this.scrollLeft(0);
+                scrollLen=0;
+            }  
+            doanimate=setInterval(function(){
+                if(animateLen<unitsWidth){  
+                    var dist=Math.ceil((unitsWidth-animateLen)/10);  
+                    animateLen=animateLen+dist;    
+                    scrollLen=scrollLen+dist;    
+                    _this.scrollLeft(scrollLen);
+                }else{  
+                    clearInterval(doanimate);
+                    animateLen=0;
+                }  
+            },30);
+            setTimeout(scrollLeft,setting.speed);
+        }
+    }
+})(jQuery);
+</pre>
+<p>
+这里仅仅只是做一个说明，而且只有向左滚动，且动画的平滑度也不是太好，需要再优化，其它的如各方向的滚动，更多的参数设置等都需要按添加。但滚动的基本操作就是这样子。
+</p>
