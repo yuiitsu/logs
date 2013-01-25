@@ -1,0 +1,22 @@
+---
+layout: post
+title: win7 64位系统无法加载MYSQL问题，如何修改HOSTS
+category: others
+description: 在你手动配置APACHE、PHP、MYSQL的时候，64位系统和32位系统稍有不同，大多会遇到无法加载MYSQL扩展，主要是因为libmysql.dll在64位和32位系统下放的位置不一样
+img: win7.jpg
+---
+<p>
+在你手动配置APACHE、PHP、MYSQL的时候，64位系统和32位系统稍有不同，大多会遇到无法加载MYSQL扩展，主要是因为libmysql.dll在64位和32位系统下放的位置不一样
+</p>
+<blockquote class="content_quote">
+    64位：libmysql.dll需放在SysWOW64目录下
+    32位：libmysql.dll需放在System32目录下
+</blockquote>
+<p>
+其实，将和mysql相关的文件，以前放到system32下的，全放到syswow64下就好了
+</p>
+<p>
+关于修改HOSTS，64位系统通常情况下你登录的帐号是不允许修改的，但可以在外面新建一个文件，复制进去覆盖掉它。
+
+如：在桌面建立hosts文件，然后复制到C:\windows\System32\drivers\etc\里，覆盖掉原文件就可以了。注意你的文件扩展名，hosts文件没有扩展名的，建议开启系统的“显示完整扩展名”之后，把扩展名删除
+</p>

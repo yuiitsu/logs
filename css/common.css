@@ -38,6 +38,7 @@ h2.first_title a:hover{color:#009900;}
 .index_ul li{height:30px;line-height:30px;border-bottom:1px dotted #ededed;}
 .index_ul li span{float:right;font-size:12px;color:#666;}
 .index_ul li a{text-decoration: none;color:#444;}
+.index_ul li a:hover{text-decoration: underline;color:#009900;}
 .links{}
 .links h3{padding:0px;margin:0px;height:30px;line-height:30px;border-bottom:1px solid #ededed;}
 .links ul{list-style: none;}
