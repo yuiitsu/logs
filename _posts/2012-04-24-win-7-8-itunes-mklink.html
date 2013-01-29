@@ -1,0 +1,28 @@
+---
+layout: post
+title: WIN7/8利用mklink将iTunes的备份目录转移
+category: others
+description: 用了iTunes就知道，那个备份目录真是让我们的C盘有点吃不消，而iTunes又不能设置备份目录，所以只能另想办法。 
+img: 201301/2901.jpg
+---
+<p>
+用了iTunes就知道，那个备份目录真是让我们的C盘有点吃不消，而iTunes又不能设置备份目录，所以只能另想办法。
+</p>
+<p>
+WIN7/8有mklink命令来创建文件创连接，也就是说，删除掉iTunes的备份目录，创建一个名称一样的连接，指向另一个盘的一个目录，当做备份目录，这样，iTunes在读取文件夹的时候，目标就是另一个盘的那个目录啦。
+</p>
+<p>
+命令很简单，例如，我要把E:\iTunes\backup当做备份目录，只需要这样做：
+</p>
+<blockquote class="content_quote">
+进入到C盘的iTunes备份目录的上一级目录。C:\Users\weiyi\AppData\Roaming\Apple Computer<br/>
+将里面的MobileSync目录下的全部内容拷贝到E:\iTunes\bakcup目录下，再删除C盘下的MobileSync目录<br/>
+打开命令行，进入到C:\Users\weiyi\AppData\Roaming\Apple Computer<br/>
+执行命令：mklink /d MobileSync?E:\iTunes\MobileSync。若提示创建连接成功，就OK了<br/>
+</blockquote>
+<p>
+<img src="http://my.csdn.net/uploads/201204/24/1335275027_6564.jpg" alt="pic" />
+</p>
+<p>
+关于mklink，可以看看这个：<a href="http://www.cnblogs.com/asion/archive/2011/03/10/1979282.html" target="_blank">http://www.cnblogs.com/asion/archive/2011/03/10/1979282.html</a>
+</p>
