@@ -1,8 +1,4 @@
 <div class="side radius left">
-	<h2>归档(Archives)</h2>
-	<ul class="side_ul">
-		{% for monthly_archive in site.monthly_archives reversed %}
-		<li><a href="{{ site.url }}/{{ monthly_archive.url }}">{{ monthly_archive.name }}</a> ({{ monthly_archive.posts | size }} posts)</li>
-		{% endfor  %}
-	</ul>
+	<h2>微博(weibo)</h2>
+	<iframe frameborder="0" scrolling="no" src="http://show.v.t.qq.com/index.php?c=show&a=index&n=onlyfu&w=0&h=548&fl=2&l=30&o=1&co=0" width="100%" height="548"></iframe>
 </div>
