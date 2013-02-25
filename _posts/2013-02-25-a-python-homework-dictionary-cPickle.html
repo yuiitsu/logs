@@ -1,0 +1,88 @@
+---
+layout: post
+title: Python 作业，利用字典实现的用户信息存储程序
+category: Python
+description: Python也学了一段时间了，一直都只是了解了一个大概，看到简明教程后面有个家庭作业，但打算做一做，也算是把之前学习的一些内容强化一下，实践才能记住嘛。功能很简单，只是利用字典实现用户信息的存储，包括添加、修改、删除、查看四个功能。
+img: 201302/020401.jpg
+---
+<p>
+Python也学了一段时间了，一直都只是了解了一个大概，看到简明教程后面有个家庭作业，但打算做一做，也算是把之前学习的一些内容强化一下，实践才能记住嘛。功能很简单，只是利用字典实现用户信息的存储，包括添加、修改、删除、查看四个功能。
+</p>
+<p>
+过程比较顺利，中间遇到一些小问题，基本上都是在看书的过程中没有记住的，这里也顺便记录一下：
+</p>
+<pre class="content_pre">
+1、判断一个文件是否存在，使用os.path.exists(‘文件路径及文件名’)。当然得先import os
+2、判断一个值为假，用的是False，而不是false
+3、+ 不能连接字符串和字典对象，只能连接字典里的值
+4、判断一个keys是否在字典里要用 if key in dict.keys()。这一点对于字典中的字典同样适用，如：if key in dict[k].keys()
+5、函数一定要写在调用位置的前面
+</pre>
+<pre class="content_pre">
+#!D:\code\python
+# Filename: userinfos.py
+import cPickle as p
+import os
+
+def saveData(data):
+	f = file(userdata, 'w')
+	p.dump(data, f)
+	f.close()
+
+userdata = "user.data"
+if os.path.exists(userdata) == False:
+	temp = {"fuweiyi":{"sex":"male","age":"30"}}
+	f = file(userdata, 'w')
+	p.dump(temp, f)
+	f.close()
+
+while True:
+	t = int(raw_input('Enter number, (1:view, 2:add, 3:update, 4:del, other:quite) : '))
+	fi = file(userdata)
+	users = p.load(fi)
+	if t == 1:
+		print "View the user info"
+		name = raw_input("Enter name : ")
+		if name in users.keys():
+			print name + " [sex: " + users[name]['sex'] + ", age: " + users[name]['age'] + ", phone: " +users[name]['phone']+ "]"
+		else:
+			print "No user, Please check the name"
+	elif t == 2:
+		print "Add the user info"
+		name = raw_input("Enter name : ")
+		if name in users.keys():
+			print "Error: The user is exists"
+		else:
+			sex = raw_input("Enter sex : ")
+			age = raw_input("Enter age : ")
+			phone = raw_input("Enter phone : ")
+			users[name] = {"sex": sex, "age": age, "phone": phone}
+			saveData(users)
+			print "Success"
+	elif t == 3:
+		print "Update the user info"
+		name = raw_input("Enter name : ")
+		if name in users.keys():
+			attribute = raw_input("Enter attribute : ")
+			if attribute in users[name].keys():
+				value = raw_input("Enter value : ")
+				users[name][attribute] = value
+				saveData(users)
+				print "Success"
+			else:
+				print "Error: The attribute is not exists"
+		else:
+			print "Error: The user is not exists"
+	elif t == 4:
+		print "Del the user info"
+		name = raw_input("Enter name : ")
+		if name in users.keys():
+			del users[name]
+			saveData(users)
+			print "Success"
+		else:
+			print "Error: The user is not exists"
+	else:
+		print "Thanks you! The program has terminated"
+		break
+</pre>
