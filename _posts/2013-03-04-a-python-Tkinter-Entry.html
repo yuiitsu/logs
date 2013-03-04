@@ -36,6 +36,7 @@ Python学习记录--关于Tkinter Entry(文本框)的选项、方法说明，以
 	<li><a href="#takefocus">takefocus</a></li>
 	<li><a href="#textvariable">textvariable</a></li>
 	<li><a href="#width">width</a></li>
+	<li><a href="#xscrollcommand">xscrollcommand</a></li>
 </ul>
 <h3 id="background">
 	background(bg)
@@ -325,6 +326,158 @@ text = Entry(top, width = 50)
 #示例
 def callback():
 	#code
-	
+
 text = Entry(top, command = callback)
 </pre>
+
+<h2 class="content_h2">
+方法（Methods）
+</h2>
+<ul>
+	<li><a href="#insert">insert</a></li>
+	<li><a href="#delete">delete</a></li>
+	<li><a href="#icursor">icursor</a></li>
+	<li><a href="#get">get</a></li>
+	<li><a href="#index">index</a></li>
+	<li><a href="#selection_adjust">selection_adjust, select_adjust</a></li>
+	<li><a href="#selection_clear">selection_clear, select_clear</a></li>
+	<li><a href="#selection_from">selection_from, select_from</a></li>
+	<li><a href="#selection_present">selection_present, select_present</a></li>
+	<li><a href="#selection_range">selection_range, select_range</a></li>
+	<li><a href="#selection_to">selection_to, select_to</a></li>
+	<li><a href="#scan_mark">scan_mark</a></li>
+	<li><a href="#scan_dragto">scan_dragto</a></li>
+	<li><a href="#xview">xview</a></li>
+	<li><a href="#xview_moveto">xview_moveto, xview_scroll</a></li>
+</ul>
+
+<h3 id="insert">
+	insert(index, text)
+</h3>
+<p>
+向文本框中插入值，index：插入位置，text：插入值
+</p>
+<pre class="content_pre">
+#示例
+text.insert(0, '内容一')  #在文本框开始位置插入“内容一”
+text.insert(10, '内容二')  #在文本框第10个索引位置插入“内容二”
+text.insert(END, '内容三')  #在文本框末尾插入“内容三”
+</pre>
+
+<h3 id="delete">
+	delete(index), delete(from, to)
+</h3>
+<p>
+删除文本框里直接位置值
+</p>
+<pre class="content_pre">
+#示例
+text.delete(10)  #删除索引值为10的值
+text.delete(10, 20)  #删除索引值从10到20之前的值
+text.insert(0, END)  #删除所有值
+</pre>
+
+<h3 id="icursor">
+	icursor(index)
+</h3>
+<p>
+将光标移动到指定索引位置，只有当文框获取焦点后成立
+</p>
+<pre class="content_pre">
+#示例
+text.icursor(10)  #移动光标到索引为10的位置
+</pre>
+
+<h3 id="get">
+	get()
+</h3>
+<p>
+获取文件框的值
+</p>
+<pre class="content_pre">
+#示例
+text.get()  #返回文本框的值
+</pre>
+
+<h3 id="index">
+	index(index)
+</h3>
+<p>
+返回指定的索引值
+</p>
+<pre class="content_pre">
+#示例
+text.index(2)  
+</pre>
+
+<h3 id="selection_adjust">
+	selection_adjust(index), select_adjust(index)
+</h3>
+<p>
+选中指定索引和光标所在位置之前的值
+</p>
+<pre class="content_pre">
+#示例
+text.selection_adjust(2)  #选中索引为2和光标所有位置之前的所有值
+</pre>
+
+<h3 id="selection_clear">
+	selection_clear(), select_clear()
+</h3>
+<p>
+清空文本框
+</p>
+<pre class="content_pre">
+#示例
+text.selection_clear() 
+</pre>
+
+<h3 id="selection_from">
+	selection_from(index), select_from(index)
+</h3>
+<p>
+待定
+</p>
+
+<h3 id="selection_range">
+	selection_range(start, end), select_range(start, end)
+</h3>
+<p>
+选中指定索引之前的值，start必须比end小
+</p>
+<pre class="content_pre">
+#示例
+text.selection_range(2, 10) #选中索引为2和10之前的所有值 
+</pre>
+
+<h3 id="selection_to">
+	selection_to(index), select_to(index)
+</h3>
+<p>
+选中指定索引与光标之间的值（感觉和selection_adjust差不多）
+</p>
+<pre class="content_pre">
+#示例
+text.selection_to(2) #选中索引为2和所光标所在位置之前的值
+</pre>
+
+<h3 id="scan_mark">
+	scan_mark(x)
+</h3>
+<p>
+待定
+</p>
+
+<h3 id="scan_dragto">
+	scan_dragto(x)
+</h3>
+<p>
+待定
+</p>
+
+<h3 id="xview">
+	xview(x)
+</h3>
+<p>
+待定
+</p>
