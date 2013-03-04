@@ -13,6 +13,29 @@ Python学习记录--关于Tkinter Entry(文本框)的选项、方法说明，以
 </h2>
 <ul>
 	<li><a href="#background">background(bg)</a></li>
+	<li><a href="#borderwidth">borderwidth(bd)</a></li>
+	<li><a href="#cursor">cursor</a></li>
+	<li><a href="#exportselection">exportselection</a></li>
+	<li><a href="#font">font</a></li>
+	<li><a href="#foreground">foreground(fg)</a></li>
+	<li><a href="#highlightbackground">highlightbackground</a></li>
+	<li><a href="#highlightcolor">highlightcolor</a></li>
+	<li><a href="#highlightthickness">highlightthickness</a></li>
+	<li><a href="#insertbackground">insertbackground</a></li>
+	<li><a href="#insertborderwidth">insertborderwidth</a></li>
+	<li><a href="#insertofftime">insertofftime</a></li>
+	<li><a href="#insertontime">insertontime</a></li>
+	<li><a href="#insertwidth">insertwidth</a></li>
+	<li><a href="#justify">justify</a></li>
+	<li><a href="#relief">relief</a></li>
+	<li><a href="#selectbackground">selectbackground</a></li>
+	<li><a href="#selectborderwidth">selectborderwidth</a></li>
+	<li><a href="#selectforeground">selectforeground</a></li>
+	<li><a href="#show">show</a></li>
+	<li><a href="#state">state</a></li>
+	<li><a href="#takefocus">takefocus</a></li>
+	<li><a href="#textvariable">textvariable</a></li>
+	<li><a href="#width">width</a></li>
 </ul>
 <h3 id="background">
 	background(bg)
@@ -31,4 +54,277 @@ text = Entry(top, background = 'red')
 text.pack()
 
 mainloop()
+</pre>
+<h3 id="borderwidth">
+	borderwidth(bd)
+</h3>
+<ul>
+	<li>Type: distance</li>
+	<li>说明：文本框边框宽度</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, borderwidth = 3)
+</pre>
+<h3 id="cursor">
+	cursor
+</h3>
+<ul>
+	<li>Type: cursor</li>
+	<li>待定</li>
+</ul>
+<h3 id="exportselection">
+	exportselection
+</h3>
+<ul>
+	<li>Type: flag</li>
+	<li>待定</li>
+</ul>
+<h3 id="font">
+	font
+</h3>
+<ul>
+	<li>Type: font</li>
+	<li>说明：文字字体。值是一个元祖，font = ('字体'，'字号'，'粗细')</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, font = ('Helvetica', '14', 'bold')
+</pre>
+<h3 id="foreground">
+	foreground
+</h3>
+<ul>
+	<li>Type: color</li>
+	<li>说明：文字颜色。值为颜色或为颜色代码，如：'red','#ff0000'</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, foreground = 'red')  #正确
+text = Entry(top, foreground = '#ff0000')  #正确
+text = Entry(top, foreground = 'ff0000') #错误，必须加上#号
+</pre>
+<h3 id="highlightbackground">
+	highlightbackground
+</h3>
+<ul>
+	<li>Type: color</li>
+	<li>说明：文本框高亮边框颜色，当文本框未获取焦点时显示</li>
+	<li>条件：highlightthickness设置有值</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, highlightbackground = 'red', hightlightthickness = 1)
+</pre>
+<h3 id="highlightcolor">
+	highlightcolor
+</h3>
+<ul>
+	<li>Type: color</li>
+	<li>说明：文本框高亮边框颜色，当文本框获取焦点时显示</li>
+	<li>条件：highlightthickness设置有值</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, highlightcolor = 'red', hightlightthickness = 1)
+</pre>
+<h3 id="highlightthickness">
+	highlightthickness
+</h3>
+<ul>
+	<li>Type: distance</li>
+	<li>说明：文本框高亮边框宽度。（官网上说有默认值1或2，但如果不设置，实际上没有值，可能和操作系统有关系）</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, highlightcolor = 'red', hightlightthickness = 1)
+</pre>
+<h3 id="insertbackground">
+	insertbackground
+</h3>
+<ul>
+	<li>Type: color</li>
+	<li>说明：文本框光标的颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, insertbackground = 'red')
+</pre>
+<h3 id="insertborderwidth">
+	insertborderwidth
+</h3>
+<ul>
+	<li>Type: distance</li>
+	<li>说明：文本框光标的宽度。（有问题，官网未有说明，待定）</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, insertborderwidth = 3)
+</pre>
+<h3 id="insertofftime">
+	insertofftime
+</h3>
+<ul>
+	<li>Type: int</li>
+	<li>说明：文本框光标闪烁时，消失持续时间，单位：毫秒</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, insertofftime = 50)
+</pre>
+<h3 id="insertontime">
+	insertontime
+</h3>
+<ul>
+	<li>Type: int</li>
+	<li>说明：文本框光标闪烁时，显示持续时间，单位：毫秒</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, insertontime = 50)
+</pre>
+<h3 id="insertwidth">
+	insertwidth
+</h3>
+<ul>
+	<li>Type: int</li>
+	<li>说明：文本框光标宽度</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, insertwidth = 3)
+</pre>
+<h3 id="justify">
+	justify
+</h3>
+<ul>
+	<li>Type: const</li>
+	<li>待定</li>
+</ul>
+<h3 id="relief">
+	relief
+</h3>
+<ul>
+	<li>Type: const</li>
+	<li>说明：文本框风格，如凹陷、凸起，值有：flat/sunken/raised/groove/ridge</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, relief = 'sunken')
+</pre>
+
+<h3 id="selectbackground">
+	selectbackground
+</h3>
+<ul>
+	<li>Type: color</li>
+	<li>说明：选中文字的背景颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, selectbackground = 'red')
+text = Entry(top, selectbackground = '#ff0000')
+</pre>
+
+<h3 id="selectborderwidth">
+	selectborderwidth
+</h3>
+<ul>
+	<li>Type: int</li>
+	<li>说明：选中文字的背景边框宽度</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, selectborderwidth = 3)
+</pre>
+
+<h3 id="selectforeground">
+	selectforeground
+</h3>
+<ul>
+	<li>Type: color</li>
+	<li>说明：选中文字的颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, selectforeground = 'red')
+text = Entry(top, selectforeground = '#ff0000')
+</pre>
+
+<h3 id="show">
+	show
+</h3>
+<ul>
+	<li>Type: character</li>
+	<li>说明：指定文本框内容显示为字符，值随意，满足字符即可。如密码可以将值设为*</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, show = '*')
+</pre>
+
+<h3 id="state">
+	state
+</h3>
+<ul>
+	<li>Type: const</li>
+	<li>说明：文框状态，分为只读和可写，值为：normal/disabled</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, state = 'normal')  #可操作
+text = Entry(top, state = 'disabled')  #不可操作
+</pre>
+
+<h3 id="takefocus">
+	takefocus
+</h3>
+<ul>
+	<li>Type: flag</li>
+	<li>说明：是否能用TAB键来获取焦点，默认是可以获得</li>
+</ul>
+<pre class="content_pre">
+#示例
+待定
+</pre>
+
+<h3 id="textvariable">
+	textvariable
+</h3>
+<ul>
+	<li>Type: variable</li>
+	<li>说明：文本框的值，是一个StringVar()对象</li>
+</ul>
+<pre class="content_pre">
+#示例
+default_value = StringVar()
+default_value.set('This is a default value')
+text = Entry(top, textvariable = default_value)
+</pre>
+
+<h3 id="width">
+	width
+</h3>
+<ul>
+	<li>Type: int</li>
+	<li>说明：文本框宽度</li>
+</ul>
+<pre class="content_pre">
+#示例
+text = Entry(top, width = 50)
+</pre>
+
+<h3 id="xscrollcommand">
+	xscrollcommand
+</h3>
+<ul>
+	<li>Type: callback</li>
+	<li>说明：回调函数</li>
+</ul>
+<pre class="content_pre">
+#示例
+def callback():
+	#code
+	
+text = Entry(top, command = callback)
 </pre>
