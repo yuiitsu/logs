@@ -1,0 +1,34 @@
+---
+layout: post
+title: Python Tkinter Entry(文本框) 说明
+category: Python
+description: Python学习记录--关于Tkinter Entry(文本框)的选项、方法说明，以及一些示例。
+img: 201302/020401.jpg
+---
+<p>
+Python学习记录--关于Tkinter Entry(文本框)的选项、方法说明，以及一些示例。
+</p>
+<h2 class="content_h2">
+属性（Options）
+</h2>
+<ul>
+	<li><a href="#background">background(bg)</a></li>
+</ul>
+<h3 id="background">
+	background(bg)
+</h3>
+<ul>
+	<li>Type: color</li>
+	<li>说明：文本框的背景颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+from Tkinter import *
+
+top = Tk()
+
+text = Entry(top, background = 'red')
+text.pack()
+
+mainloop()
+</pre>
