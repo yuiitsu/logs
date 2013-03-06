@@ -12,8 +12,12 @@ Python学习记录--关于Tkinter Canvas(画布)的选项、方法、项目说�
 元素（Item）
 </h2>
 <ul>
-	<li><a href="#Arc">Arc</a></li>
-	<li><a href="#Bitmap">Bitmap</a></li>
+	<li><a href="#Arc">Arc（圆弧）</a></li>
+	<li><a href="#Bitmap">Bitmap（位图）</a></li>
+	<li><a href="#Image">Image（图片）</a></li>
+	<li><a href="#Line">Line（直线）</a></li>
+	<li><a href="#Oval">Oval（椭圆）</a></li>
+	<li><a href="#Polygon">Polygon（多边形）</a></li>
 </ul>
 
 <h3 id="Arc">
@@ -219,6 +223,376 @@ canvas.create_bitmap(100, 100, bitmap = 'info', foreground="red")
 #示例
 canvas.create_bitmap(100, 100, bitmap = 'info', background="red")
 </pre>
+
+<h3 id="arc_tags">
+	tags
+</h3>
+<ul>
+	<li>Type：tuple</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="Image">
+	Image
+</h3>
+<ul>
+	<li>说明：绘制图片</li>
+	<li>方法：create_image(x0, y0, options...)。x0,y0为图片左上角坐标</li>
+</ul>
+<pre class="content_pre">
+#示例
+photo = PhotoImage(file = 'eg.gif')
+canvas.create_image(10, 10, image = photo)
+</pre>
+
+<h2 class="content_h2">
+图片属性（Options）
+</h2>
+<ul>
+	<li><a href="#image_image">image</a></li>
+	<li><a href="#image_anchor">anchor</a></li>
+	<li><a href="#image_tags">tags</a></li>
+</ul>
+
+<h3 id="image_image">
+	image
+</h3>
+<ul>
+	<li>Type：image</li>
+	<li>说明：图片。需使用PhotoImage进行指定</li>
+</ul>
+<pre class="content_pre">
+#示例
+photo = PhotoImage(file = 'eg.gif')
+canvas.create_image(10, 10, image = photo)
+</pre>
+
+<h3 id="image_anchor">
+	anchor
+</h3>
+<ul>
+	<li>Type：constant</li>
+	<li>说明：锚点。可用值：n, ne, e, se, s, sw, w, nw, center。默认为center</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_image(10, 10, image = photo)
+</pre>
+
+<h3 id="arc_tags">
+	tags
+</h3>
+<ul>
+	<li>Type：tuple</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="Line">
+	Line
+</h3>
+<ul>
+	<li>说明：绘制直线（折线）</li>
+	<li>方法：create_line(x0, y0, x1, y1, ..., xn, yn, options...)</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_line(0, 0, 10, 10, fill = 'red')
+</pre>
+
+<h2 class="content_h2">
+直线属性（Options）
+</h2>
+<ul>
+	<li><a href="#line_width">width</a></li>
+	<li><a href="#line_fill">fill</a></li>
+	<li><a href="#line_stipple">stipple</a></li>
+	<li><a href="#line_arrow">arrow</a></li>
+	<li><a href="#line_arrowshape">arrowshape</a></li>
+	<li><a href="#line_capstyle">capstyle</a></li>
+	<li><a href="#line_joinstyle">joinstyle</a></li>
+	<li><a href="#line_smooth">smooth</a></li>
+	<li><a href="#line_splinesteps">splinesteps</a></li>
+	<li><a href="#line_tags">tags</a></li>
+</ul>
+
+<h3 id="line_width">
+	width
+</h3>
+<ul>
+	<li>Type：distance</li>
+	<li>说明：线条宽度</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_line(0, 0, 100, 100, width =5)
+</pre>
+
+<h3 id="line_fill">
+	fill
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：线条颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_line(0, 0, 100, 100, fill = 'red')
+canvas.create_line(0, 0, 100, 100, fill = '#ff0000')
+</pre>
+
+<h3 id="line_stipple">
+	stipple
+</h3>
+<ul>
+	<li>Type：bitmap</li>
+	<li>说明：线条纹路。典型值有：gray75, gray50, gray25, gray12</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_line(0, 0, 100, 100, stipple = 'gray75', width =5)
+</pre>
+
+<h3 id="line_arrow">
+	arrow
+</h3>
+<ul>
+	<li>Type：constant</li>
+	<li>说明：带箭头的直线。值有3个，first, last, both，代表箭头位置：开始，最后，两边都有</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_line(0, 0, 100, 100, arrow = 'both', width =5)
+</pre>
+
+<h3 id="line_arrowshape">
+	arrowshape
+</h3>
+<ul>
+	<li>Type：3-tuple</li>
+	<li>说明：箭头形状。值是一个三元元组，默认值为：(8, 10, 3)</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_line(0, 0, 100, 100, arrowshape = (10, 10, 10), width =5)
+</pre>
+
+<h3 id="line_capstyle">
+	capstyle
+</h3>
+<ul>
+	<li>Type：constant</li>
+	<li>说明：线条两头形状。需宽线，细线看不到效果。值有：buit, projecting, round。默认为buit。</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_line(0, 0, 100, 100, capstyle = 'round', width =5)
+</pre>
+
+<h3 id="line_joinstyle">
+	joinstyle
+</h3>
+<ul>
+	<li>Type：constant</li>
+	<li>说明：折线转折位置形状。需宽线，细线看不到效果。值有：bevel, miter, round。默认为round圆角</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_line(0, 0, 100, 100, 50, 20 capstyle = 'round', width =5)
+</pre>
+
+<h3 id="line_smooth">
+	smooth
+</h3>
+<ul>
+	<li>Type：flag</li>
+	<li>说明：折线转折位置启用平滑。值为bool，不为0或False时，启用平滑反之不启用</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_line(0, 0, 100, 100, 50, 20 smooth = True, width =5)
+</pre>
+
+<h3 id="line_splinesteps">
+	splinesteps
+</h3>
+<ul>
+	<li>Type：int</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="arc_tags">
+	tags
+</h3>
+<ul>
+	<li>Type：tuple</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="Oval">
+	Oval
+</h3>
+<ul>
+	<li>说明：绘制椭圆</li>
+	<li>方法：create_oval(x0, y0, x1, y1, options...)</li>
+</ul>
+<pre class="content_pre">
+#示例
+xy = 20, 20, 300, 180
+canvas.create_arc(xy, fill = 'red')
+</pre>
+
+<h2 class="content_h2">
+椭圆属性（Options）
+</h2>
+<ul>
+	<li><a href="#oval_fill">fill</a></li>
+	<li><a href="#oval_stipple">stipple</a></li>
+	<li><a href="#oval_outline">outline</a></li>
+	<li><a href="#oval_width">width</a></li>
+	<li><a href="#oval_tags">tags</a></li>
+</ul>
+
+<h3 id="oval_fill">
+	fill
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：椭圆内部填充颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_oval(xy, fill = 'red')
+</pre>
+
+<h3 id="oval_stipple">
+	stipple
+</h3>
+<ul>
+	<li>Type：bitmap</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="oval_outline">
+	outline
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：椭圆边框颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_oval(xy, outline = 'red')
+</pre>
+
+<h3 id="oval_width">
+	width
+</h3>
+<ul>
+	<li>Type：distance</li>
+	<li>说明：椭圆边框宽度</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_oval(xy, width = 5)
+</pre>
+
+<h3 id="arc_tags">
+	tags
+</h3>
+<ul>
+	<li>Type：tuple</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="Polygon">
+	Polygon
+</h3>
+<ul>
+	<li>说明：绘制多边形</li>
+	<li>方法：create_polygon(x0, y0, x1, y1, ..., xn, yn, options...)</li>
+</ul>
+<pre class="content_pre">
+#示例
+xy = 20, 20, 300, 180, 200, 100
+canvas.create_arc(xy, fill="red")
+</pre>
+
+<h2 class="content_h2">
+多边形属性（Options）
+</h2>
+<ul>
+	<li><a href="#polygon_fill">fill</a></li>
+	<li><a href="#polygon_stipple">stipple</a></li>
+	<li><a href="#polygon_outline">outline</a></li>
+	<li><a href="#polygon_width">width</a></li>
+	<li><a href="#polygon_smooth">smooth</a></li>
+	<li><a href="#polygon_splinesteps">splinesteps</a></li>
+	<li><a href="#polygon_tags">tags</a></li>
+</ul>
+
+<h3 id="polygon_fill">
+	fill
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：多边形内部填充颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_polygon(xy, fill = 'red')
+</pre>
+
+<h3 id="polygon_stipple">
+	stipple
+</h3>
+<ul>
+	<li>Type：bitmap</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="polygon_outline">
+	outline
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：多边形外边框颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_polygon(xy, outline = 'red')
+</pre>
+
+<h3 id="polygon_width">
+	width
+</h3>
+<ul>
+	<li>Type：distance</li>
+	<li>说明：多边形外边框宽度</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_polygon(xy, width = 5)
+</pre>
+
+<h3 id="polygon_smooth">
+	smooth
+</h3>
+<ul>
+	<li>Type：flag</li>
+	<li>说明：多边形转角平滑。值为True或1时，为启用，False或0时，为不启用</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_polygon(xy, smooth = True)
+</pre>
+
+<h3 id="polygon_splinesteps">
+	splinesteps
+</h3>
+<ul>
+	<li>Type：int</li>
+	<li>待定</li>
+</ul>
 
 <h3 id="arc_tags">
 	tags
