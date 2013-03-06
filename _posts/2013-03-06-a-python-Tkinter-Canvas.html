@@ -1,0 +1,229 @@
+---
+layout: post
+title: Python2.7.3 Tkinter Canvas(画布) 说明
+category: Python
+description: Python学习记录--关于Tkinter Canvas(画布)的选项、方法、项目说明，以及一些示例。
+img: 201303/030601.jpg
+---
+<p>
+Python学习记录--关于Tkinter Canvas(画布)的选项、方法、项目说明，以及一些示例。
+</p>
+<h2 class="content_h2">
+元素（Item）
+</h2>
+<ul>
+	<li><a href="#Arc">Arc</a></li>
+	<li><a href="#Bitmap">Bitmap</a></li>
+</ul>
+
+<h3 id="Arc">
+	Arc
+</h3>
+<ul>
+	<li>说明：绘制圆弧</li>
+	<li>方法：create_arc(x0, y0, x1, y1, options...)</li>
+</ul>
+<pre class="content_pre">
+#示例
+xy = 20, 20, 300, 180
+canvas.create_arc(xy, start=0, extent=270, fill="red")
+canvas.create_arc(xy, start=270, extent=60, fill="blue")
+canvas.create_arc(xy, start=330, extent=30, fill="green")
+</pre>
+<p>
+xy，是圆弧左、上两个顶点的位置以及圆弧的X轴和Y轴的直径，如:xy = 20, 30, 300, 180，表明圆弧的左边顶点和画布左边界的距离为20像素，圆弧上边顶点和画布上边界的距离为30像素，圆弧X轴的直径为300像素，圆弧Y轴的直径为180像素
+</p>
+<p>
+圆弧是以圆弧中心为基点，从X轴的3点钟方向开始，也就是X轴的0角度，逆向展开
+</p>
+
+<h2 class="content_h2">
+圆弧属性（Options）
+</h2>
+<ul>
+	<li><a href="#arc_style">style</a></li>
+	<li><a href="#arc_start">start</a></li>
+	<li><a href="#arc_extent">extent</a></li>
+	<li><a href="#arc_fill">fill</a></li>
+	<li><a href="#arc_stipple">stipple</a></li>
+	<li><a href="#arc_outline">outline</a></li>
+	<li><a href="#arc_outlinestipple">outlinestipple</a></li>
+	<li><a href="#arc_width">width</a></li>
+	<li><a href="#arc_tags">tags</a></li>
+</ul>
+
+<h3 id="arc_style">
+	style
+</h3>
+<ul>
+	<li>Type：constant</li>
+	<li>说明：圆弧的风格。其值有：pieslice, chord, arc</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_arc(xy, style = 'arc')
+</pre>
+
+<h3 id="arc_start">
+	start
+</h3>
+<ul>
+	<li>Type：angle</li>
+	<li>说明：圆弧开始绘制时的起始角度。圆心为基点，正X轴为0角度，逆时针转动的角度。</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_arc(xy, start = 0)  #0角度开始
+canvas.create_arc(xy, start = 90) #90度角开始，也就是正Y轴
+</pre>
+
+<h3 id="arc_extent">
+	extent
+</h3>
+<ul>
+	<li>Type：angle</li>
+	<li>说明：圆弧开始绘制时的结束角度。圆心为基点，正X轴为0角度，逆时针转动的角度。</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_arc(xy, start = 0, extent = 90)  #0角度开始，90度结束的一个扇形
+</pre>
+
+<h3 id="arc_fill">
+	fill
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：圆弧内部的填充颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_arc(xy, fill = 'red')  
+</pre>
+
+<h3 id="arc_stipple">
+	stipple
+</h3>
+<ul>
+	<li>Type：bitmap</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="arc_outline">
+	outline
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：圆弧外部边框颜色。默认值为：black</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_arc(xy, outline = 'red')  
+</pre>
+
+<h3 id="arc_outlinestipple">
+	outlinestipple
+</h3>
+<ul>
+	<li>Type：bitmap</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="arc_width">
+	width
+</h3>
+<ul>
+	<li>Type：distance</li>
+	<li>说明：圆弧外部边框宽度，默认为1px</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_arc(xy, outline = 'red')  
+</pre>
+
+<h3 id="arc_tags">
+	tags
+</h3>
+<ul>
+	<li>Type：tuple</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="Bitmap">
+	Bitmap
+</h3>
+<ul>
+	<li>说明：绘制位图</li>
+	<li>方法：create_bitmap(x0, y0, options...)</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_bitmap(100, 100, bitmap="info", foreground="red")
+</pre>
+
+<h2 class="content_h2">
+位图属性（Options）
+</h2>
+<ul>
+	<li><a href="#bitmap_bitmap">bitmap</a></li>
+	<li><a href="#bitmap_anchor">anchor</a></li>
+	<li><a href="#bitmap_foreground">foreground</a></li>
+	<li><a href="#bitmap_background">background</a></li>
+	<li><a href="#bitmap_tags">tags</a></li>
+</ul>
+
+<h3 id="bitmap_bitmap">
+	bitmap
+</h3>
+<ul>
+	<li>Type：bitmap</li>
+	<li>说明：位图名称，也可以用xbm文件。默认可用值为：error, gray75, gray50, gray25, gray12, hourglass, info, questhead, question, warning</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_bitmap(100, 100, bitmap = 'info', anchor="ne")
+</pre>
+
+<h3 id="bitmap_anchor">
+	anchor
+</h3>
+<ul>
+	<li>Type：constant</li>
+	<li>说明：锚点。可用值：n, ne, e, se, s, sw, w, nw, center。默认为center</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_bitmap(100, 100, bitmap = 'info', anchor="ne")
+</pre>
+
+<h3 id="bitmap_foreground">
+	foreground
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：前景颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_bitmap(100, 100, bitmap = 'info', foreground="red")
+</pre>
+
+<h3 id="bitmap_background">
+	background
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：背景颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_bitmap(100, 100, bitmap = 'info', background="red")
+</pre>
+
+<h3 id="arc_tags">
+	tags
+</h3>
+<ul>
+	<li>Type：tuple</li>
+	<li>待定</li>
+</ul>
