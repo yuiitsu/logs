@@ -18,11 +18,13 @@ Python学习记录--关于Tkinter Canvas(画布)的选项、方法、项目说�
 	<li><a href="#Line">Line（直线）</a></li>
 	<li><a href="#Oval">Oval（椭圆）</a></li>
 	<li><a href="#Polygon">Polygon（多边形）</a></li>
+	<li><a href="#Rectangle">Rectangle（矩形）</a></li>
+	<li><a href="#Text">Text（矩形）</a></li>
 </ul>
 
-<h3 id="Arc">
+<h2 class="content_h2" id="Arc">
 	Arc
-</h3>
+</h2>
 <ul>
 	<li>说明：绘制圆弧</li>
 	<li>方法：create_arc(x0, y0, x1, y1, options...)</li>
@@ -153,9 +155,9 @@ canvas.create_arc(xy, outline = 'red')
 	<li>待定</li>
 </ul>
 
-<h3 id="Bitmap">
+<h2 class="content_h2" id="Bitmap">
 	Bitmap
-</h3>
+</h2>
 <ul>
 	<li>说明：绘制位图</li>
 	<li>方法：create_bitmap(x0, y0, options...)</li>
@@ -232,9 +234,9 @@ canvas.create_bitmap(100, 100, bitmap = 'info', background="red")
 	<li>待定</li>
 </ul>
 
-<h3 id="Image">
+<h2 class="content_h2" id="Image">
 	Image
-</h3>
+</h2>
 <ul>
 	<li>说明：绘制图片</li>
 	<li>方法：create_image(x0, y0, options...)。x0,y0为图片左上角坐标</li>
@@ -287,9 +289,9 @@ canvas.create_image(10, 10, image = photo)
 	<li>待定</li>
 </ul>
 
-<h3 id="Line">
+<h2 class="content_h2" id="Line">
 	Line
-</h3>
+</h2>
 <ul>
 	<li>说明：绘制直线（折线）</li>
 	<li>方法：create_line(x0, y0, x1, y1, ..., xn, yn, options...)</li>
@@ -428,9 +430,9 @@ canvas.create_line(0, 0, 100, 100, 50, 20 smooth = True, width =5)
 	<li>待定</li>
 </ul>
 
-<h3 id="Oval">
+<h2 class="content_h2" id="Oval">
 	Oval
-</h3>
+</h2>
 <ul>
 	<li>说明：绘制椭圆</li>
 	<li>方法：create_oval(x0, y0, x1, y1, options...)</li>
@@ -504,9 +506,9 @@ canvas.create_oval(xy, width = 5)
 	<li>待定</li>
 </ul>
 
-<h3 id="Polygon">
+<h2 class="content_h2" id="Polygon">
 	Polygon
-</h3>
+</h2>
 <ul>
 	<li>说明：绘制多边形</li>
 	<li>方法：create_polygon(x0, y0, x1, y1, ..., xn, yn, options...)</li>
@@ -601,3 +603,176 @@ canvas.create_polygon(xy, smooth = True)
 	<li>Type：tuple</li>
 	<li>待定</li>
 </ul>
+
+<h2 class="content_h2" id="Rectangle">
+	Rectangle
+</h2>
+<ul>
+	<li>说明：绘制矩形</li>
+	<li>方法：create_rectangle(x0, y0, x1, y1, options...)</li>
+</ul>
+<pre class="content_pre">
+#示例
+xy = 20, 20, 300, 180
+canvas.create_rectangle(xy)
+</pre>
+
+<h2 class="content_h2">
+矩形属性（Options）
+</h2>
+<ul>
+	<li><a href="#rectangle_fill">fill</a></li>
+	<li><a href="#rectangle_outline">outline</a></li>
+	<li><a href="#rectangle_stipple">stipple</a></li>
+	<li><a href="#rectangle_width">width</a></li>
+	<li><a href="#rectangle_tags">tags</a></li>
+</ul>
+
+<h3 id="rectangle_fill">
+	fill
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：内部填充颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_rectangle(xy, fill = 'red')
+</pre>
+
+<h3 id="rectangle_outline">
+	outline
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：内部外边框颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_rectangle(xy, outline = 'red')
+</pre>
+
+<h3 id="rectangle_stipple">
+	stipple
+</h3>
+<ul>
+	<li>Type：bitmap</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="rectangle_width">
+	width
+</h3>
+<ul>
+	<li>Type：distance</li>
+	<li>说明：内部外边框宽度</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_rectangle(xy, width = 5)
+</pre>
+
+<h3 id="arc_tags">
+	tags
+</h3>
+<ul>
+	<li>Type：tuple</li>
+	<li>待定</li>
+</ul>
+
+<h2 class="content_h2" id="Text">
+	Text
+</h2>
+<ul>
+	<li>说明：绘制文本</li>
+	<li>方法：create_text(x0, y0, options...)</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_text(100, 100 , text = 'Hello World!')
+</pre>
+
+<h2 class="content_h2">
+文本属性（Options）
+</h2>
+<ul>
+	<li><a href="#text_anchor">anchor</a></li>
+	<li><a href="#text_fill">fill</a></li>
+	<li><a href="#text_font">font</a></li>
+	<li><a href="#text_justify">justify</a></li>
+	<li><a href="#text_stipple">stipple</a></li>
+	<li><a href="#text_tags">tags</a></li>
+	<li><a href="#text_text">text</a></li>
+</ul>
+
+<h3 id="text_anchor">
+	anchor
+</h3>
+<ul>
+	<li>Type：constant</li>
+	<li>说明：锚点。其值有：n, ne, e, se, s, sw, w, nw, center。默认值为center</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_text(100, 100, text = 'Hello World!', anchor = 'ne')
+</pre>
+
+<h3 id="text_fill">
+	fill
+</h3>
+<ul>
+	<li>Type：color</li>
+	<li>说明：文本颜色</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_text(100, 100, text = 'Hello World!', fill = 'red')
+</pre>
+
+<h3 id="text_font">
+	font
+</h3>
+<ul>
+	<li>Type：font</li>
+	<li>说明：文本字体。值是一个元祖，font = ('字体'，'字号'，'粗细')</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_text(100, 100, text = 'Hello World!', font = ('Helvetica', 14, 'bold'))
+</pre>
+
+<h3 id="text_justify">
+	justify
+</h3>
+<ul>
+	<li>Type：constant</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="text_stipple">
+	stipple
+</h3>
+<ul>
+	<li>Type：bitmap</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="text_tags">
+	tags
+</h3>
+<ul>
+	<li>Type：tuple</li>
+	<li>待定</li>
+</ul>
+
+<h3 id="text_text">
+	text
+</h3>
+<ul>
+	<li>Type：string</li>
+	<li>说明：文字内容</li>
+</ul>
+<pre class="content_pre">
+#示例
+canvas.create_text(100, 100, text = 'Hello World!', font = ('Helvetica', 14, 'bold'))
+</pre>
