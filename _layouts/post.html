@@ -38,7 +38,7 @@
     			<h2>相关日志</h2>
     			<ul>
     				{% for v in site.categories[page.category] limit:5  %}
-    				<li><a href="{{ site:baseurl  }}{{ v.url  }}">{{ v.title  }}</a></li>
+    				<li><a href="{{ site:url  }}{{ v.url  }}">{{ v.title  }}</a></li>
     				{% endfor  %}
     			</ul>
     		</div>
