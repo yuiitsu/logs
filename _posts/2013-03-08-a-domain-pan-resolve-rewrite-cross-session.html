@@ -1,0 +1,84 @@
+---
+layout: post
+title: 域名泛解析后，使用rewrite匹配二级域名以及二级域名共享session方法_PHP
+category: others
+description: 想为网站频道或用户主页启用二级域名，那就得用得域名泛解析，泛解析之后，所有的域名都会指向同一个IP，这时候，如果来匹配二级域名就是一个问题。有多种方法，最好做的，某过于，直接用PHP对二级域名进行分拆，取出前缀然后进行后面的工作。但最科学和好使的，还是利用rewrite来匹配，这样可以少做一些工作。所以，这里主要讲利用apache rewrite来进行域名的匹配和调用。
+img: 201303/030801.jpg
+---
+<h2 class="content_h2">
+域名泛解析
+</h2>
+<p>
+想为网站频道或用户主页启用二级域名，那就得用得域名泛解析，泛解析之后，所有的域名都会指向同一个IP，这时候，如果来匹配二级域名就是一个问题。有多种方法，最好做的，某过于，直接用PHP对二级域名进行分拆，取出前缀然后进行后面的工作。但最科学和好使的，还是利用rewrite来匹配，这样可以少做一些工作。所以，这里主要讲利用apache rewrite来进行域名的匹配和调用。
+</p>
+<p>
+利用rewrite进行这项工作，主要有两个方法：
+</p>
+<pre class="content_pre">
+1、RewriteCond
+2、RewriteRule
+</pre>
+<p>
+解析一下，rewriteCond其实就是一个条件，如果满足它设定的规则，就等于是满足了这个条件，然后就要执行它下面的一条规则。rewriteRule就是规则。看个例子：
+</p>
+<pre class="content_pre">
+RewriteCond %{HTTP_HOST} www.tanyi.com
+RewriteRule ^/?$ index.php
+</pre>
+<p>
+解释：
+</p>
+<p>
+第一条：RewriteCond的意思是，如果HTTP_HOST的值是www.tanyi.com，则执行下面一条规则。第二条：RewriteRule就是规则，执行index.php文件。连起来的意思就是：如果访问的域名是www.tanyi.com，则访问实际地址为：www.tanyi.com/index.php
+</p>
+<p>
+是不是很明了。那怎么来对二级域名进行匹配呢，这里先给出一个要求：
+</p>
+<pre class="content_pre">
+1、访问顶级域名（www.tanyi.com）时，需访问网站主页
+2、网站有3个频道，女装、男装、童装，需分别用nvzhuang.tanyi.com，nanzhuang.tanyi.com和tongzhuang.tanyi.com进行访问而且可以使用nvzhuang.tanyi.com/shangzhuang_lianyiqun访问子分类。
+3、用户主页，使用用户的用户名做为二级域名进行访问，如：fuwy.tanyi.com访问的就是傅唯一的主页。
+</pre>
+<p>
+不是很复杂，但这里仍然要用到3次RewriteCond和3次RewriteRule进行条件规则。示例如下：
+</p>
+<pre class="content_pre">
+#访问主页，前面已经解释过了
+RewriteCond %{HTTP_HOST} www.tanyi.com
+RewriteRule ^/?$ index.php
+#访问3个频道
+RewriteCond %{HTTP_HOST} (nvzhuang|nanzhuang|tongzhuang).tanyi.com
+RewriteRule ^/?$  pd.php?category=%1  #%1，即为它的条件RewriteCond中()里的内容。如：访问nvzhuang.tanyi.com，实际地址为：ph.php?category=nvzhuang
+#访问用户个人主页
+RewriteCond %{HTTP_HOST} ([A-za-z0-9]+).tanyi.com
+RewriteRule ^/?$ user.php?name=%1  #同上
+</pre>
+<p>
+这样一来，当前缀不为www,nvzhuang,nanzhuang,tongzhuang的时候，就会执行user.php?name=%1上。如：fuwy.tanyi.com访问的就是user.php?user=fuwy。是不是很简单。
+</p>
+<p>
+如果域名后还有规则，请在RewriteRule里添加匹配，要注意一点，在RewriteRule里对()里的内容取值用的是$号，而不是%号。
+</p>
+<p>
+关于rewrite规则和正则表达式，请查看相关内容。
+</p>
+<h2 class="content_h2">
+二级域名共享Session
+</h2>
+<p>
+要知道session是能在多个二级域名和主域名之前共享的，要实现这一点，需要在它们之前传送session_id()。方法很简单：<strong>利用cookie保存session_id，然后其它域名为session指定session_id。</strong>，如：
+</p>
+<pre class="content_pre">
+#在登录域名的位置，设置session_id的cookie
+setcookie('sessionid',session_id());
+
+#在其它二级域名，高用cookie里的session_id
+$sessionid=$_COOKIE('sessionid');
+
+#在session_start()之前指定session_id
+session_id($sessionid);
+session_start();
+</pre>
+<p>
+这样各二级域名就共享Session信息了
+</p>
