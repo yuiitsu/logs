@@ -1,0 +1,60 @@
+---
+layout: post
+title: 【软件】为图片创建指定大小的等比例缩略图_Python_ResizeImage
+category: python
+description: 经常要将手机拍摄的照片上传，但照片一般都比较大，所以每次都要修改一下大小，机器里只装有Photoshop，确实不愿意打开它来做这件事，于是就萌发了写一个简单方便修改图片大小的程序。Python非常适合做这件事。
+img: 201303/031101.jpg
+keywords: 软件,缩略图,Python,resizeimage
+---
+<p>
+经常要将手机拍摄的照片上传，但照片一般都比较大，所以每次都要修改一下大小，机器里只装有Photoshop，确实不愿意打开它来做这件事，于是就萌发了写一个简单方便修改图片大小的程序。Python非常适合做这件事。
+</p>
+<h2 class="content_h2">
+ResizeImage
+</h2>
+<h3>
+运行截图：
+</h3>
+<p>
+<img src="{{ site:url }}/images/201303/031102.jpg" alt="运行截图" />
+</p>
+<h3>
+介绍：
+</h3>
+<p>
+ResizeImage可以创建图片的缩略图，该程序需要输入3到4个参数（每个参数用空格进行分隔），它们的意思分别是：
+</p>
+<pre class="content_pre">
+1、图片目录或是图片的路径
+2、需生成图片的宽，整数
+3、需生成图片的高，整数
+4、如果第1个参数是图片目录，可以使用这么4个参数来过滤图片的类型，比如，只想对目录下所有的gif图片进行缩略图的创建。该参数包括jpg,jpeg,gif和png。如果不指定它，默认的值为jpg。意为着，程序会将该目录下所有格式为jpg的图片进行缩略图的创建。
+</pre>
+<h3>
+使用方法：
+</h3>
+<pre class="content_pre">
+1、运行resizeImage.exe
+2、将图片或图片目录拖到程序界面（命令行）里。当然也可以手动输入图片或图片目录所在路径
+3、输入需要生成图片的宽高
+</pre>
+<h3>
+示例：
+</h3>
+<pre class="content_pre">
+1、将图片目录d:\pics下所有格式为jpg的图片，创建宽为300或高为300的缩略图
+Enter path width height: d:\pics 300 300
+
+2、将图片目录d:\pics下所有格式为gif的图片，创建宽为300或高为300的缩略图
+Enter path width height: d:\pics 300 300 gif
+
+3、将图片d:\pics\ex.jpg，创建宽为300或高为300的缩略图
+Enter path width height: d:\pics\ex.jpg 300 300
+
+PS：创建的缩略图为什么是宽为300或是高为300，（300这个数值由您输入的决定，这里只是引用上面例子中的数值）
+
+因为程序会根据图片比例进行自动的等比例缩放，所以，可能是宽被控制为300，也可能是高被控制为300
+</pre>
+<h3>
+下载：<a href="{{ site:url }}/files/ResizeImageV1.0.rar" style="color:#ff0000;">点击这里</a>
+</h3>
