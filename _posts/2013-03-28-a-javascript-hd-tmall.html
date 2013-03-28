@@ -1,0 +1,161 @@
+---
+layout: post
+title: jquery，非常简单的仿天猫大图幻灯切换
+category: javascript
+description: 幻灯已经被写得烂掉了，即使这样，但觉得天猫的幻灯做得很漂亮，大图，现在好像很浏览使用大图，毕竟大家的网速都起来。这里主要记录一下一个简单的仿制，去掉了天猫有的一些额外展现元素，仅仅是切换大图而已。
+img: 201303/031104.jpg
+keywords: javascript,幻灯,天猫
+---
+<p>
+幻灯已经被写得烂掉了，即使这样，但觉得天猫的幻灯做得很漂亮，大图，现在好像很浏览使用大图，毕竟大家的网速都起来。这里主要记录一下一个简单的仿制，去掉了天猫有的一些额外展现元素，仅仅是切换大图而已。
+</p>
+<h2 class="content_h2">
+原理
+</h2>
+<p>
+原理非常简单，就是利用jquery的fadeOut和fadeIn将重叠在一起的众图片轮流渐隐渐显。
+</p>
+<h2 class="content_h2">
+页面样式
+</h2>
+<p>
+关于这里，有两个注意点：
+</p>
+<p>
+1、虽然图片很大，如：1600*420，但仍然有1920的显示器，所以，图片一定要在中间显示
+</p>
+<p>
+2、所有图片必须重叠的排在一起，所以，需要用到绝对定位
+</p>
+<h3>
+结构如下：
+</h3>
+<pre class="content_pre">
+&lt;div class="index_focus"&gt;
+	&lt;ul class="index_focus_ps"&gt;
+		&lt;li class="index_focus_li" style="background:url('01.jpg') no-repeat center top;background-color:#151412;"&gt;&lt;a href="http://www.eebang.cn/goods/5020" target="_blank"&gt;&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="index_focus_li" style="display:none;background-color:#151412;background:url('02.jpg') no-repeat center top;"&gt;&lt;a href="http://www.eebang.cn/goods/10221" target="_blank"&gt;&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="index_focus_li" style="display:none;background-color:#151412;background:url('03.jpg') no-repeat center top;"&gt;&lt;a href="http://www.eebang.cn/goods/11003" target="_blank"&gt;&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="index_focus_li" style="display:none;background-color:#151412;background:url('04.jpg') no-repeat center top;"&gt;&lt;a href="http://www.eebang.cn/shop/981" target="_blank"&gt;&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="index_focus_li" style="display:none;background-color:#151412;background:url('05.jpg') no-repeat center top;"&gt;&lt;a href="http://www.eebang.cn/goods/3328" target="_blank"&gt;&lt;/a&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+	&lt;ul id="index_focus_po"&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+<h3>
+说明：
+</h3>
+<p>
+第二个ul，是用来放控制点的，里面暂时没有内容，因为程序会根据已有图片数来计算需要的点数，然后生成li后放入到ul里。
+</p>
+<h3>
+CSS，把图片重叠在一起，且处于屏幕的中央
+</h3>
+<pre class="content_pre">
+.index_focus{width:100%;height:420px;z-index:0;position: relative;}
+.index_focus ul.index_focus_ps{width:100%;height:420px;}
+.index_focus ul.index_focus_ps li{width:100%;height:420px;position: absolute;left:0px;top:0px;}
+.index_focus ul.index_focus_ps li a{display:block;height:420px;width:1000px;margin:0 auto;}
+#index_focus_po{position: absolute;}
+#index_focus_po li{float:left;width:14px;height:14px;background-color:#b5b5b5;margin-right:5px;cursor:pointer;}
+#index_focus_po li.hover{background-color:#c80002;}
+</pre>
+<h2 class="content_h2">
+javascript程序
+</h2>
+<h3>
+首先，取得图片总数，以便生成控制点
+</h3>
+<pre class="content_pre">
+var hdItems = $(".index_focus_li");  //取得图片所在li对象
+var hdNums = hdItems.size();  //取得图片总数
+var lis='';
+for(var i=0;i<hdNums;i++){  //循环，生成控制点
+	lis+=i==0?'<li action-id="'+i+'" id="hdPo_'+i+'" class="hdPoLi hover"></li>':'<li action-id="'+i+'" id="hdPo_'+i+'"class="hdPoLi"></li>';
+}
+$("#index_focus_po").css({'left':'50%','top':'375px','margin-left':'-250px'}); //移动控制点位置
+$("#index_focus_po").html(lis); //将生成的li写入ul里
+</pre>
+<p>
+因为是绝对定位，所以控制点的移动靠以屏幕中间为X轴，向左移动250像素来定位。Y轴的高度因为能确定，所以只用给一个具体的数值就行。
+</p>
+<h3>
+图片的渐隐渐显
+</h3>
+<pre class="content_pre">
+function hdGo(p,n){
+	p=p?p:hds;
+	n='undefined'!=typeof n?n:(hds+1==hdNums?0:hds+1);
+	hds=n;
+	hdItems.eq(p).fadeOut(1000);
+	$("#hdPo_"+p).removeClass('hover');
+	$("#hdPo_"+n).addClass('hover');
+	hdItems.eq(n).fadeIn(1000);
+}
+</pre>
+<p>
+图片渐隐渐显其实很简单，当前图片使用fadeOut渐隐，下一张图片使用fadeIn渐显，就完成了。主要注意的是当到最后一张的时候，下一张是第一张，所以，有一个处理：
+</p>
+<pre class="content_pre">
+hds+1==hdNums?0:hds+1  //如果当前图片所以位置数+1等于图片的总数，则下一张图片位置为0，否则+1
+</pre>
+<p>
+hdGo函数使用了两个参数，它们是使用控制点的时候取得的，一个是当前显示图片的位置数，另一个是目标图片的位置数。当然很有可能这个n不存在，所以使用'undefined'!=typeof n来做了一个判断，以免出错
+</p>
+<h3>
+控制点的操作
+</h3>
+<pre class="content_pre">
+$(".hdPoLi").unbind('mouseenter').mouseenter(function(){  //将控制点绑定事件
+	if(hds!=$(this).attr('action-id')){ //如果鼠标指向的点是当前显示的点，则不进行以下处理
+		clearInterval(hdRun);
+		hdGo(hds,parseInt($(this).attr('action-id')));
+		hdRun=setInterval(hdGo,5000);
+	}
+});
+</pre>
+<p>
+因为页面一开始就使用了setInterval来进行自动处理，所以，当鼠标放上控制点后，要清处一下，以免乱套，clearInterval(hdRun);
+</p>
+<p>
+之后，调用hdGo函数，传入当前图片所在位置数和目标图片所在位置数，控制图片的渐隐渐显
+</p>
+<p>
+最后，重新启用setInterval来调用hdGo函数，hdRun=setInterval(hdGo,5000); 每隔5秒执行一次。非常简单
+</p>
+<p>
+效果请看，<a href="http://www.eebang.cn" target="_blank">衣帮网http://www.eebang.cn</a>
+</p>
+<h3>
+完成程序
+</h3>
+<pre class="content_pre">
+var hdItems = $(".index_focus_li");
+var hdNums = hdItems.size();
+var lis='',hds=0;
+for(var i=0;i<hdNums;i++){
+	lis+=i==0?'<li action-id="'+i+'" id="hdPo_'+i+'" class="hdPoLi hover"></li>':'<li action-id="'+i+'" id="hdPo_'+i+'"class="hdPoLi"></li>';
+}
+$("#index_focus_po").css({'left':'50%','top':'375px','margin-left':'-250px'});
+$("#index_focus_po").html(lis);
+
+$(".hdPoLi").unbind('mouseenter').mouseenter(function(){
+	if(hds!=$(this).attr('action-id')){
+		clearInterval(hdRun);
+		hdGo(hds,parseInt($(this).attr('action-id')));
+		hdRun=setInterval(hdGo,5000);
+	}
+});
+
+function hdGo(p,n){
+	p=p?p:hds;
+	n='undefined'!=typeof n?n:(hds+1==hdNums?0:hds+1);
+	hds=n;
+	hdItems.eq(p).fadeOut(1000);
+	$("#hdPo_"+p).removeClass('hover');
+	$("#hdPo_"+n).addClass('hover');
+	hdItems.eq(n).fadeIn(1000);
+}
+hdRun=setInterval(hdGo,5000);
+</pre>
