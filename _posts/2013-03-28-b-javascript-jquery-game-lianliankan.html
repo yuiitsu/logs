@@ -26,6 +26,7 @@ keywords: javascript,游戏,连连看,寻路
 #game_map div.mapItem_4{background-color:#666;}
 </style>
 <div id="game_map">正在努力加载...</div>
+<div style="clear:both;"></div>
 <script type="text/javascript" src="/jquery.js"></script>
 <script type="text/javascript">
 jQuery(function($){
@@ -86,8 +87,8 @@ jQuery(function($){
 		var aOjbect=$("#"+a1+"_"+a2);
 		var bOjbect=$("#"+b1+"_"+b2);
 		aOjbect.removeClass('click');
-		aOjbect.css('background','#000');
-		bOjbect.css('background','#000');
+		aOjbect.css('background','#fff');
+		bOjbect.css('background','#fff');
 		gameItems[a1][a2]='blank';
 		gameItems[b1][b2]='blank';
 		direction=0;
