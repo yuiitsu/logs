@@ -16,7 +16,7 @@ keywords: javascript,游戏,连连看,寻路
 试玩（本程序很可能引起浏览器崩溃，且边缘方块未做处理）
 </h2>
 <style type="text/css">
-#game_map{width:756px;margin:0 auto;margin-top:10px;}
+#game_map{width:756px;margin:0 auto;margin-top:10px;height:486px;background-color:#000;}
 #game_map div{width:50px;height:50px;float:left;background-color:#ccc;margin-right:2px;margin-bottom:2px;border:1px solid #000;}
 #game_map div.click{border:1px solid #fff;}
 #game_map div.mapItem_0{background-color:#ff0000;}
@@ -87,8 +87,8 @@ jQuery(function($){
 		var aOjbect=$("#"+a1+"_"+a2);
 		var bOjbect=$("#"+b1+"_"+b2);
 		aOjbect.removeClass('click');
-		aOjbect.css('background','#fff');
-		bOjbect.css('background','#fff');
+		aOjbect.css('background','#000');
+		bOjbect.css('background','#000');
 		gameItems[a1][a2]='blank';
 		gameItems[b1][b2]='blank';
 		direction=0;
