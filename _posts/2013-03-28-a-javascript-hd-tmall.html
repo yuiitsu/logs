@@ -3,7 +3,7 @@ layout: post
 title: jquery，非常简单的仿天猫大图幻灯切换
 category: javascript
 description: 幻灯已经被写得烂掉了，即使这样，但觉得天猫的幻灯做得很漂亮，大图，现在好像很浏览使用大图，毕竟大家的网速都起来。这里主要记录一下一个简单的仿制，去掉了天猫有的一些额外展现元素，仅仅是切换大图而已。
-img: 201303/031104.jpg
+img: 201303/032801.jpg
 keywords: javascript,幻灯,天猫
 ---
 <p>
@@ -71,8 +71,8 @@ javascript程序
 var hdItems = $(".index_focus_li");  //取得图片所在li对象
 var hdNums = hdItems.size();  //取得图片总数
 var lis='';
-for(var i=0;i<hdNums;i++){  //循环，生成控制点
-	lis+=i==0?'<li action-id="'+i+'" id="hdPo_'+i+'" class="hdPoLi hover"></li>':'<li action-id="'+i+'" id="hdPo_'+i+'"class="hdPoLi"></li>';
+for(var i=0;i&lt;hdNums;i++){  //生成控制点
+	lis+=i==0?'&lt;li action-id="'+i+'" id="hdPo_'+i+'" class="hdPoLi hover"&gt;&lt;/li&gt;':'&lt;li action-id="'+i+'" id="hdPo_'+i+'"class="hdPoLi"&gt;&lt;/li&gt;';
 }
 $("#index_focus_po").css({'left':'50%','top':'375px','margin-left':'-250px'}); //移动控制点位置
 $("#index_focus_po").html(lis); //将生成的li写入ul里
@@ -134,8 +134,8 @@ $(".hdPoLi").unbind('mouseenter').mouseenter(function(){  //将控制点绑定�
 var hdItems = $(".index_focus_li");
 var hdNums = hdItems.size();
 var lis='',hds=0;
-for(var i=0;i<hdNums;i++){
-	lis+=i==0?'<li action-id="'+i+'" id="hdPo_'+i+'" class="hdPoLi hover"></li>':'<li action-id="'+i+'" id="hdPo_'+i+'"class="hdPoLi"></li>';
+for(var i=0;i&lt;hdNums;i++){
+	lis+=i==0?'&lt;li action-id="'+i+'" id="hdPo_'+i+'" class="hdPoLi hover"&gt;&lt;/li&gt;':'&lt;li action-id="'+i+'" id="hdPo_'+i+'"class="hdPoLi"&gt;&lt;/li&gt;';
 }
 $("#index_focus_po").css({'left':'50%','top':'375px','margin-left':'-250px'});
 $("#index_focus_po").html(lis);
