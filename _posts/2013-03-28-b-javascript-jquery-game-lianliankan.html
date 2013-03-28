@@ -13,6 +13,163 @@ keywords: javascript,游戏,连连看,寻路
 本文只是初步实现寻路，关于性能、连连看规则、边缘处理都没有涉及，后面将陆续增加（如果弄得出来的话）
 </p>
 <h2 class="content_h2">
+试玩（本程序很可能引起浏览器崩溃，且边缘方块未做处理）
+</h2>
+<style type="text/css">
+#game_map{width:756px;margin:0 auto;margin-top:10px;}
+#game_map div{width:50px;height:50px;float:left;background-color:#ccc;margin-right:2px;margin-bottom:2px;border:1px solid #000;}
+#game_map div.click{border:1px solid #fff;}
+#game_map div.mapItem_0{background-color:#ff0000;}
+#game_map div.mapItem_1{background-color:#fff000;}
+#game_map div.mapItem_2{background-color:#009900;}
+#game_map div.mapItem_3{background-color:#dedede;}
+#game_map div.mapItem_4{background-color:#666;}
+</style>
+<div id="game_map">正在努力加载...</div>
+<script type="text/javascript" src="/jquery.js"></script>
+<script type="text/javascript">
+jQuery(function($){
+	var clicked=new Array(0,0,0);
+	var gameItems=new Array();
+	var preItems=new Array(0,0);
+	var ways=[];
+	var direction=0,corner=0,done=0;
+
+	function createGameMap(){
+		var mapW=14,mapH=9;itemW=50,itemH=50;
+		var totalItemNums=mapW*mapH;
+		var game_map='';
+		for(var i=1;i<=mapH;i++){
+			gameItems[i]=new Array();
+			for(var j=1;j<=mapW;j++){
+				gameItems[i][j]=Math.floor(5*Math.random());
+				game_map+='<div k1="'+i+'" k2="'+j+'" v="'+gameItems[i][j]+'" id="'+i+'_'+j+'" class="mapItem mapItem_'+gameItems[i][j]+'" >'+i+'-'+j+'</div>';
+			}
+		}
+		$("#game_map").html(game_map);
+	}
+
+	function clickItem(){
+		$(".mapItem").click(function(){
+			$("#debug").html('');
+			var k1=$(this).attr('k1');
+			var k2=$(this).attr('k2');
+			var v=$(this).attr('v');
+
+			if(clicked[0]==0){
+				$(this).addClass('click');
+				clicked[0]=k1;
+				clicked[1]=k2;
+				clicked[2]=v;
+				done=0;
+				ways=[];
+			}else{
+
+				if(v != clicked[2]){
+					$("#"+clicked[0]+"_"+clicked[1]).removeClass('click');
+					
+				}else{
+					//debug('loading','====','====');
+					$("#debug").html('loading...');
+					if(wayFinding(clicked[0],clicked[1],k1,k2)){
+						$("#"+clicked[0]+"_"+clicked[1]).removeClass('click');
+					}
+				}
+				clicked[0]=0;
+				clicked[1]=0;
+				clicked[2]=0;
+			}
+		});
+	}
+
+	function remveItem(a1,a2,b1,b2){
+		var aOjbect=$("#"+a1+"_"+a2);
+		var bOjbect=$("#"+b1+"_"+b2);
+		aOjbect.removeClass('click');
+		aOjbect.css('background','#000');
+		bOjbect.css('background','#000');
+		gameItems[a1][a2]='blank';
+		gameItems[b1][b2]='blank';
+		direction=0;
+		ways=[];
+		//alert(ways.length);
+	}
+
+	function wayFinding(a1,a2,b1,b2){
+		a1=parseInt(a1);
+		a2=parseInt(a2);
+		b1=parseInt(b1);
+		b2=parseInt(b2);
+		debug(direction,direction,'====');
+		corner++;
+		debug(corner,'====','====');
+		if(done==1){
+			return false;
+		}
+		for(var i=1;i<=4;i++){
+			if(direction!=3||(direction==3&&preItems[1]!=a2)){
+				if(i==1){
+					direction=1;
+					k1=a1-1;
+					k2=a2;
+				}
+			}
+			if(direction!=4||(direction==4&&preItems[0]!=a1)){
+				if(i==2){
+					direction=2;
+					k1=a1;
+					k2=a2+1;
+				}
+			}
+			if(direction!=1||(direction==1&&preItems[1]!=a2)){
+				if(i==3){
+					direction=3;
+					k1=a1+1;
+					k2=a2;
+					
+				}
+			}
+			if(direction!=2||(direction==2&&preItems[0]!=a1)){
+				if(i==4){
+					direction=4;
+					k1=a1;
+					k2=a2-1;
+				}
+			}
+
+			if(gameItems[k1][k2]=='blank'){
+				if(jQuery.inArray(k1+''+k2,ways)==-1){
+					preItems[0]=k1;
+					preItems[1]=k2;
+					debug(k1,k2,'blank');
+					ways.push(k1+''+k2);
+					if(!wayFinding(k1,k2,b1,b2)){
+						return false;
+					}
+				}else{
+					debug(k1,k2,'passed');
+				}
+			}else if(k1==b1&&k2==b2){
+				debug(k1,k2,'done');
+				done=1;
+				remveItem(clicked[0],clicked[1],b1,b2);
+				return false;
+			}else{
+				debug(k1,k2,'false');
+			}
+		}
+		return true;
+	}
+
+	function debug(k1,k2,v){
+		$("#debug").html($("#debug").html()+'<p>'+k1+'_'+k2+'='+v+'</p>');
+	}
+
+	createGameMap();
+	clickItem();
+});
+</script>
+<h2 class="content_h2">
 连连看规则
 </h2>
 <p>
@@ -186,8 +343,8 @@ function wayFinding(a1,a2,b1,b2){  //它有4个参数，前两个是第一个点
 到这里，连连的初步的程序已经搭建完成了，但仅仅只是一个寻路，后面还需要做三大处理，这个游戏才算完成。
 </p>
 <p>
-1、提交寻路的效率。别让本来就在边上的目标点，要走遍所有空格才能到达<br/>
-2、增加对边缘方块的处理。
+1、提高寻路的效率。别让本来就在边上的目标点，要走遍所有空格才能到达。<br/>
+2、增加对边缘方块的处理。<br/>
 3、增加连连看的规则，最多只能转2次角。
 </p>
 <p>
