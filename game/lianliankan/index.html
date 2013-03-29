@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Javascript game_连连看</title>
+	<meta name="keywords" content="javascript,game,连连看"/>
+	<meta name="description" content="Javascript小游戏连连看" />
+	<script src="../jquery.js" type="text/javascript"></script>
+</head>
+<body>
+<style type="text/css">
+body{background-color:#000;font:14px Tahoma;}
+#game_map{width:756px;margin:0 auto;margin-top:10px;}
+#game_map div{width:50px;height:50px;float:left;background-color:#ccc;margin-right:2px;margin-bottom:2px;border:1px solid #000;}
+#game_map div.click{border:1px solid #fff;}
+#game_map div.mapItem_0{background:url('images/fruit.jpg');}
+#game_map div.mapItem_1{background:url('images/fruit.jpg');background-position:0px -50px;}
+#game_map div.mapItem_2{background:url('images/fruit.jpg');background-position:0px -100px;}
+#game_map div.mapItem_3{background:url('images/fruit.jpg');background-position:0px -150px;}
+#game_map div.mapItem_4{background:url('images/fruit.jpg');background-position:0px -200px;}
+#debug{position: absolute;left:0px;top:0px;width:220px;height:500px;background-color:#fff;overflow: auto;}
+</style>
+<div id="debug"> </div>
+<div id="game_map">正在努力加载...</div>
+<script type="text/javascript">
+jQuery(function($){
+	var clicked=new Array(0,0,0);
+	var gameItems=new Array();
+	var preItems=new Array(0,0);
+	var ways=[];
+	var direction=0,corner=0,done=0;
+
+	function createGameMap(){
+		var mapW=14,mapH=9;itemW=50,itemH=50;
+		var totalItemNums=mapW*mapH;
+		var game_map='';
+		for(var i=1;i<=mapH;i++){
+			gameItems[i]=new Array();
+			for(var j=1;j<=mapW;j++){
+				gameItems[i][j]=Math.floor(5*Math.random());
+				game_map+='<div k1="'+i+'" k2="'+j+'" v="'+gameItems[i][j]+'" id="'+i+'_'+j+'" class="mapItem mapItem_'+gameItems[i][j]+'" ></div>';
+			}
+		}
+		$("#game_map").html(game_map);
+	}
+
+	function clickItem(){
+		$(".mapItem").click(function(){
+			$("#debug").html('');
+			var k1=$(this).attr('k1');
+			var k2=$(this).attr('k2');
+			var v=$(this).attr('v');
+
+			if(clicked[0]==0){
+				$(this).addClass('click');
+				clicked[0]=k1;
+				clicked[1]=k2;
+				clicked[2]=v;
+				corner=0;
+				ways=[k1+'_'+k2];
+			}else{
+
+				if(v != clicked[2]){
+					$("#"+clicked[0]+"_"+clicked[1]).removeClass('click');
+					
+				}else{
+					$("#debug").html('loading...');
+					if(wayFinding(clicked[0],clicked[1],k1,k2)){
+						$("#"+clicked[0]+"_"+clicked[1]).removeClass('click');
+					}
+				}
+				clicked[0]=0;
+				clicked[1]=0;
+				clicked[2]=0;
+			}
+		});
+	}
+
+	function remveItem(a1,a2,b1,b2){
+		var aOjbect=$("#"+a1+"_"+a2);
+		var bOjbect=$("#"+b1+"_"+b2);
+		aOjbect.removeClass('click');
+		aOjbect.html('<img src="images/peng.gif" style="width:50px;height:50px;" alt="peng" />');
+		bOjbect.html('<img src="images/peng.gif" style="width:50px;height:50px;" alt="peng" />');
+		gameItems[a1][a2]='blank';
+		gameItems[b1][b2]='blank';
+		direction=0;
+		ways=[];
+		setInterval(function(){
+			aOjbect.html('');
+			bOjbect.html('');
+			aOjbect.css('background','#000');
+			bOjbect.css('background','#000');
+		},700);
+	}
+	
+	function getDirections(a1,a2,b1,b2,directions){
+		if(a1==b1){
+			if(a2<b2){
+				directions[0]='E';
+				directions[1]='S';
+				directions[2]='N';
+				directions[3]='W';
+			}else{
+				directions[0]='W';
+				directions[1]='N';
+				directions[2]='W';
+				directions[3]='E';
+			}
+		}
+		if(a1<b1){
+			if(a2==b2){
+				directions[0]='S';
+				directions[1]='E';
+				directions[2]='W';
+				directions[3]='N';
+			}else if(a2 < b2){
+				directions[0]='E';
+				directions[1]='S';
+				directions[2]='W';
+				directions[3]='N';
+			}else{
+				directions[0]='S';
+				directions[1]='W';
+				directions[2]='N';
+				directions[3]='E';
+			}
+		}
+		if(a1>b1){
+			if(a2 == b2){
+				directions[0]='N';
+				directions[1]='W';
+				directions[2]='E';
+				directions[3]='S';
+			}else if(a2 < b2){
+				directions[0]='N';
+				directions[1]='E';
+				directions[2]='S';
+				directions[3]='W';
+			}else{
+				directions[0]='W';
+				directions[1]='N';
+				directions[2]='S';
+				directions[3]='E';
+			}
+		}
+		return directions;
+	}
+	
+	function countCorner(k1,k2,doCornerNum){
+		var as=[];
+		wayLen=ways.length;
+		if(wayLen>=2){
+			as=ways[wayLen-2];
+			as=as.split('_');
+			debug(as[0],as[1],'===='+k1+'_'+k2);
+			if(k1!=as[0]&&k2!=as[1]){
+				corner++;
+				doCornerNum++;
+				return doCornerNum;
+			}
+		}
+	}
+
+	function wayFinding(a1,a2,b1,b2){
+		a1=parseInt(a1);
+		a2=parseInt(a2);
+		b1=parseInt(b1);
+		b2=parseInt(b2);
+		var directions=[];
+		var doCorner=0,doCornerNum=0;
+		var ds=getDirections(a1,a2,b1,b2,directions);
+		for(var i=0;i<=3;i++){
+			if(ds[i]=='N'){
+				k1=a1-1;
+				k2=a2;
+			}
+			if(ds[i]=='E'){
+				k1=a1;
+				k2=a2+1;
+			}
+			if(ds[i]=='S'){
+				k1=a1+1;
+				k2=a2;
+			}
+			if(ds[i]=='W'){
+				k1=a1;
+				k2=a2-1;
+			}
+			
+			doCorner=countCorner(k1,k2,doCornerNum);
+			if(corner>2){
+				debug(k1,k2,'false corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+				corner--;
+			}else{
+				if(gameItems[k1][k2]=='blank'){
+					if(jQuery.inArray(k1+'_'+k2,ways)==-1){
+						preItems[0]=k1;
+						preItems[1]=k2;
+						debug(k1,k2,'blank corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+						ways.push(k1+'_'+k2);
+						if(!wayFinding(k1,k2,b1,b2)){
+							return false;
+						}
+					}else{
+						debug(k1,k2,'passed corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+					}
+				}else if(k1==b1&&k2==b2){
+					debug(k1,k2,'done corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+					remveItem(clicked[0],clicked[1],b1,b2);
+					return false;
+				}else{
+					if(doCorner>0){
+						corner--;
+						doCorner=0;
+					}
+					debug(k1,k2,'false corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+				}
+			}
+		}
+		if(doCorner>0){
+			corner=corner-doCorner;
+		}
+		return true;
+	}
+
+	function debug(k1,k2,v){
+		$("#debug").html($("#debug").html()+'<p>'+k1+'_'+k2+'='+v+'</p>');
+	}
+
+	createGameMap();
+	clickItem();
+});
+</script>
+</body>
+</html>
