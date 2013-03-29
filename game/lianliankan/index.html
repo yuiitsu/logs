@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Javascript game_连连看</title>
-	<meta name="keywords" content="javascript,game,连连看"/>
-	<meta name="description" content="Javascript小游戏连连看" />
-	<script src="../../jquery.js" type="text/javascript"></script>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Javascript game_连连看</title>
+        <meta name="keywords" content="javascript,game,连连看"/>
+        <meta name="description" content="Javascript小游戏连连看" />
+        <script src="../../jquery.js" type="text/javascript"></script>
 </head>
 <body>
 <style type="text/css">
@@ -24,6 +24,7 @@ body{background-color:#000;font:14px Tahoma;}
 <div id="game_map">正在努力加载...</div>
 <script type="text/javascript">
 jQuery(function($){
+	var mapW=14,mapH=9;itemW=50,itemH=50;
 	var clicked=new Array(0,0,0);
 	var gameItems=new Array();
 	var preItems=new Array(0,0);
@@ -31,7 +32,6 @@ jQuery(function($){
 	var direction=0,corner=0,done=0;
 
 	function createGameMap(){
-		var mapW=14,mapH=9;itemW=50,itemH=50;
 		var totalItemNums=mapW*mapH;
 		var game_map='';
 		for(var i=1;i<=mapH;i++){
@@ -192,8 +192,19 @@ jQuery(function($){
 			if(corner>2){
 				debug(k1,k2,'false corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
 				corner--;
+				if(k1==b1&&k2==b2){
+					break;
+				}
 			}else{
-				if(gameItems[k1][k2]=='blank'){
+				if('undefined'==typeof gameItems[k1][k2]){
+					if(k2>mapW){
+						if(k2-1==b2){
+							debug(k1,k2,'done corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+							remveItem(clicked[0],clicked[1],b1,b2);
+							return false;
+						}
+					}
+				}else if(gameItems[k1][k2]=='blank'){
 					if(jQuery.inArray(k1+'_'+k2,ways)==-1){
 						preItems[0]=k1;
 						preItems[1]=k2;
@@ -214,13 +225,14 @@ jQuery(function($){
 						corner--;
 						doCorner=0;
 					}
-					debug(k1,k2,'false corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+					debug(k1,k2,'false2 corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
 				}
 			}
 		}
 		if(doCorner>0){
 			corner=corner-doCorner;
 		}
+		ways.pop();
 		return true;
 	}
 
