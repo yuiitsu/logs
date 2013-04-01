@@ -353,19 +353,7 @@ jQuery(function($){
 			}
 			
 			doCorner=countCorner(k1,k2,doCornerNum);
-			if(corner==2){
-				alert(corner);
-				if(ds[i]=='N'||ds[i]=='S'){
-					if(k2!=b2){
-						break;
-					}
-				}
-				if(ds[i]=='E'||ds[i]=='W'){
-					if(k1!=b1){
-						break;
-					}
-				}
-			}else if(corner>2){
+			if(corner>2){
 				debug(k1,k2,'false corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
 				corner--;
 				if(k1==b1&&k2==b2){
