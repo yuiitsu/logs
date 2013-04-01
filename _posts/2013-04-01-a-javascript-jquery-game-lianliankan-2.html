@@ -1,0 +1,436 @@
+---
+layout: post
+title: Javascript小游戏，连连看（二）寻路改进一及规则
+category: javascript
+description: 本文主要是讲寻路的一些改进以及连连看规则的加入，但程序并没有完全解决寻路失败和浏览器崩溃的问题，但绝大多数的寻路速度很大程序的提高了。
+img: 201304/0101.jpg
+keywords: javascript,游戏,连连看,寻路
+---
+<p>
+本文主要是讲寻路的一些改进以及连连看规则的加入，但程序并没有完全解决寻路失败和浏览器崩溃的问题，但绝大多数的寻路速度有很大程度的提高了。
+</p>
+<p>
+接前文：<a href="http://blog.fuweiyi.com/javascript/2013/03/28/b-javascript-jquery-game-lianliankan.html" target="_blank">Javascript小游戏，连连看（一）初步实现寻路</a>
+</p>
+<h2 class="content_h2">
+为何要改进？
+</h2>
+<p>
+试想一下，如果我的起始方块和目标方块相邻，且起始方块在目标方块的左边（西），那开始寻路的时候，程序将会从起始方块的上右下左这个顺序进行。其实明明就在边上，还得转一圈才找到，太笨了，对不？
+</p>
+<h2 class="content_h2">
+如何改进？
+</h2>
+<p>
+在这里我考虑使用起始方块和目标方块所在位置（横纵坐标）来先做一次预判，根据不同的相对位置，调用不同的判断顺序。例如：像下图的两个标红的白色方块
+</p>
+<p>
+<img src="/images/201304/0103.jpg" alt="" />
+</p>
+<p>
+7-8是起始位置，5-5是目标位置。那可以这样来判断一下相对位置：起始位置坐标为7，8，目标位置为5，5，则7>5,8>5，所以，起始位置是在目标位置的东南方。这个时候，程序若开始寻路，是不是首先应该朝西或是北走第一步？因为东和南都有点反方向，当然并不排除可以这样的走，我们只是把它先由最好的方向进行而已。同理，不管两个方块处于什么位置，都可以利用这种方法把一开始寻路时的起始方向找到，这样，每走一步，它又会根据这样的预判来走下一步，如果中间是空路，那它永远是向最好的方向在走，就不会向前一篇文章那样，每次都是北东南西的四个方向转。
+</p>
+<p>
+具体有8种情况（8个方向，不考虑边界）：
+</p>
+<p>
+1、开始于正东边（也就是1号和2号方块的纵坐标相同，且1号的横坐标大于2号）
+2、开始于正南边（也就是1号和2号方块的横坐标相同，且1号的纵坐标大于2号）
+3、开始于正西边（也就是1号和2号方块的纵坐标相同，且1号的横坐标小于2号）
+4、开始于正北边（也就是1号和2号方块的纵坐标相同，且1号的纵坐标小于2号）
+5、开始于东南边（也就是1号横坐标和纵坐标都大于2号）
+6、开始于西南边（也就是1号的横坐标小于2号，而纵坐标大于2号）
+7、开始于西北边（也就是1号的横坐标和纵坐标都小于2号）
+8、开始于东北边（也就是1号的横坐标大于2号，而纵坐标小于2号）
+</p>
+<p>
+按照这8种情况，可以得出一个取位置的函数，该函数需要目标方块（2号）的坐标和当前寻路位置的坐标做为参数，而且还需要一个存储数组做为参数。函数如下：
+</p>
+<pre class="content_pre">
+function getDirections(a1,a2,b1,b2,directions){
+	if(a1==b1){
+		if(a2&lt;b2){
+			directions[0]='E';
+			directions[1]='S';
+			directions[2]='N';
+			directions[3]='W';
+		}else{
+			directions[0]='W';
+			directions[1]='N';
+			directions[2]='W';
+			directions[3]='E';
+		}
+	}
+	if(a1&lt;b1){
+		if(a2==b2){
+			directions[0]='S';
+			directions[1]='E';
+			directions[2]='W';
+			directions[3]='N';
+		}else if(a2 &lt; b2){
+			directions[0]='E';
+			directions[1]='S';
+			directions[2]='W';
+			directions[3]='N';
+		}else{
+			directions[0]='S';
+			directions[1]='W';
+			directions[2]='N';
+			directions[3]='E';
+		}
+	}
+	if(a1&gt;b1){
+		if(a2 == b2){
+			directions[0]='N';
+			directions[1]='W';
+			directions[2]='E';
+			directions[3]='S';
+		}else if(a2 &lt; b2){
+			directions[0]='N';
+			directions[1]='E';
+			directions[2]='S';
+			directions[3]='W';
+		}else{
+			directions[0]='W';
+			directions[1]='N';
+			directions[2]='S';
+			directions[3]='E';
+		}
+	}
+	return directions;
+}
+</pre>
+<p>
+函数返回一个数组，其值代表寻路开始方向的顺序。第5个参数directions是在递归函数里申明的数组，因为每次都会判断方向，所以这个数组是个局部数组，不然方向的判断就会出问题。
+</p>
+<pre class="content_pre">
+var ds=getDirections(a1,a2,b1,b2,directions);
+for(var i=0;i&lt;=3;i++){  //同样是循环4次，因为有4个方向
+	if(ds[i]=='N'){  //根据方向数组里对应的值，来进行位移
+		k1=a1-1;
+		k2=a2;
+	}
+	if(ds[i]=='E'){
+		k1=a1;
+		k2=a2+1;
+	}
+	if(ds[i]=='S'){
+		k1=a1+1;
+		k2=a2;
+	}
+	if(ds[i]=='W'){
+		k1=a1;
+		k2=a2-1;
+	}
+}
+</pre>
+<p>
+后面就像第一篇文章里的做法一样，判断是否有路，然后递归。做到这里，其实已经把寻路的次数降了不少了，程序始终朝着该朝的方向前进着。当然，在有些特殊的情况时，它也会判断失败，进入死循环。
+</p>
+<h2 class="content_pre">
+关于连连看规则
+</h2>
+<p>
+我开始认为规则的加入要比减少寻路次数简单，但实际上却很有问题，因为单看一个问题的时候都比较容易，但把两个问题放到一起，就不那么容易了。
+</p>
+<p>
+关于规则，我的想法是这样的：寻路每转一次转，就说明做了一次拐角，使用一个全局变量(corner)来表示拐角次数，那corner++，如果corner>2说明已经不符合规则了，这时候直接坐这一步里跳出，继续父级的寻路。
+</p>
+<p>
+想法很简单，确实也能判断出部分不符合规则的点击，但确很大程度的增加了进入死循环的机率，所以这种方法还很成问题。
+</p>
+<h2 class="content_h2">
+如何判断拐角？
+</h2>
+<p>
+先不论这样的方法不能解决所有情况，但至少可以看看，怎么来实现拐角的判断吧。
+</p>
+<p>
+直线，也就4个方向，在这4个方向上的方块，要么是横坐标相等，要么是纵坐标等，所以，如果横纵坐标都不相等时候，表明拐角了。超级简单的，这里我们又写一个函数来判断拐角：
+</p>
+<pre class="content_pre">
+function countCorner(k1,k2,doCornerNum){
+	var as=[];
+	wayLen=ways.length;
+	if(wayLen&gt;=2){
+		as=ways[wayLen-2];
+		as=as.split('_');
+		if(k1!=as[0]&&k2!=as[1]){
+			corner++;
+			doCornerNum++;
+			return doCornerNum;
+		}
+	}
+}
+</pre>
+<p>
+该函数主是要判断坐标是否相等，但同时还要做一件事情，就是得判断走过的点，是不是超过2个，试想，如果只有两个点，怎么拐得了角呢，所以一定是大于等于2的。而且，要判断是倒数第二个点和下一步两个点的坐标。中间那个是拐角嘛。如果判断都是正确的，说明拐了，corner++。
+</p>
+<p>
+但是光加不行，还得减，因为如果判断成功了，程序会接着从父级开始寻，父级失败继续上一个父级。所以，如果不减，那corner会越来越大，那就判断不正确了。
+</p>
+<p>
+但这样的想法是成立的，程序却不好处理，所以，到目前为止，程序仍然有判断失败的情况。
+</p>
+<h2 class="content_h2">
+试玩（本程序很可能引起浏览器崩溃）
+</h2>
+<style type="text/css">
+#game_map{width:756px;margin:0 auto;margin-top:10px;height:486px;background-color:#000;}
+#game_map div{width:50px;height:50px;float:left;background-color:#ccc;margin-right:2px;margin-bottom:2px;border:1px solid #000;}
+#game_map div.click{border:1px solid #fff;}
+#game_map div.mapItem_0{background-color:#ff0000;}
+#game_map div.mapItem_1{background-color:#fff000;}
+#game_map div.mapItem_2{background-color:#009900;}
+#game_map div.mapItem_3{background-color:#dedede;}
+#game_map div.mapItem_4{background-color:#666;}
+</style>
+<div id="game_map"><span style="color:#fff;">正在努力加载...</span></div>
+<div style="clear:both;"></div>
+<script type="text/javascript" src="/jquery.js"></script>
+<script type="text/javascript">
+jQuery(function($){
+	var mapW=12,mapH=6;itemW=50,itemH=50;
+	var clicked=new Array(0,0,0);
+	var gameItems=new Array();
+	var preItems=new Array(0,0);
+	var ways=[];
+	var direction=0,corner=0,done=0;
+
+	function createGameMap(){
+		var totalItemNums=mapW*mapH;
+		var game_map='';
+		for(var i=0;i<=mapH+1;i++){
+			gameItems[i]=new Array();
+			for(var j=0;j<=mapW+1;j++){
+				if(i==0||j==0||i==7||j==13){
+					gameItems[i][j]='stone';
+					game_map+='<div class="blank"></div>';
+				}else{
+					gameItems[i][j]=Math.floor(5*Math.random());
+					game_map+='<div k1="'+i+'" k2="'+j+'" v="'+gameItems[i][j]+'" id="'+i+'_'+j+'" class="mapItem mapItem_'+gameItems[i][j]+'" >'+i+'_'+j+'</div>';
+				}
+			}
+		}
+		$("#game_map").html(game_map);
+	}
+
+	function clickItem(){
+		$(".mapItem").click(function(){
+			$("#debug").html('');
+			var k1=$(this).attr('k1');
+			var k2=$(this).attr('k2');
+			var v=$(this).attr('v');
+
+			if(clicked[0]==0){
+				$(this).addClass('click');
+				clicked[0]=k1;
+				clicked[1]=k2;
+				clicked[2]=v;
+				corner=0;
+				ways=[k1+'_'+k2];
+			}else{
+
+				if(v != clicked[2]||(clicked[0]==k1&&clicked[1]==k2)){
+					$("#"+clicked[0]+"_"+clicked[1]).removeClass('click');
+					
+				}else{
+					$("#debug").html('loading...');
+					if(wayFinding(clicked[0],clicked[1],k1,k2)){
+						$("#"+clicked[0]+"_"+clicked[1]).removeClass('click');
+					}
+				}
+				clicked[0]=0;
+				clicked[1]=0;
+				clicked[2]=0;
+			}
+		});
+	}
+	
+	function remveItem(a1,a2,b1,b2){
+		var aOjbect=$("#"+a1+"_"+a2);
+		var bOjbect=$("#"+b1+"_"+b2);
+		aOjbect.removeClass('click');
+		gameItems[a1][a2]='blank';
+		gameItems[b1][b2]='blank';
+		direction=0;
+		ways=[];
+		aOjbect.css('background','#000');
+		bOjbect.css('background','#000');
+	}
+	
+	function getDirections(a1,a2,b1,b2,directions){
+		if(a1==b1){
+			if(a2<b2){
+				directions[0]='E';
+				directions[1]='S';
+				directions[2]='N';
+				directions[3]='W';
+			}else{
+				directions[0]='W';
+				directions[1]='N';
+				directions[2]='W';
+				directions[3]='E';
+			}
+		}
+		if(a1<b1){
+			if(a2==b2){
+				directions[0]='S';
+				directions[1]='E';
+				directions[2]='W';
+				directions[3]='N';
+			}else if(a2 < b2){
+				directions[0]='E';
+				directions[1]='S';
+				directions[2]='W';
+				directions[3]='N';
+			}else{
+				directions[0]='S';
+				directions[1]='W';
+				directions[2]='N';
+				directions[3]='E';
+			}
+		}
+		if(a1>b1){
+			if(a2 == b2){
+				directions[0]='N';
+				directions[1]='W';
+				directions[2]='E';
+				directions[3]='S';
+			}else if(a2 < b2){
+				directions[0]='N';
+				directions[1]='E';
+				directions[2]='S';
+				directions[3]='W';
+			}else{
+				directions[0]='W';
+				directions[1]='N';
+				directions[2]='S';
+				directions[3]='E';
+			}
+		}
+		return directions;
+	}
+	
+	function countCorner(k1,k2,doCornerNum){
+		var as=[];
+		wayLen=ways.length;
+		if(wayLen>=2){
+			as=ways[wayLen-2];
+			as=as.split('_');
+			if(k1!=as[0]&&k2!=as[1]){
+				corner++;
+				doCornerNum++;
+				return doCornerNum;
+			}
+		}
+	}
+
+	function wayFinding(a1,a2,b1,b2){
+		a1=parseInt(a1);
+		a2=parseInt(a2);
+		b1=parseInt(b1);
+		b2=parseInt(b2);
+		var directions=[];
+		var doCorner=0,doCornerNum=0;
+		var ds=getDirections(a1,a2,b1,b2,directions);
+		for(var i=0;i<=3;i++){
+			if(ds[i]=='N'){
+				k1=a1-1;
+				k2=a2;
+			}
+			if(ds[i]=='E'){
+				k1=a1;
+				k2=a2+1;
+			}
+			if(ds[i]=='S'){
+				k1=a1+1;
+				k2=a2;
+			}
+			if(ds[i]=='W'){
+				k1=a1;
+				k2=a2-1;
+			}
+			
+			doCorner=countCorner(k1,k2,doCornerNum);
+			if(corner==2){
+				alert(corner);
+				if(ds[i]=='N'||ds[i]=='S'){
+					if(k2!=b2){
+						break;
+					}
+				}
+				if(ds[i]=='E'||ds[i]=='W'){
+					if(k1!=b1){
+						break;
+					}
+				}
+			}else if(corner>2){
+				debug(k1,k2,'false corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+				corner--;
+				if(k1==b1&&k2==b2){
+					break;
+				}
+			}else{
+				if('undefined'==typeof gameItems[k1][k2]){
+					if(k2>mapW){
+						if(k2-1==b2){
+							debug(k1,k2,'done corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+							remveItem(clicked[0],clicked[1],b1,b2);
+							return false;
+						}
+					}
+				}else if(gameItems[k1][k2]=='blank'){
+					if(jQuery.inArray(k1+'_'+k2,ways)==-1){
+						preItems[0]=k1;
+						preItems[1]=k2;
+						debug(k1,k2,'blank corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+						ways.push(k1+'_'+k2);
+						if(!wayFinding(k1,k2,b1,b2)){
+							return false;
+						}
+					}else{
+						debug(k1,k2,'passed corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+					}
+				}else if(k1==b1&&k2==b2){
+					debug(k1,k2,'done corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+					remveItem(clicked[0],clicked[1],b1,b2);
+					return false;
+				}else{
+					if(doCorner>0){
+						corner--;
+						doCorner=0;
+					}
+					debug(k1,k2,'false2 corner='+corner+' pre_'+preItems[0]+'_'+preItems[1]);
+				}
+			}
+		}
+		if(doCorner>0){
+			corner=corner-doCorner;
+		}
+		return true;
+	}
+
+	function debug(k1,k2,v){
+		$("#debug").html($("#debug").html()+'<p>'+k1+'_'+k2+'='+v+'</p>');
+	}
+
+	createGameMap();
+	clickItem();
+});
+</script>
+<h2 class="content_h2">
+进一步思考
+</h2>
+<p>
+上面的方法虽然在效率和规则上都有提高，但仍然不能完美的解决所有情况，毕竟，连连看产生的随机布局还是很复杂的。抛开前面的思路，再想想，是不是可以利用这样一个规则：
+</p>
+<p>
+一开始寻路，只需要朝一个方向进行，至到一个拐角，当到第二个拐角的时候，直接判断该点的纵坐标或是横坐标，是不是和目标坐标的一至，如果，不是则说明失败，如果是，判断剩下的路上是否全部为空，如果不是，失败。
+</p>
+<p>
+再或者直接将两个点连成一个矩形，读取里面所有存在的点，然后进行判断，也许这样做会更简单直接，不过没有仔细去想是不是可行。
+</p>
+<p>
+说了这么多，也没能完美的解决问题，而且剩下的问题还很不好改进，只能继续琢磨了。
+</p>
