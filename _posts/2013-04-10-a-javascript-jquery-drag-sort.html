@@ -59,6 +59,16 @@ keywords: javascript,jquery,drag,sort,拖动,排序
 		</tr>
 	</tbody>
 </table>
+<script type="text/javascript">
+$("#drag_table").DragList({
+	dgLine:'drag_line',
+	dgButton:'drag_orders',
+	id:'action-id',
+	linePre:'list_',
+	JSONUrl:'{_ADMIN}?controller=contents&method=focus_form',
+	maskLoadIcon:'{SYS_URL}views/admin/images/loading.gif'
+});
+</script>
 <h2 class="content_h2">
 要求
 </h2>
