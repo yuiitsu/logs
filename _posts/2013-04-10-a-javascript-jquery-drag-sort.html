@@ -12,7 +12,7 @@ keywords: javascript,jquery,drag,sort,拖动,排序
 <h2 class="content_h2">
 测试
 </h2>
-<script type="text/javascript" src="/jquery.js"></script>
+
 <script type="text/javascript" src="/DragList.js"></script>
 <style type="text/css">
 #listtable{width:100%;}
@@ -60,13 +60,16 @@ keywords: javascript,jquery,drag,sort,拖动,排序
 	</tbody>
 </table>
 <script type="text/javascript">
-$("#drag_table").DragList({
-	dgLine:'drag_line',
-	dgButton:'drag_orders',
-	id:'action-id',
-	linePre:'list_',
-	JSONUrl:'{_ADMIN}?controller=contents&method=focus_form',
-	maskLoadIcon:'{SYS_URL}views/admin/images/loading.gif'
+jQuery(function($){
+	$("#drag_table").DragList({
+		dgLine:'drag_line',
+		dgButton:'drag_orders',
+		id:'action-id',
+		linePre:'list_',
+		JSONUrl:'{_ADMIN}?controller=contents&method=focus_form',
+		maskLoadIcon:'{SYS_URL}views/admin/images/loading.gif'
+	});
+	window.prettyPrint && prettyPrint();
 });
 </script>
 <h2 class="content_h2">
@@ -101,7 +104,7 @@ Javascript里鼠标按下和放开事件为onmousedown，onmouseup，JQuery里�
 <p>
 首先，要知道界面有多少行，每一行有多高，因为要判断鼠标的移动距离
 </p>
-<pre class="content_pre">
+<pre class="prettyPrint">
 var tbodyHeight=setting.frame.outerHeight();  //setting.frame，父对象
 var lineNum=$("."+setting.dgLine).length;  //setting.dgLine，每一行的classname
 var lineHeight=Math.ceil(tbodyHeight/lineNum);
@@ -112,7 +115,7 @@ var lineHeight=Math.ceil(tbodyHeight/lineNum);
 <p>
 当mousedown事件触发后，就要开始计算鼠标移动的距离，用于判断该行到底要移动到什么位置
 </p>
-<pre class="content_pre">
+<pre class="prettyPrint">
 dgid=$(this).attr(setting.id);  //移动行的ID，setting.id，是每一行用来标记ID的名称
 thisIndex=$("#"+setting.linePre+dgid).index(); //该行的索引，setting.linePre，每一行ID关辍
 thisLineTop=$("#"+setting.linePre+dgid).offset().top; //该行的top值
