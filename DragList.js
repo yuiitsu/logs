@@ -43,7 +43,7 @@
 			
 			dg_tips(left,top);
 			$('body').css('cursor','move');
-			$("body").disableSelection();
+			unselect();
 			setting.frame.mousemove(function(e){
 				$("#dgf").css({"left":e.pageX+setting.tipsOffsetLeft+'px',"top":e.pageY+'px'});
 			});
@@ -83,6 +83,7 @@
 				dgid='';
 				thisLineTop=0;
 				$('body').css('cursor','default');
+				onselect();
 			}
 		});
 		
@@ -113,6 +114,28 @@
 		function dg_tips(left,top){
 			var floatdiv="<div id='dgf' style='padding:5px 10px;border:1px solid #444;background-color:#fff;filter:alpha(opacity="+setting.tipsOpacity+");moz-opacity:"+setting.tipsOpacity/100+";opacity:"+setting.tipsOpacity/100+";position:absolute;left:"+left+"px;top:"+top+"px;'>移动一条记录</div>";
 			$('body').append(floatdiv);
+		}
+		
+		function unselect(){
+			$('body').each(function() {           
+				$(this).attr('unselectable', 'on').css({
+					'-moz-user-select':'none',
+					'-webkit-user-select':'none',
+					'user-select':'none'
+				}).each(function() {
+					this.onselectstart = function() { return false; };
+				});
+			});
+		}
+		
+		function onselect(){
+			$('body').each(function() {           
+				$(this).attr('unselectable', '').css({
+					'-moz-user-select':'',
+					'-webkit-user-select':'',
+					'user-select':''
+				});
+			});
 		}
 	}
 })(jQuery);
