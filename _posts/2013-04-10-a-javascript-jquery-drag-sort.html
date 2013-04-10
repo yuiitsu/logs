@@ -13,7 +13,7 @@ keywords: javascript,jquery,drag,sort,拖动,排序
 测试
 </h2>
 
-<script type="text/javascript" src="/DragList.js"></script>
+
 <style type="text/css">
 #listtable{width:100%;}
 #listtable td{padding:4px 10px;}
@@ -69,7 +69,6 @@ jQuery(function($){
 		JSONUrl:'{_ADMIN}?controller=contents&method=focus_form',
 		maskLoadIcon:'{SYS_URL}views/admin/images/loading.gif'
 	});
-	window.prettyPrint&&prettyPrint();
 });
 </script>
 <h2 class="content_h2">
@@ -115,7 +114,7 @@ var lineHeight=Math.ceil(tbodyHeight/lineNum);
 <p>
 当mousedown事件触发后，就要开始计算鼠标移动的距离，用于判断该行到底要移动到什么位置
 </p>
-<pre class="prettyPrint">
+<pre class="prettyprint">
 dgid=$(this).attr(setting.id);  //移动行的ID，setting.id，是每一行用来标记ID的名称
 thisIndex=$("#"+setting.linePre+dgid).index(); //该行的索引，setting.linePre，每一行ID关辍
 thisLineTop=$("#"+setting.linePre+dgid).offset().top; //该行的top值
@@ -134,7 +133,7 @@ topDistance和downDistance，用来判断鼠标有没有移出列表的范围，
 <p>
 mousedown事件主要做的，就是这几件事情，当然，为了效果，还可以增加一些东西
 </p>
-<pre class="content_pre">
+<pre class="prettyprint">
 $("#"+setting.linePre+dgid).css('background',setting.lineHighlight); //高亮移动行
 var left=e.pageX+20;
 var top=e.pageY;
@@ -151,7 +150,7 @@ $("#dgf").css({"left":e.pageX+setting.tipsOffsetLeft+'px',"top":e.pageY+'px'});
 <p>
 关于禁止选中，.disableSelection();这是jQuery_UI里带的方法，如果你有使用jQuery_UI，那可以直接使用它，如果没有使用，可以这样做
 </p>
-<pre class="content_pre">
+<pre class="prettyprint">
 $('body').each(function() {           
 	$(this).attr('unselectable', 'on').css({
 		'-moz-user-select':'none',
@@ -165,7 +164,7 @@ $('body').each(function() {
 <p>
 取消禁止选择
 </p>
-<pre class="content_pre">
+<pre class="prettyprint">
 $('body').each(function() {           
 	$(this).attr('unselectable', '').css({
 		'-moz-user-select':'',
@@ -183,13 +182,13 @@ $('body').each(function() {
 <p>
 mouseup触发后，首先就要判断thisLineTop是不是有值，防止无意义的事件执行。跟着判断鼠标移动的距离是正还是负，也就是向上移动还是向下移动。
 </p>
-<pre class="content_pre">
+<pre class="prettyprint">
 var moveDistance=e.pageY-thisLineTop;
 </pre>
 <p>
 根据不同的方向作不同的处理
 </p>
-<pre class="content_pre">
+<pre class="prettyprint">
 if(moveDistance&lt;0){
 	if(thisIndex!=0){
 		moveDistance=Math.abs(moveDistance);  //为负数的时候，取一下绝对值
@@ -224,7 +223,7 @@ if(moveDistance&lt;0){
 <p>
 移动完了，还得把按下鼠标时使用的效果给去除掉
 </p>
-<pre class="content_pre">
+<pre class="prettyprint">
 $("#dgf").remove();//移除提示层
 $("#"+setting.linePre+dgid).css('background','');//将高亮的行变为普通
 dgid='';//将移动行的ID值空
@@ -237,7 +236,7 @@ $('body').css('cursor','default');//更改鼠标手势为默认
 <p>
 下面给出完整的封装程序，包括更新数据部分
 </p>
-<pre class="content_pre">
+<pre class="prettyprint">
 /*
 * 
 *  DragList.js
@@ -383,7 +382,7 @@ $('body').css('cursor','default');//更改鼠标手势为默认
 <p>
 使用
 </p>
-<pre class="content_pre">
+<pre class="prettyprint">
 &lt;table cellpadding="5" cellspacing="0" class="listtable" id="listtable"&gt;
 	&lt;thead&gt;
 		&lt;tr&gt;
@@ -417,3 +416,4 @@ $("#drag_table").DragList({
 <p>
 关于拖动排序就是这么多了，当然还可以把效果做得更漂亮些，提示更清楚点，有助于用户体验
 </p>
+<script type="text/javascript" src="/DragList.js"></script>
