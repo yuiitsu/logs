@@ -10,6 +10,56 @@ keywords: javascript,jquery,drag,sort,拖动,排序
 基于JQuery的拖动插件有几个都相当好用，效果也很好，但再好，还是自己琢磨一个最好。所以，我的理念就是即使实际项目中使用别人的程序，自己也得根据自己的理解和想法写一个出来。那么今天，就来看看我的思路是不是可以实现拖动排序的功能
 </p>
 <h2 class="content_h2">
+测试
+</h2>
+<script type="text/javascript" src="/jquery.js"></script>
+<script type="text/javascript" src="/DragList.js"></script>
+<style type="text/css">
+#listtable{width:100%;}
+#listtable td{padding:4px 10px;}
+#listtable thead{background-color:#e7e7e7;}
+#listtable tbody td{border-bottom:1px solid #f7f7f7;}
+.td20{width:20px;}
+.td50{width:50px;}
+.drag_orders{width:30px;height:30px;background-color:#e7e7e7;text-align:center;line-height:30px;cursor:move;}
+</style>
+<table id="listtable">
+	<thead>
+		<tr>
+			<td class="td20">ID</td>
+			<td class="td50">拖动</td>
+			<td>名称</td>
+		</tr>
+	</thead>
+	<tbody id="drag_table">
+		<tr id="list_1" action-id="1" class="drag_line">
+			<td>1</td>
+			<td><div class="drag_orders" action-id="1">拖</div></td>
+			<td>这里是第一行</td>
+		</tr>
+		<tr id="list_2" action-id="2" class="drag_line">
+			<td>2</td>
+			<td><div class="drag_orders" action-id="2">拖</div></td>
+			<td>这里是第二行</td>
+		</tr>
+		<tr id="list_3" action-id="3" class="drag_line">
+			<td>3</td>
+			<td><div class="drag_orders" action-id="3">拖</div></td>
+			<td>这里是第三行</td>
+		</tr>
+		<tr id="list_4" action-id="4" class="drag_line">
+			<td>4</td>
+			<td><div class="drag_orders" action-id="4">拖</div></td>
+			<td>这里是第四行</td>
+		</tr>
+		<tr id="list_5" action-id="5" class="drag_line">
+			<td>5</td>
+			<td><div class="drag_orders" action-id="5">拖</div></td>
+			<td>这里是第五行</td>
+		</tr>
+	</tbody>
+</table>
+<h2 class="content_h2">
 要求
 </h2>
 <p>
