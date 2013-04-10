@@ -69,7 +69,7 @@ jQuery(function($){
 		JSONUrl:'{_ADMIN}?controller=contents&method=focus_form',
 		maskLoadIcon:'{SYS_URL}views/admin/images/loading.gif'
 	});
-	window.prettyPrint && prettyPrint();
+	window.prettyPrint&&prettyPrint();
 });
 </script>
 <h2 class="content_h2">
@@ -104,7 +104,7 @@ Javascript里鼠标按下和放开事件为onmousedown，onmouseup，JQuery里�
 <p>
 首先，要知道界面有多少行，每一行有多高，因为要判断鼠标的移动距离
 </p>
-<pre class="prettyPrint">
+<pre class="prettyprint">
 var tbodyHeight=setting.frame.outerHeight();  //setting.frame，父对象
 var lineNum=$("."+setting.dgLine).length;  //setting.dgLine，每一行的classname
 var lineHeight=Math.ceil(tbodyHeight/lineNum);
