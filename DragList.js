@@ -135,7 +135,9 @@
 					'-webkit-user-select':'',
 					'user-select':''
 				});
-			});
+			}).each(function() {
+					this.onselectstart = function() { return true; };
+				});
 		}
 	}
 })(jQuery);
