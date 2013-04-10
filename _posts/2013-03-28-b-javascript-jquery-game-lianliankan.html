@@ -200,7 +200,7 @@ jQuery(function($){
 <p>
 它是一个9*14的方格组，每个大小50*50像素，这些不重要，重要的是，会把这些小方块写成一个二维数组里，用于寻路时判断相邻位置是否是通的。看看创建地图的函数：
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 //创建地图
 var mapW=14,mapH=9;itemW=50,itemH=50;
 var totalItemNums=mapW*mapH;
@@ -221,25 +221,25 @@ $("#game_map").html(game_map);
 <p>
 接下来是一些必须要做记录的数据，例如先点的那个元素，为什么要记录这个，因为要点击两个元素，才能判断是否能够消除，所以先点的那个先记录下来，这样才可以和后点的元素进行处理。所以，使用一个数组来记录第一次点击的元素：
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 var clicked=new Array(0,0,0);
 </pre>
 <p>
 它的长度为3，每个值都为0，因为地图是个二维数组，所以，要确定一个坐标，要2个值，再加上元素本身身份值（颜色），所以是3个。
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 var gameItems=new Array();
 </pre>
 <p>
 这个就是存储小方块的数组，当然这个申明是在创建地图的前面。
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 var ways=[];
 </pre>
 <p>
 这个数组，是用来存放已经走过的元素位置。后面程序会通过判断目标位置是否存在于这个数组里，如果存在，就不能走，反之，就可走。
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 var direction=0,corner=0;
 </pre>
 <p>
@@ -248,7 +248,7 @@ var direction=0,corner=0;
 <p>
 地图创建好后，为每一个小方块绑定一个点击事件，这时就要判断点击的是第一次，还是第二次，如果是第一次，记录该方块的数据，如果是第二次，先判断两个点是否同类型，如果不同类，不做处理，如果同类，就开始寻路了。
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 function clickItem(){
 	$(".mapItem").click(function(){  //绑定单击事件
 		var k1=$(this).attr('k1');  //取得方块的横坐标
@@ -279,7 +279,7 @@ function clickItem(){
 <p>
 这个函数很好理解，最重要也是最麻烦的是寻路函数，wayFinding()，它是一个递归，先来看看它的样子（没什么技巧）：
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 function wayFinding(a1,a2,b1,b2){  //它有4个参数，前两个是第一个点的坐标，后两个是第二个点的坐标
 	a1=parseInt(a1);  //都要做转型处理，保证是整数
 	a2=parseInt(a2);

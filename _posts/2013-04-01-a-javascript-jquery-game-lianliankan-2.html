@@ -46,7 +46,7 @@ keywords: javascript,游戏,连连看,寻路
 <p>
 按照这8种情况，可以得出一个取位置的函数，该函数需要目标方块（2号）的坐标和当前寻路位置的坐标做为参数，而且还需要一个存储数组做为参数。函数如下：
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 function getDirections(a1,a2,b1,b2,directions){
 	if(a1==b1){
 		if(a2&lt;b2){
@@ -103,7 +103,7 @@ function getDirections(a1,a2,b1,b2,directions){
 <p>
 函数返回一个数组，其值代表寻路开始方向的顺序。第5个参数directions是在递归函数里申明的数组，因为每次都会判断方向，所以这个数组是个局部数组，不然方向的判断就会出问题。
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 var ds=getDirections(a1,a2,b1,b2,directions);
 for(var i=0;i&lt;=3;i++){  //同样是循环4次，因为有4个方向
 	if(ds[i]=='N'){  //根据方向数组里对应的值，来进行位移
@@ -148,7 +148,7 @@ for(var i=0;i&lt;=3;i++){  //同样是循环4次，因为有4个方向
 <p>
 直线，也就4个方向，在这4个方向上的方块，要么是横坐标相等，要么是纵坐标等，所以，如果横纵坐标都不相等时候，表明拐角了。超级简单的，这里我们又写一个函数来判断拐角：
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 function countCorner(k1,k2,doCornerNum){
 	var as=[];
 	wayLen=ways.length;

@@ -30,7 +30,7 @@ keywords: javascript,幻灯,天猫
 <h3>
 结构如下：
 </h3>
-<pre class="content_pre">
+<pre class="prettyprint lang-html">
 &lt;div class="index_focus"&gt;
 	&lt;ul class="index_focus_ps"&gt;
 		&lt;li class="index_focus_li" style="background:url('01.jpg') no-repeat center top;background-color:#151412;"&gt;&lt;a href="http://www.eebang.cn/goods/5020" target="_blank"&gt;&lt;/a&gt;&lt;/li&gt;
@@ -52,7 +52,7 @@ keywords: javascript,幻灯,天猫
 <h3>
 CSS，把图片重叠在一起，且处于屏幕的中央
 </h3>
-<pre class="content_pre">
+<pre class="prettyprint lang-html">
 .index_focus{width:100%;height:420px;z-index:0;position: relative;}
 .index_focus ul.index_focus_ps{width:100%;height:420px;}
 .index_focus ul.index_focus_ps li{width:100%;height:420px;position: absolute;left:0px;top:0px;}
@@ -67,7 +67,7 @@ javascript程序
 <h3>
 首先，取得图片总数，以便生成控制点
 </h3>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 var hdItems = $(".index_focus_li");  //取得图片所在li对象
 var hdNums = hdItems.size();  //取得图片总数
 var lis='';
@@ -83,7 +83,7 @@ $("#index_focus_po").html(lis); //将生成的li写入ul里
 <h3>
 图片的渐隐渐显
 </h3>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 function hdGo(p,n){
 	p=p?p:hds;
 	n='undefined'!=typeof n?n:(hds+1==hdNums?0:hds+1);
@@ -97,7 +97,7 @@ function hdGo(p,n){
 <p>
 图片渐隐渐显其实很简单，当前图片使用fadeOut渐隐，下一张图片使用fadeIn渐显，就完成了。主要注意的是当到最后一张的时候，下一张是第一张，所以，有一个处理：
 </p>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 hds+1==hdNums?0:hds+1  //如果当前图片所以位置数+1等于图片的总数，则下一张图片位置为0，否则+1
 </pre>
 <p>
@@ -106,7 +106,7 @@ hdGo函数使用了两个参数，它们是使用控制点的时候取得的，�
 <h3>
 控制点的操作
 </h3>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 $(".hdPoLi").unbind('mouseenter').mouseenter(function(){  //将控制点绑定事件
 	if(hds!=$(this).attr('action-id')){ //如果鼠标指向的点是当前显示的点，则不进行以下处理
 		clearInterval(hdRun);
@@ -130,7 +130,7 @@ $(".hdPoLi").unbind('mouseenter').mouseenter(function(){  //将控制点绑定�
 <h3>
 完成程序
 </h3>
-<pre class="content_pre">
+<pre class="prettyprint lang-javascript">
 var hdItems = $(".index_focus_li");
 var hdNums = hdItems.size();
 var lis='',hds=0;
