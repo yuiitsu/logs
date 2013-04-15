@@ -89,7 +89,6 @@ keywords: win7,win8,mklink,iTuness,备份目录
 打开数据库配置文件，可以在/source/configs/database.config.php找到它。你也可以把这个文件移动到/app/configs/database.config.php中。按文件中各项填写数据库相关内容。一个简单的配置如下：
 </p>
 <pre class="content_pre">
-<?php
 return array(
 	'dbhost' => '127.0.0.1', 
 	'dbuser' => 'root',
@@ -99,7 +98,6 @@ return array(
 	'tablepre' => 'hk_',
 	'dbcharset' => 'utf8',
 );
-?>
 </pre>
 <h2 class="content_h2">
 访问连接构成
@@ -141,9 +139,7 @@ RewriteRule ^m/([A-Za-z]+)+(/([A-Za-z]+)+)*$  index.php?controller=$1&method=$3
 默认路由的设置在配置文件/source/configs/route.config.php中，默认设置如下：
 </p>
 <pre class="prettyprint lang-php">
-<?php
 return array('controller' => 'index', 'method' => 'index');
-?>
 </pre>
 <h2 class="content_h2">
 控制器（controller）
@@ -155,13 +151,11 @@ return array('controller' => 'index', 'method' => 'index');
 下面，我们创建一个新的控制器，叫做post_controller.php，将它存放到/app/controllers目录里。一个控制器的基本内容需要像下面的例子：
 </p>
 <pre class="prettyprint lang-php">
-<?php
 class post extends Base{
 	public function __construct(){
 		parent::__construct();
 	}
 ｝
-?>
 </pre>
 <p>
 每一个控制器都需要继承父类Base，你也可以建立自己的基础父类来继承Base类，这样，你就可以在控制器中继承你自己建立的基础父类。
@@ -173,7 +167,6 @@ class post extends Base{
 接下来需要定义index方法，因为默认路由访问的方法为index，所以，如果没有这个方法，程序很可能会因为找不到方法而报错。
 </p>
 <pre class="prettyprint lang-php">
-<?php
 class post extends Base{
 	public function __construct(){
 		parent::__construct();
@@ -183,14 +176,12 @@ public function index(){
 		//code
 	}
 ｝
-?>
 </pre>
 <p>
 这样子，程序就可以用下面的地址进行访问：http://www.example.com/m/post/index，当然，也可以直接用：http://www.example.com/m/post进行访问。因为默认路由设置的方法为index。<br/>
 接下来，我们再定义一个方法：hello();<br/>
 </p>
 <pre class="prettyprint lang-php">
-<?php
 class post extends Base{
 	public function __construct(){
 		parent::__construct();
@@ -204,7 +195,6 @@ class post extends Base{
 	    echo “hello”;
 	}
 ｝
-?>
 </pre>
 <p>
 同理，我们可以用地址：http://www.example.com/m/post/hello来访问它
