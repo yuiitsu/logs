@@ -33,7 +33,7 @@ keywords: win7,win8,mklink,iTuness,备份目录
 </h2>
 <pre class="content_pre">
 /根目录
-    /app
+	/app
 	/attachments
 	/cache
 	/source
@@ -151,3 +151,305 @@ return array('controller' => 'index', 'method' => 'index');
 <h3>
 创建控制器
 </h3>
+<p>
+下面，我们创建一个新的控制器，叫做post_controller.php，将它存放到/app/controllers目录里。一个控制器的基本内容需要像下面的例子：
+</p>
+<pre class="prettyprint lang-php">
+<?php
+class post extends Base{
+	public function __construct(){
+		parent::__construct();
+	}
+｝
+?>
+</pre>
+<p>
+每一个控制器都需要继承父类Base，你也可以建立自己的基础父类来继承Base类，这样，你就可以在控制器中继承你自己建立的基础父类。
+</p>
+<h3>
+定义方法
+</h3>
+<p>
+接下来需要定义index方法，因为默认路由访问的方法为index，所以，如果没有这个方法，程序很可能会因为找不到方法而报错。
+</p>
+<pre class="prettyprint lang-php">
+<?php
+class post extends Base{
+	public function __construct(){
+		parent::__construct();
+	}
+
+public function index(){
+		//code
+	}
+｝
+?>
+</pre>
+<p>
+这样子，程序就可以用下面的地址进行访问：http://www.example.com/m/post/index，当然，也可以直接用：http://www.example.com/m/post进行访问。因为默认路由设置的方法为index。<br/>
+接下来，我们再定义一个方法：hello();<br/>
+</p>
+<pre class="prettyprint lang-php">
+<?php
+class post extends Base{
+	public function __construct(){
+		parent::__construct();
+	}
+
+	public function index(){
+			//work
+		}
+
+	public function hello(){
+	    echo “hello”;
+	}
+｝
+?>
+</pre>
+<p>
+同理，我们可以用地址：http://www.example.com/m/post/hello来访问它
+</p>
+<h2 class="content_h2">
+模板（view）
+</h2>
+<h3>
+创建模板
+</h3>
+<p>
+模板文件的扩展名是有规定的，必须是.htm，其它扩展名都不支持。当然，你可以通过模板类来修改它。模板都存放在/views目录下的各模板子目录。例如：默认模板目录为default。如果你需要更换模板，可以创建新的目录用于存放你的模板文件，那在调用的时候需指定模板目
+</p>
+<h3>
+调用模板
+</h3>
+<p>
+默认情况下，在控制器里，调用模板的方法如下：
+</p>
+<pre class="prettyprint lang-php">
+include $this->_template->load('index');
+</pre>
+<p>
+这里，告诉程序，调用的模板文件名称为index，省去了扩展名，模板目录则为默认模板目录default。若希望调用其它模板目录的文件，需加上模板目录名的参数
+</p>
+<pre class="prettyprint lang-php">
+include $this->_template->load('index',0,0,’newtemplate’);
+</pre>
+<p>
+语句中第4个参数为模板目录名，前两个参数为模板ID，一般情况下置0。
+</p>
+<h3>
+调用子模板
+</h3>
+<p>
+当需要在模板中调用模板的时候，可以使用subtemplate，方法如下：
+</p>
+<pre class="prettyprint lang-php">
+{subtemplate header}
+</pre>
+<p>
+后面直接跟模板的名称，如果是在模板根目录下的一个目录里，可带上目录的名字，如：
+</p>
+<pre class="prettyprint lang-php">
+{subtemplate subs:header}
+</pre>
+<h3>
+模板内数据应用
+</h3>
+<p>
+数据输出非常简单，只要是在调用模板的方法里被赋值的变量都可以直接在模板里调用输出，不需要再在做任何的操作
+</p>
+<h3>
+变量输出
+</h3>
+<p>
+使用｛｝来标明处理字段，意思就是说，变量需要用｛｝括起来。例如在控制器中给一个变量赋了值：
+</p>
+<pre class="prettyprint lang-php">
+$val=’HI,UnPHP’;
+</pre>
+<p>
+那在模板中，我们只需要这样写：
+</p>
+<pre class="prettyprint lang-html">
+&lt;div&gt;{$val}&lt;/div&gt;
+</pre>
+<h3>
+循环输出
+</h3>
+<p>
+使用&lt;!—{loop }—&gt;&lt;!—{/loop}—&gt;或直接用{loop}和{/loop}来做循环输出。例如控制器中有一个数组变量：
+</p>
+<pre class="prettyprint lang-php">
+$lists=array(
+	0=>array(
+	    ‘id’=>1,
+	    ‘name’=>’小王’,
+	),
+	1=>array(
+	    ‘id’=>2,
+	    ‘name’=>’小明’,
+	),
+)
+</pre>
+<p>
+那在模板中，我们需要这样写：
+</p>
+<pre class="prettyprint lang-html">
+&lt;table&gt;
+&lt;!—{loop $lists $val}—&gt;
+&lt;tr&gt;
+&lt;td&gt;{$val[‘id’]}&lt;/td&gt;
+&lt;td&gt;{$val[‘name’]}&lt;/td&gt;
+&lt;/tr&gt;
+&lt;!—{/loop}—&gt;
+&lt;/table&gt;
+</pre>
+<h3>
+使用PHP函数或自定义函数
+</h3>
+<p>
+模板里也是可以直接使用PHP函数的，同样需要写在｛｝里面，但必须写上PHP的输入函数echo，如：
+</p>
+<pre class="prettyprint lang-php">
+{echo ‘123’;} //直接输出变量
+{echo date(‘Y-m-d’);}//输出年月日
+{echo count($array);}//输出数组长度
+{echo myfunction();}//输出自定义函数
+</pre>
+<h2 class="content_h2">
+数据类（data）
+</h2>
+<h3>
+创建数据类
+</h3>
+<p>
+框架将数据和控制器进行了关联，创建控制器必须创建数据类。我们先来看一个简单的例子：先创建一个控制器/app/controllers/post_controller.php，代码如前面,这时候，如果执行这个控制器，系统会提示未找到数据文件，要求你创建该文件，如：
+</p>
+<pre class="content_pre">
+Error: the model class is not exists,check the file : D:/web/yaoera/app/model/post_data.php
+</pre>
+<p>
+从这个提示中可以看出，我们需要在/app/model里创建post_data.php文件。接下来，我们创建/app/model/post_data.php文件
+</p>
+<pre class="prettyprint lang-php">
+class post_data extends Data{	
+	public function __construct(){
+		parent::__construct();
+	}
+}
+</pre>
+<p>
+所有的数据类都需要继承Data父类，Data类里定义了数据库的操作方法。和controller一样，类名就是数据类的文件名。接下来，你就可以在该类中创建数据方法
+</p>
+<pre class="prettyprint lang-php">
+public function getOneMember($uid){
+	//获取数据
+}
+</pre>
+<h3>
+通过数据类获取数据
+</h3>
+<p>
+数据类创建好后，我们就可以直接在对应的控制器里调用数据类方法来获取数据，如我们要调用1.10.1中的方法getOneMember
+</p>
+<pre class="prettyprint lang-php">
+$d=$this->_model->getOneMember('5');
+</pre>
+<h3>
+如何获取别的数据类
+</h3>
+<p>
+默认情况下，控制器只会创建对应的数据类对象，但若你想使用别的数据类，那就需要自己创建对象
+</p>
+<pre class="prettyprint lang-php">
+$user_data=new user_data();
+$b=$user_data->getUser(5);
+</pre>
+<h3>
+数据库操作
+</h3>
+<p>
+可以在/source/class/model.class.php中找到所有的方法
+</p>
+<h3>
+获取一条数据
+</h3>
+<pre class="prettyprint lang-php">
+$d=$this->_DB->find(‘members’,’first’,array(‘conditions’=>array(‘uid’=>5)));
+</pre>
+<p>
+这条语句将返回uid=5的用户的所有字段及数据。<br/>
+find方法有3个参数：<br/>
+第一个是表名称。可以使用as来为表改名如：members as m<br/>
+第二个是指明类型。如first代表单条数据<br/>
+第三个是数组，用于表示sql语句条件、排序、字段等内容<br/>
+</p>
+<h3>
+获取一组数据
+</h3>
+<p>
+同上，在获取一组数据的时候，只是第二个参数有变化，如：
+</p>
+<pre class="prettyprint lang-php">
+$d=$this->_DB->find(‘members’,’list’,array(‘conditions’=>array(‘uid>’=>5)));
+</pre>
+<p>
+这条语句将返回uid>5的所有用户数据
+</p>
+<h3>
+获取单个数据
+</h3>
+<p>
+有时候，我们只想取得一条数据里某个字段的数据，那么，我们就可以使用getone方法，如：
+</p>
+<pre class="prettyprint lang-php">
+$d=$this->_DB->getone(‘members’,array(‘field’=>’username’,’conditions’=>array(‘uid’=>5)));
+</pre>
+<p>
+getone只有2个参数，第一个同上，都是表名（在UnPHP的数据库操作方法中，第一个参数都代表表名称）。第二个参数是SQL语句构成，但区别与数据获取的是，它有一个必须的内容，就是field，注意不是复数，因为在其它几个方法中，这里是复数fields。它代表着我们要取的字段。
+</p>
+<h3>
+插入数据
+</h3>
+<pre class="prettyprint lang-php">
+$insert_id=$this->_DB->insert(‘members’,array(‘key’=>array(‘username’),’value’=>array(‘unphp’)));
+</pre>
+<h3>
+修改数据
+</h3>
+<pre class="prettyprint lang-php">
+$this->_DB->update(‘members’,array(‘fields’=>array(‘username’=>’abc’),’conditions’=>array(‘uid’=>5)));
+</pre>
+<h3>
+删除数据
+</h3>
+<pre class="prettyprint lang-php">
+$this->_DB->del(‘members’,array(‘conditions’=>array(‘uid’=>5)));
+</pre>
+<h2 class="content_h2">
+构造SQL语句
+</h2>
+<p>
+UnPHP对SQL语句进行了构造，通过前面几个数据库的操作方法，相信你对基本的使用方法有了一定的了解，但SQL语句或许比较复杂，那我们要先来看看UnPHP在构造SQL语句上的一些规定。<br/>
+SQL语句的构造，全都以数组的形式存在，且都有固定的key来代表，如条件语句：array(‘conditions’=>array(‘uid’=>5));conditions就代表着条件的含意，其后的数组则是它的值。那么，接下来我们先看看在查询中包含所有key的数组：
+</p>
+<pre class="prettyprint lang-php">
+array(
+	‘fields’=>array(‘uid’,’username’),
+	‘LEFT’=>array(
+	    ‘f’=>array(
+	    ‘table’=>’member_fields’,
+	    ‘ON’=>’f.uid=m.uid’,
+	),
+	),
+	‘conditions’=>array(
+	    ‘or’=>array(
+	    array(‘uid’=>5),
+	    array(‘uid’=>6),
+	),
+	‘date>’=>1,
+	‘date<=’=>10,
+	),
+	‘orders’=>array(‘id’=>’desc’),
+	‘limit’=>array(0,10),
+);
+</pre>
