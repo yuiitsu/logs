@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 一个PHP框架_我的代码
+title: 一个PHP框架
 keywords: win7,win8,mklink,iTuness,备份目录
 ---
 <h2 class="content_h2">
@@ -10,5 +10,144 @@ keywords: win7,win8,mklink,iTuness,备份目录
 很简单的一个框架，只是实现controller、data、view的封装，特别是对数据和模板的封装，方便构件。因为比较简单，所以很容易修改和添加程序。
 </p>
 <h2 class="content_h2">
-
+更新
 </h2>
+<p>
+<strong>2012年10月15日 v1.1.2</strong>
+</p>
+<blockquote class="content_quote">
+1、更新数据层<br/>
+2、更新模板层，增加语言设置
+</blockquote>
+<h2 class="content_h2">
+下载
+</h2>
+<p>
+<a href="{{ site:url }}/files/php_framework.rar" class="linkorg">点击这里</a>
+</p>
+<p>
+以下是简单说明，详细说明，请查看压缩包里的文档
+</p>
+<h2 class="content_h2">
+基本目录结构
+</h2>
+<pre class="content_pre">
+/根目录
+    /app
+	/attachments
+	/cache
+	/source
+	/views
+	.htaccess
+	index.php
+</pre>
+<h3>
+/attachments
+</h3>
+<p>
+预定义附件目录。此目录并不是必要目录，你可以在开发过程中任意调整。
+</p>
+<h3>
+/cache
+</h3>
+<p>
+数据缓存目录。必要目录。不可删除，但可以修改，可以/source/common.inc.php中修改。
+</p>
+<p>
+该目录下还包括3个预定子目录：
+</p>
+<blockquote class="content_quote">
+/cache/data 数据缓存目录<br/>
+/cache/views 模板缓存目录<br/>
+/cache/sys 系统配置缓存目录<br/>
+</blockquote>
+<h3>
+/app
+</h3>
+<p>
+你的文件存放目录。必要目录，不可删除，但可以修改，修改同上
+</p>
+<p>
+该目录下包括7个预定子目录：
+</p>
+<blockquote class="content_quote">
+/class 你的类文件<br/>
+/configs 你的配置文件<br/>
+/functions 你的函数文件<br/>
+/language 你的语言文件<br/>
+/script 你的javascript文件<br/>
+/controllers 控制器目录。必要目录。你所有的控制器文件都需要存放到该目<br/>
+/model 你的数据类目录<br/>
+/source<br/>
+框架核心文件。如：基础类文件、模板解析文件、数据封闭文件等。
+该目录同样包含4个预定子目录，其结构和app文件夹基本一至
+</blockquote>
+<h2 class="content_h2">
+数据库配置
+</h2>
+<p>
+打开数据库配置文件，可以在/source/configs/database.config.php找到它。你也可以把这个文件移动到/app/configs/database.config.php中。按文件中各项填写数据库相关内容。一个简单的配置如下：
+</p>
+<pre class="content_pre">
+<?php
+return array(
+	'dbhost' => '127.0.0.1', 
+	'dbuser' => 'root',
+	'dbpw' => '',
+	'dbname' => 'tanyi',
+	'pconnect' => 0,
+	'tablepre' => 'hk_',
+	'dbcharset' => 'utf8',
+);
+?>
+</pre>
+<h2 class="content_h2">
+访问连接构成
+</h2>
+<p>
+本框架是单一文件入口，其文件为index.php<br/>
+有两个预定义参数：<br/>
+controller：访问控制器名称<br/>
+method：访问控制器内的方法名称<br/>
+一个简单的访问地址：http://www.example.com/index.php?controller=index&method=view<br/>
+其中controller=index表示控制器index_controller.php，method=view表示在控制器index_controller.php中的view方法。<br/>
+如果还有其它参数，直接在后面添加，如：&id=1<br/>
+</p>
+<h2 class="content_h2">
+提供的伪静太规则
+</h2>
+<p>
+在.htaccess文件中，可以看到其规则：
+</p>
+<p>
+RewriteRule ^m/([A-Za-z]+)+(/([A-Za-z]+)+)*$  index.php?controller=$1&method=$3
+</p>
+<p>
+那用伪静态访问前面的连接地址，就应该是这样：http://www.example.com/m/index/view<br/>
+这只是一个简单应用，具体的静态方法，可以根据你的需求自己定制
+</p>
+<h2 class="content_h2">
+默认路由
+</h2>
+<p>
+默认路由，就是告诉程序，在不指定控制器和方法的时候，它应该调用什么控制器下的什么方法。<br/>
+框架的默认路由设置为：controller->index，method->index<br/>
+控制器和方法都用了index，也就是说，像直接访问：http://www.example.com的时候，程序其它执行的是：http://www.example.com/index.php?controller=index&method=index
+</p>
+<h3>
+设置默认路由
+</h3>
+<p>
+默认路由的设置在配置文件/source/configs/route.config.php中，默认设置如下：
+</p>
+<pre class="prettyprint lang-php">
+<?php
+return array('controller' => 'index', 'method' => 'index');
+?>
+</pre>
+<h2 class="content_h2">
+控制器（controller）
+</h2>
+<h3>
+创建控制器
+</h3>
