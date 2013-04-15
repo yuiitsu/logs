@@ -443,6 +443,182 @@ array(
 	‘limit’=>array(0,10),
 );
 </pre>
+<h3>
+条件语句
+</h3>
+<p>
+在SQL里，条件语句有可能比较复杂，但在UnPHP目前的版本中，可能未涉及全面，那目前已经完成的有以下几个内容：<br/>
+1、and方法<br/>
+2、or方法<br/>
+3、=、!=、>、<、>=、<=、in、not in方法<br/>
+and方法不用特别指定，只要正常出现在conditions数组中，都是and关系，例如：
+</p>
+<pre class="prettyprint lang-php">
+conditions=>array(
+	‘uid’=>5,
+	‘uid’=>6,
+)
+</pre>
+<p>
+这样子即代表uid=5 and uid=6。<br/>
+从上面的例子和前面的例子已经可以看出=号的使用是不用指明的，但了除了=号，其它的赋值都需要指定符号，且符号需要跟在字段的下标里，如：
+</p>
+<pre class="prettyprint lang-php">
+conditions=>array(
+	‘uid!=’=>5,
+	‘uid>’=>5,
+	‘uid<’=>5,
+	‘uid>=’=>5,
+	‘uid<=’=>5,
+	‘uid in’=>’5,6’,
+	‘uid not in’=>’5,6’,
+)
+</pre>
+<p>
+这里特别要指出的是or(或)关系，or的写法在前面已有，基本上就是以or为下标的一个2维数组，里面数组即为or关系。但是or 必须要写在所有and关系的前面，意思就是说，如果你的条件中有or关系，conditions一开始就必须要写or，之后，才能写and，如：
+</p>
+<pre class="prettyprint lang-php">
+‘conditions’=>array(
+    ‘or’=>array(
+		array(‘uid’=>5),
+		array(‘uid’=>6),
+	),
+	‘date>’=>1,
+	‘date<=’=>10,
+)
+</pre>
+<p>
+此条件为：(uid=5 or uid=6) and date>1 and date<=10
+</p>
+<h3>
+联合查询
+</h3>
+<p>
+LEFT表示左联合查询的开始，第一个key值f，表示联合表的别名，之后的table表示表名，ON即关联字段。这里需要注意的是，主表需要写成members as m这样的别名形式
+</p>
+<pre class="prettyprint lang-php">
+‘LEFT’=>array(
+    ‘f’=>array(
+		‘table’=>’member_fields’,
+		‘ON’=>’f.uid=m.uid’,
+	),
+),
+</pre>
+<p>
+多表联合：
+</p>
+<pre class="prettyprint lang-php">
+‘LEFT’=>array(
+	‘f’=>array(
+		‘table’=>’member_fields’,
+		‘ON’=>’f.uid=m.uid’,
+	),
+	‘g’=>array(
+	    ‘table’=>’gold’,
+	    ‘ON’=>’g.uid=m.uid’,
+	),
+),
+</pre>
+<h3>
+排序、超始条数
+</h3>
+<p>
+排序是以orders开始，后面的数组表示排序的字段和方式，如：
+</p>
+<pre class="prettyprint lang-php">
+‘orders’=>array(‘id’=>’desc’),
+</pre>
+<p>
+代表：order by id desc，若有多个排序：
+</p>
+<pre class="prettyprint lang-php">
+‘orders’=>array(‘id’=>’desc’,’date’=>’asc’),
+</pre>
+<p>
+代表：order by id desc,date asc<br/>
+起始条数和orders基本上是一致的,limit开始，后面的数组表示开始条数和取多少条，如：
+</p>
+<pre class="prettyprint lang-php">
+‘limit’=>array(0,10),
+</pre>
+<p>
+代表：limit 0,10
+</p>
+<h3>
+获取数据条数
+</h3>
+<p>
+获取数据条数的方法是getrow，一个例子：
+</p>
+<pre class="prettyprint lang-php">
+$datanums=$this->getrows(‘members’,array(‘fields’=>array(‘count(*) as nums’),’conditions’=>array(‘uid>’=>5)));
+</pre>
+<p>
+那么这条语句的意思就是：select count(*) as nums from members where uid>5;返回的$datanums即为满足条件的数据数量。
+</p>
+<h3>
+分页查询
+</h3>
+<pre class="prettyprint lang-php">
+paginate ($table,$params=array(),$multi=null,$link=null);
+</pre>
+<p>
+$table	字符串	表名<br/>
+$params	数组	构造SQL语句<br/>
+$multi	整型数字	分页类型<br/>
+$link	字符	分页连接符
+</p>
+<p>返回值：</p>
+<p>
+array($list,$datanums,$multi);<br/>
+$list	数组	当前页结果数据<br/>
+$datanums	整数	结果总条数<br/>
+$multi	字符串	分页代码
+</p>
+<h2 class="content_h2">
+使用语言
+</h2>
+<p>
+框架在初始化时就已经应用了语言类，所以你只需要按规则建立语言文件，在模板里调用对应数据就可以了。
+</p>
+<h3>
+创建语言文件
+</h3>
+<p>
+语言文件需要存放在/app/language文件夹里，名字有格式要求，即：yourlanguage.lan.php。内容示例：
+</p>
+<pre class="prettyprint lang-php">
+return array(
+	'forget_pass'=>'忘记密码？',
+	'login_pass'=>'登录密码',
+	'login_email'=>'注册邮箱',
+	'login_text'=>'帐户登录',
+);
+</pre>
+<h3>
+语言配置
+</h3>
+<p>
+语言文件创建之后，接着我们就需要让系统知道，它应该调用哪个语言文件，所以，我们要对它进行配置。你可以在/app/configs里找到语言的配置文件lang.config.php，打开它：
+</p>
+<pre class="prettyprint lang-php">
+return array('lang' => 'simplified_chinese',);
+</pre>
+<p>
+非常清楚，真上你的语言文件名，保存就可以了
+</p>
+<h3>
+使用语言
+</h3>
+<p>
+基本上，我们只需要在模板里使用语言就可以了，当然还有可能会在控制器里使用，那么在模板里使用语言的方法如下：
+</p>
+<pre class="prettyprint lang-html">
+{lang login_text}
+</pre>
+<p>
+很简单，和模板里输出变量同理，只是用了lang进行，后面的字符串即为语言文件里对应的下标
+</p>
 <script type="text/javascript">
 jQuery(function($){
 	window.prettyPrint && prettyPrint();
