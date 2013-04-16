@@ -1,0 +1,76 @@
+---
+layout: code
+title: 表格拖动排序
+keywords: javascript,drag,sort,拖动,排序
+---
+<p>
+关于程序介绍，请查看日志：<a href="{{ site:url }}/javascript/2013/04/10/a-javascript-jquery-drag-sort.html" class="linkorg">基于JQuery的列表拖动排序</a>
+</p>
+<h2 class="content_h2">
+更新
+</h2>
+<p>
+<strong>2013年4月10日 v1.0.0</strong>
+</p>
+<h2 class="content_h2">
+下载
+</h2>
+<p>
+<a href="{{ site:url }}/files/js_drag_sort.zip" class="linkorg">点击这里</a>
+</p>
+
+<h2 class="content_h2">
+参数说明
+</h2>
+<pre class="prettyprint lang-javascript">
+dgLine : 'DLL',  //每一行的className
+dgButton : 'DLB',  //每一行拖动锚点的className
+id : 'action-id',  //每一行的固定ID，可以使用数据ID
+linePre : 'list_',  //每一行的ID前缀，后跟数据ID，如：id="list_8"
+lineHighlight : '#ffffcc',  //拖动行的高亮颜色
+tipsOpacity : 80,  //提示层的透明度，1-100
+tipsOffsetLeft : 20, //提示层的左位移像素
+tipsOffsetTop : 0,  //提示层的上位移像素
+JSONUrl : '',  //数据提交路径
+JSONData : {}, //数据提交数据
+maskLoaddingIcon : '',  //蒙版层加载图片地址
+maskBackgroundColor : '#999', //蒙版层北景颜色
+maskOpacity : 30,  //蒙版层透明度
+maskColor : '#000',  //蒙版层文字颜色
+</pre>
+<h2 class="content_h2">
+使用示例
+</h2>
+<pre class="prettyprint lang-html">
+&lt;table cellpadding="5" cellspacing="0" class="listtable" id="listtable"&gt;
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;td class="td50"&gt;拖动&lt;/td&gt;
+			&lt;td class="td220"&gt;名称&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody id="drag_table"&gt;
+		&lt;!--{loop $lists $k $list}--&gt;
+		&lt;tr id="list_{$list['id']}" action-id="{$list['id']}" class="drag_line"&gt;
+			&lt;td&gt;&lt;div class="drag_orders" action-id="{$list['id']}"&gt;&lt;img src="{SYS_URL}views/admin/images/move.png" alt="" /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/td&gt;
+			&lt;td&gt;这里是一行&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;!--{/loop}--&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;script type="text/javascript"&gt;
+$("#drag_table").DragList({
+	dgLine:'drag_line',
+	dgButton:'drag_orders',
+	id:'action-id',
+	linePre:'list_',
+	JSONUrl:'{_ADMIN}?controller=contents&method=focus_form',
+	maskLoadIcon:'{SYS_URL}views/admin/images/loading.gif'
+});
+&lt;/script&gt;
+</pre>
+<script type="text/javascript">
+jQuery(function($){
+	window.prettyPrint && prettyPrint();
+});
+</script>
