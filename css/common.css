@@ -9,7 +9,7 @@ img{border:0px;}
 .header{width:100%;height:50px;border-radius: 0px 0px 5px 5px;}
 .header h2{height:50px;line-height:50px;float:left;margin:0px;padding:0px;padding-left:20px;}
 .header span{height:50px;line-height:50px;display: inline-block;padding-right:20px;color:#d8d8d8;}
-.header h2 a{background:url('../images/logo.png') no-repeat;background-position:0px 10px;display:inline-block;padding-left:40px;height:50px;line-height:50px;text-decoration: none;color:#fff;font-weight:700px;}
+.header h2 a{background:url('../images/logo.jpg') no-repeat;background-position:0px 10px;display:inline-block;padding-left:40px;height:50px;line-height:50px;text-decoration: none;color:#fff;font-weight:700px;}
 .black{background-color:#3e3e3e;}
 .main{width:100%;padding-top:10px;}
 .sidebar{width:250px;}
