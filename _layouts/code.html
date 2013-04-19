@@ -31,14 +31,6 @@
                     </script>
                 </div>
             </div>
-    		<div class="likepost">
-    			<h2>相关日志</h2>
-    			<ul>
-    				{% for v in site.categories[page.category] limit:5  %}
-    				<li><a href="{{ site:url  }}{{ v.url  }}">{{ v.title  }}</a></li>
-    				{% endfor  %}
-    			</ul>
-    		</div>
 			<div id="disqus_thread"></div>
             <script src="http://mat1.gtimg.com/app/openjs/openjs.js#autoboot=no&debug=no"></script>
             <script type="text/javascript">
