@@ -1,0 +1,158 @@
+---
+layout: post
+title: 瀑布流的简单实现
+category: javascript
+description: 瀑布流布局，简单说，就是按列向下展开，每一列只有固定宽度，没有固定高度。用平时的布局方法肯定不能满足需求，如果仅仅是布局倒也好说，但又要读取数据的时候，就稍麻烦一点。 
+img: 201204/1801.jpg
+keywords: javascript,瀑布流
+---
+<p>
+瀑布流布局，简单说，就是按列向下展开，每一列只有固定宽度，没有固定高度。用平时的布局方法肯定不能满足需求，如果仅仅是布局倒也好说，但又要读取数据的时候，就稍麻烦一点。
+</p>
+<p>
+简单说一下原理：
+</p>
+<blockquote class="content_quote">
+利用绝对定位，将每一块数据输出到指定列上。也就是说，需要计算每一块数据的LEFT和TOP值。计算各列高度，将最新的数据块输出到高度最小列上。
+</blockquote>
+<p>
+可以看看DOM
+</p>
+<p>
+<img src="http://pic002.cnblogs.com/images/2012/50008/2012041822320185.png" alt="图片" />
+</p>
+<h2 class="content_h2">
+方法
+</h2>
+<p>
+因为是简单的应用，所以不考虑自适应屏幕宽度的问题，这里使用4列的模式。因为要用到每一列的高度，所以先定义一个数组，用来存放每一列的高度值
+</p>
+<pre class="prettyprint lang-javascript">
+var lie=new Array(0,46,46,46);
+</pre>
+<p>
+这里给了初始值，因为设计要求，第二、三、四列的启始高度有这么高。
+</p>
+<p>
+因为每一列的宽度是固定的，所以每一列的LEFT就可以先定下来，这个根据设计的需求设定，也用一个数组来存放每一列的LEFT值。都用数组的好处是可以用key值来调用
+</p>
+<pre class="prettyprint lang-javascript">
+var _left=new Array(0,234,468,702);
+</pre>
+<p>
+SO，各列的LEFT值，一目了然
+</p>
+<p>
+说说计算各列高度的最小值，其实很简单，lie数组里存的就是高度，只要找到数组lie中的最小值，就可以了，下面是代码
+</p>
+<pre class="prettyprint lang-javascript">
+function getMin(){
+	for(_x in lie){
+		if(_x==0){
+			_t=lie[_x];
+			_k=_x;
+		}else{
+			if(_t&gt;lie[_x]){
+				_t=lie[_x];
+				_k=_x;
+			}
+		}
+	}
+}
+</pre>
+<p>
+_t用来存放最小值，然后和后一个值做比较，_t大，则将小值付给_t，这个数组遍历结束，_t就是最小值了。但我们不用这_t值，我们要用的是它的下标，因为下标代表着1、2、3、4列。所以在每次给_t付值的时候，都将下标_x付给_k，这样结束的时候，_k自然就是高度最小的列了。
+</p>
+<p>
+现在获取到了高度最小的列，那就要将新的数据块输入到这一列的最后，结合两个数组的下标和值，就可以计算出数据块的LEFT和TOP值，代码如下：
+</p>
+<pre class="prettyprint lang-javascript">
+function setPosition(thisHeight){
+    hot_city_left=_left[_k]+'px';
+    hot_city_top=lie[_k]?lie[_k]+10+'px':lie[_k]+'px';
+    lie[_k]=lie[_k]?lie[_k]+thisHeight+10:lie[_k]+thisHeight;
+    maxHeight=lie[_k]&gt;maxHeight?lie[_k]:maxHeight;
+}
+</pre>
+<p>
+参数thisHeight是获取到的这个最新数据块的高度，因为把它输入到列上了，还得算出新列的高度，代码第三行，就是在做这个工作。为了效果，每一个数据块相对于它的上一块，都加了10像素的距离。
+</p>
+<p>
+说说这个maxHeight，因为绝对定位，底部的内容是不会被自动撑开的，所以，利用maxHeight这个值和新数据块的高度+原来列的高度做比较，如果新值大，就将新值附给maxHeight，这样就能保持maxHeight最大，那再加50像素，就永远碰不到底了。
+</p>
+<p>
+主要就是这么点东西，下面是全部代码：
+</p>
+<pre class="prettyprint lang-javascript">
+var maxHeight=0;
+var _x,_t=0,_k=0;
+var lie=new Array(0,46,46,46);
+var _left=new Array(0,234,468,702);
+var hot_city_left=0,hot_city_top=0;
+var minNum;
+moveItem();
+
+function moveItem(){
+    $(".hot_city_area").each(function(){
+        getMin();
+        setPosition($(this).height());
+        $(this).css({'position':'absolute','left':hot_city_left,'top':hot_city_top});
+    });
+    $(".hot_city").css('height',maxHeight+50+'px');
+}
+
+function getMin(){
+    for(_x in lie){
+        if(_x==0){
+            _t=lie[_x];
+            _k=_x;
+        }else{
+            if(_t&gt;lie[_x]){
+                _t=lie[_x];
+                _k=_x;
+            }
+        }
+    }
+}
+
+function setPosition(thisHeight){
+    hot_city_left=_left[_k]+'px';
+    hot_city_top=lie[_k]?lie[_k]+10+'px':lie[_k]+'px';
+    lie[_k]=lie[_k]?lie[_k]+thisHeight+10:lie[_k]+thisHeight;
+    maxHeight=lie[_k]&gt;maxHeight?lie[_k]:maxHeight;
+}
+</pre>
+<p>
+一句话解释：$(".hot_city_area").each，遍历每一个数据块，计算高度最小列，计算LEFT和TOP值，重设列高和maxHeight，然后调用$(this).css({'position':'absolute','left':hot_city_left,'top':hot_city_top});设置新数据块的LEFT和TOP，最后用$(".hot_city").css('height',maxHeight+50+'px');设置父元素的高度。
+</p>
+<p>
+下面是效果：
+</p>
+<p>
+<img src="http://pic002.cnblogs.com/images/2012/50008/2012041822305932.png" alt="图片" />
+</p>
+<p>
+这里只是讲了布局的排列方法，还有向下滚动自动读取什么的，就不说了，反正ajax读出数据，再利用上面的方法将数据块一个一个输出到列上，就OK了。主要是注意不要重置前面已经输出过的数据块，不然，越向下滚，需要处理的数据块就越来越多。
+</p>
+<p>
+还有一个是用$(this).height()来获取新数据块的高度，因为有的浏览器在加载图片的时候，没有设置预定高度，像chrmoe，那DOM在加载的时候，就很可能没有把图片的高度计算在内，或是计算错误，这种情况，需要给IMG一个高度。这个可以利用后端代码处理数据的时候，就处理掉。下面是PHP的示例：
+</p>
+<pre class="prettyprint lang-php">
+$size=getimagesize($v['photo']);
+if($size[0]&lt;217){
+    $h=$size[1];
+    $w=$size[0];
+}else{
+    $h=217*$size[1]/$size[0];
+    $w=217;
+}
+$v['style']='width:'.$w.'px;height:'.$h.'px';
+</pre>
+<p>
+就是获取原始图片的高宽，然后和目标宽度做比较（因为宽度是固定的），之后根据目标宽度值计算图片的高度，再将宽度和高度直接输出到IMG上，这样就不会计算错误了。
+</p>
+<script type="text/javascript">
+jQuery(function($){
+	window.prettyPrint && prettyPrint();
+});
+</script>
