@@ -1,0 +1,47 @@
+---
+layout: post
+title: CSS3线性渐变 各内核浏览器的使用方法
+category: css
+description: 在CSS3中，已经支持颜色的渐变，不过不同的内核处理的方式不一样，IE算另类，但也是有对应方法的。这里做一个小结，方便参考。
+img: 201305/0901.png
+keywords: css,css3,线性渐变
+---
+<p>
+在CSS3中，已经支持颜色的渐变，不过不同的内核处理的方式不一样，IE算另类，但也是有对应方法的。这里做一个小结，方便参考。
+</p>
+<h2 class="content_h2">
+Firefox之-moz-linear-gradient
+</h2>
+<p>
+基本语法：background:-moz-linear-gradient([<point> | | <angle>，] , 开始颜色值,结束颜色值, [(停靠颜色值,偏移量百分数),...] );
+</p>
+<p>
+示例
+</p>
+<pre class="prettyprint lang-html">
+background: -moz-linear-gradient(center top , #2C2C2C, #222222);
+</pre>
+<p>
+第一个参数是渐变的方向，如果是水平渐变可以写成：left center或right center，如果是垂直渐变可以写成：center top或center bottom
+</p>
+<h2 class="content_h2">
+webkit之webkit-gradient
+</h2>
+<p>
+基本语法：background:-webkit-gradient(type,x1 y1, x2 y2, from(开始颜色值),to(结束颜色值), [color-stop(偏移量小数,停靠颜色值),...] );
+</p>
+<p>
+示例：background-image:-webkit-gradient(linear,0% 0%, 0% 100%, from(#2C2C2C),to(#222222));
+</p>
+<h2 class="content_h2">
+IE之filter:progid:DXImageTransform.Microsoft.gradient
+</h2>
+<p>
+基本语法：filter:progid:DXImageTransform.Microsoft.Gradient(sProperties);
+</p>
+<p>
+示例：filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#444444', endColorstr='#333333');
+</p>
+<p>
+参考：<a href="http://msdn.microsoft.com/en-us/library/ms532997(VS.85).aspx" target="_blank">http://msdn.microsoft.com/en-us/library/ms532997(VS.85).aspx</a>
+</p>
