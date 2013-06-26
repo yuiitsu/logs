@@ -1,420 +1,149 @@
 ---
 layout: post
-title: 基于JQuery的列表拖动排序
+title: 按百分比机率的随机获取
 category: javascript
-description: 基于JQuery的拖动插件有几个都相当好用，效果也很好，但再好，还是自己琢磨一个最好。所以，我的理念就是即使实际项目中使用别人的程序，自己也得根据自己的理解和想法写一个出来。那么今天，就来看看我的思路是不是可以实现拖动排序的功能
-img: 201304/1001.jpg
-keywords: javascript,jquery,drag,sort,拖动,排序
+description: 游戏里都有随机掉装备的设定，不同装备有不同的掉率。我一直很纠结这个问题，最近考虑了一下，似乎有一个很简单的解决办法，这里记录一下，但不一定是正确的。
+img: 201306/0602.jpg
+keywords: php,百分比机率,掉落,随机,获取
 ---
 <p>
-基于JQuery的拖动插件有几个都相当好用，效果也很好，但再好，还是自己琢磨一个最好。所以，我的理念就是即使实际项目中使用别人的程序，自己也得根据自己的理解和想法写一个出来。那么今天，就来看看我的思路是不是可以实现拖动排序的功能
+游戏里都有随机掉装备的设定，不同装备有不同的掉率。我一直很纠结这个问题，最近考虑了一下，似乎有一个很简单的解决办法，这里记录一下，但不一定是正确的。
 </p>
 <h2 class="content_h2">
-测试
+原理
 </h2>
+<p>
+因为是百分比，所以规定1-100，这100个数为基准，每次取一个数的机率为1%，那一次取中1-10这10个数字的机率是多少？是不是10%。根据这个规则，可以这样理解，如果A和B，获取的机率为30%和70%，那可以用1-30代表A，31-100代表B，这样，抽取1-30的机率为30%，所以A的机率就是30%，同理，B的机率为70%。如果这个结论是正常的，那我们就可以这样来做了
+</p>
+<h2 class="content_h2">
+基本实现
+</h2>
+<p>
+条件：
+</p>
+<p>
+A:10%<br/>
+B:20%<br/>
+C:30%<br/>
+D:40%
+</p>
+<p>
+首先，建立一个百分比的数组，以百分比的值为下标，物品为值
+</p>
+<pre class="prettyprint lang-php">
+$items=array(
+	'10'=>'A',
+	'20'=>'B',
+	'30'=>'C',
+	'40'=>'D'
+);
+</pre>
+<p>
+接下来，根据这个数组，将它重新“洗牌”，即将1-10指向A，11-30指向B，31-60指向C，61-100指向D
+</p>
+<pre class="prettyprint lang-php">
+function create($items,$p){
+	$t=$p;
+	$q=$p/100;
+	$itemInterval=array();
+	foreach($items as $k=>$v){
+		$lw=$t==$p?1:$p-$t+1;
+		$up=$t==$p?$k*$q:$p-$t+$k*$q;
+		$t=$t-$k*$q;
+		$itemInterval[]=array($v,$lw,$up);
+	}
+	return $itemInterval;
+}
+</pre>
+<p>
+这里呢多考虑了一点，就是如果要求是0.3%，或是0.03%呢，那100为基数肯定就不行了，所以这里使用了参数p，如果是千分位，那就可以这样
+</p>
+<pre class="prettyprint lang-php">
+$items=array(
+	'0.3'=>'A',
+	'20'=>'B',
+	'30'=>'C',
+	'40'=>'D',
+	'9.7'=>'E'
+);
+function create($items,$p){
+	$t=$p;
+	$q=$p/100;
+	$itemInterval=array();
+	foreach($items as $k=>$v){
+		$lw=$t==$p?1:$p-$t+1;
+		$up=$t==$p?$k*$q:$p-$t+$k*$q;
+		$t=$t-$k*$q;
+		$itemInterval[]=array($v,$lw,$up);
+	}
+	return $itemInterval;
+}
 
-
-<style type="text/css">
-#listtable{width:100%;}
-#listtable td{padding:4px 10px;}
-#listtable thead{background-color:#e7e7e7;}
-#listtable tbody td{border-bottom:1px solid #f7f7f7;}
-.td20{width:20px;}
-.td50{width:50px;}
-.drag_orders{width:30px;height:30px;background-color:#e7e7e7;text-align:center;line-height:30px;cursor:move;}
-</style>
-<table id="listtable">
-	<thead>
-		<tr>
-			<td class="td20">ID</td>
-			<td class="td50">拖动</td>
-			<td>名称</td>
-		</tr>
-	</thead>
-	<tbody id="drag_table">
-		<tr id="list_1" action-id="1" class="drag_line">
-			<td>1</td>
-			<td><div class="drag_orders" action-id="1">拖</div></td>
-			<td>这里是第一行</td>
-		</tr>
-		<tr id="list_2" action-id="2" class="drag_line">
-			<td>2</td>
-			<td><div class="drag_orders" action-id="2">拖</div></td>
-			<td>这里是第二行</td>
-		</tr>
-		<tr id="list_3" action-id="3" class="drag_line">
-			<td>3</td>
-			<td><div class="drag_orders" action-id="3">拖</div></td>
-			<td>这里是第三行</td>
-		</tr>
-		<tr id="list_4" action-id="4" class="drag_line">
-			<td>4</td>
-			<td><div class="drag_orders" action-id="4">拖</div></td>
-			<td>这里是第四行</td>
-		</tr>
-		<tr id="list_5" action-id="5" class="drag_line">
-			<td>5</td>
-			<td><div class="drag_orders" action-id="5">拖</div></td>
-			<td>这里是第五行</td>
-		</tr>
-	</tbody>
-</table>
-<script type="text/javascript">
-jQuery(function($){
-	$("#drag_table").DragList({
-		dgLine:'drag_line',
-		dgButton:'drag_orders',
-		id:'action-id',
-		linePre:'list_',
-		JSONUrl:'{_ADMIN}?controller=contents&method=focus_form',
-		maskLoadIcon:'{SYS_URL}views/admin/images/loading.gif'
-	});
-	window.prettyPrint && prettyPrint();
-});
-</script>
-<h2 class="content_h2">
-要求
-</h2>
-<p>
-拖动排序，从名字就不难想像，就是按住一行数据拖到想要的排序位置，保存新的排序队列。
-</p>
-<h2 class="content_h2">
-思路
-</h2>
-<p>
-首先给列表行建立锚点，绑定mousedown和mouseup事件，当鼠标移动到想要插入的位置时，将对象行移动到目标行，然后对其经过的所有行进行排序处理。
-</p>
-<p>
-思路很简单，但这里面仍然有几个问题要注意
-</p>
-<p>
-1、移动到什么位置可以视作要插入到目标行的位置。<br/>
-2、移动出了顶端和底端时，判断为第一和最后。<br/>
-3、向上移动和向下移动的处理
-</p>
-<h2 class="content_h2">
-解决
-</h2>
-<h3>
-关于事件
-</h3>
-<p>
-Javascript里鼠标按下和放开事件为onmousedown，onmouseup，JQuery里是mousedown，mouseup，所以，这里使用mousedown和mouseup
-</p>
-<p>
-首先，要知道界面有多少行，每一行有多高，因为要判断鼠标的移动距离
-</p>
-<pre class="prettyprint lang-javascript">
-var tbodyHeight=setting.frame.outerHeight();  //setting.frame，父对象
-var lineNum=$("."+setting.dgLine).length;  //setting.dgLine，每一行的classname
-var lineHeight=Math.ceil(tbodyHeight/lineNum);
+create($items,1000);
 </pre>
 <p>
-之所有要取lineNum（行数），除了计算行高外，还有个目的是要使用index()，通过序列索引值来进行移动行到目标位置
+得出的结果将是1-1000，分成了5个段。有了这个新数组，就可以随机取值了
 </p>
-<p>
-当mousedown事件触发后，就要开始计算鼠标移动的距离，用于判断该行到底要移动到什么位置
-</p>
-<pre class="prettyprint lang-javascript">
-dgid=$(this).attr(setting.id);  //移动行的ID，setting.id，是每一行用来标记ID的名称
-thisIndex=$("#"+setting.linePre+dgid).index(); //该行的索引，setting.linePre，每一行ID关辍
-thisLineTop=$("#"+setting.linePre+dgid).offset().top; //该行的top值
-topDistance=thisIndex*lineHeight;  //该行距离第一行顶端的距离
-downDistance=(lineNum-thisIndex-1)*lineHeight; //该行距离最后一行底端的距离
+<pre class="prettyprint lang-php">
+function roll($sides){
+	return mt_rand(1, $sides);
+}
 </pre>
 <p>
-dgid主要是用来区分每一行的标识，一般的列表都是程序循环输出来的，如果没有这样一个ID，就分不出哪行是哪行，所以，在HTML上，需要定义一个存放ID的家伙。程序通过attr就是来取这个值，保证每一行都有自己唯一的值。
+这个方法都懂，$sides就是你要取的上限，如果是百分位，就传100，千分位传1000，返回的随机值，通过create返回的新数组做比较，它属于哪一个分段，那么这个分段所代表的对象，就被抽中了
 </p>
-<p>
-thisLineTop，主要是用来和鼠标移动位置进行高度计算，然后根据行高、索引值来判断是移动到哪一行了。还有个作用是用来确定是否按在了移动锚点上，如果有值，说明是，那后面的mouseup就是成立的，如果没有值，说明没有按到锚点上，mouseup不执行任何操作。为什么要这样做呢？因为不管在页面的什么位置点鼠标，都会触发mouseup事件，如果没有一个判断，就会不停的执行，那就会产生一些问题。
-</p>
-<p>
-topDistance和downDistance，用来判断鼠标有没有移出列表的范围，如果移除了，也就是鼠标移动的距离大于topDistance或downDistance，那就可以判断为需要移动到第一行或最后一行。
-</p>
-<p>
-mousedown事件主要做的，就是这几件事情，当然，为了效果，还可以增加一些东西
-</p>
-<pre class="prettyprint lang-javascript">
-$("#"+setting.linePre+dgid).css('background',setting.lineHighlight); //高亮移动行
-var left=e.pageX+20;
-var top=e.pageY;
-dg_tips(left,top);  //创建一个提示层
-$('body').css('cursor','move'); //更改页面的鼠标手势
-$("body").disableSelection(); //禁止按下鼠标后移动鼠标时选中页面元素
-setting.frame.mousemove(function(e){  //让提示层跟随鼠标移动
-$("#dgf").css({"left":e.pageX+setting.tipsOffsetLeft+'px',"top":e.pageY+'px'});
-});
-</pre>
-<p>
-这些的目的，只是让操作起来更有效果，比如高亮行，就是要让用户知道，他们操作的是哪一行。提示层的作用也一样。
-</p>
-<p>
-关于禁止选中，.disableSelection();这是jQuery_UI里带的方法，如果你有使用jQuery_UI，那可以直接使用它，如果没有使用，可以这样做
-</p>
-<pre class="prettyprint lang-javascript">
-$('body').each(function() {           
-	$(this).attr('unselectable', 'on').css({
-		'-moz-user-select':'none',
-		'-webkit-user-select':'none',
-		'user-select':'none'
-	}).each(function() {
-		this.onselectstart = function() { return false; };
-	});
-});
-</pre>
-<p>
-取消禁止选择
-</p>
-<pre class="prettyprint lang-javascript">
-$('body').each(function() {           
-	$(this).attr('unselectable', '').css({
-		'-moz-user-select':'',
-		'-webkit-user-select':'',
-		'user-select':''
-	});
-});
-</pre>
-<p>
-考虑到通用性，所以后面的代码里，不会使用.disableSelection();
-</p>
-<p>
-好了，下面是mouseup事件。这里mouseup事件是绑定在body上的，因为mouseup如果只是绑定在锚点上，那当鼠标移出锚点的时候，再松开鼠标，会发现，这个mouseup事件不执行了，因为它会认为是别的对象的mouseup。所以，最保险的方法是用$('body').mouseup。这样基本上就不会有问题。
-</p>
-<p>
-mouseup触发后，首先就要判断thisLineTop是不是有值，防止无意义的事件执行。跟着判断鼠标移动的距离是正还是负，也就是向上移动还是向下移动。
-</p>
-<pre class="prettyprint lang-javascript">
-var moveDistance=e.pageY-thisLineTop;
-</pre>
-<p>
-根据不同的方向作不同的处理
-</p>
-<pre class="prettyprint lang-javascript">
-if(moveDistance&lt;0){
-	if(thisIndex!=0){
-		moveDistance=Math.abs(moveDistance);  //为负数的时候，取一下绝对值
-		if(moveDistance&gt;lineHeight/2){ //判断移动距离是否超过行高的1/2
-			if(moveDistance&gt;topDistance){ //如果移动距离大于该行到顶边的距离
-				focusIndex=0;
-			}else{
-				focusIndex=thisIndex-Math.ceil(moveDistance/lineHeight);
-			}
-			$("."+setting.dgLine).eq(focusIndex).before($("#"+setting.linePre+dgid));//将该行插入目标位置
+<pre class="prettyprint lang-php">
+function get($itemInterval,$p){
+	$p=roll($p);
+	foreach($itemInterval as $v){
+		if($p&gt;=$v[1]&&$p&lt;=$v[2]){
+			$item=$v[0];
 		}
 	}
-}else{
-	if(thisIndex!=lineNum-1){
-		if(moveDistance&gt;lineHeight/2+lineHeight){
-			if(moveDistance&gt;downDistance){
-				focusIndex=lineNum-1;
-			}else{
-				focusIndex=thisIndex+Math.ceil(moveDistance/lineHeight)-1;
-			}
-			$("."+setting.dgLine).eq(focusIndex).after($("#"+setting.linePre+dgid));
+	return $item;
+}
+</pre>
+<p>
+最后，写一个测试，做一个平均值，从1000次取值和10000次取值中，算出各项的平均值，看看它们是不是和我们想要的结果接近
+</p>
+<pre class="prettyprint lang-php">
+function average($itemInterval,$p,$t){
+	$o=array();
+	echo "做".$t."次取值时，各值取得机率：&lt;br/&gt;";
+	for($i=1;$i&lt;=$t;$i++){
+		$item=get($itemInterval,$p);
+		if($o[$item]){
+			$o[$item]=$o[$item]+1;
+		}else{
+			$o[$item]=1;
 		}
+	}
+
+	foreach($o as $k=&gt;$v){
+		$p=$v/$t*100;
+		echo "".$k.": ".$p."%&lt;br/&gt;";
 	}
 }
 </pre>
 <p>
-之所以判断移动距离是否超过行高的1/2，是因为如果只移动一小点，可以视作不移动。在计算目标索引值的时候，使用了Math.ceil，最进位，而当移动距离大于0的时候，取了进位还要-1，因为是向下嘛。
-</p>
-<p>
-向上移动和向下移动使用了不同的插入方法，before和after，可以试着想一下为什么要使用before和after。
-</p>
-<p>
-移动完了，还得把按下鼠标时使用的效果给去除掉
-</p>
-<pre class="prettyprint lang-javascript">
-$("#dgf").remove();//移除提示层
-$("#"+setting.linePre+dgid).css('background','');//将高亮的行变为普通
-dgid='';//将移动行的ID值空
-thisLineTop=0;//将移动行的Top值至0
-$('body').css('cursor','default');//更改鼠标手势为默认
-</pre>
-<p>
-基本上的情况就是这样，主要问题就是在处理移动和判断在哪里插入的问题上。其它的都非常简单。
-</p>
-<p>
-下面给出完整的封装程序，包括更新数据部分
-</p>
-<pre class="prettyprint lang-javascript">
-/*
-* 
-*  DragList.js
-*  @author fuweiyi &lt;fuwy@foxmail.com&gt;
-*  
-*/
-(function($){
-	$.fn.DragList=function(setting){
-		var _setting = {
-			frame : $(this),
-			dgLine : 'DLL',
-			dgButton : 'DLB',
-			id : 'action-id',
-			linePre : 'list_',
-			lineHighlight : '#ffffcc',
-			tipsOpacity : 80,
-			tipsOffsetLeft : 20,
-			tipsOffsetTop : 0,
-			JSONUrl : '',
-			JSONData : {},
-			maskLoaddingIcon : '',
-			maskBackgroundColor : '#999',
-			maskOpacity : 30,
-			maskColor : '#000',
-			maskLoadIcon:'',
-		};
-		var setting = $.extend(_setting,setting); 
-
-		var dgid='',thisIndex,thisLineTop=0,topDistance,downDistance;
-		var tbodyHeight=setting.frame.outerHeight();
-		var lineNum=$("."+setting.dgLine).length;
-		var lineHeight=Math.ceil(tbodyHeight/lineNum);
-
-		$("."+setting.dgButton).mousedown(function(e){
-			dgid=$(this).attr(setting.id);
-			thisIndex=$("#"+setting.linePre+dgid).index();
-			var left=e.pageX+20;
-			var top=e.pageY;
-			thisLineTop=$("#"+setting.linePre+dgid).offset().top;
-			topDistance=thisIndex*lineHeight;
-			downDistance=(lineNum-thisIndex-1)*lineHeight;
-			$("#"+setting.linePre+dgid).css('background',setting.lineHighlight);
-			
-			dg_tips(left,top);
-			$('body').css('cursor','move');
-			unselect();
-			setting.frame.mousemove(function(e){
-				$("#dgf").css({"left":e.pageX+setting.tipsOffsetLeft+'px',"top":e.pageY+'px'});
-			});
-		});
-	
-		$('body').mouseup(function(e){
-			if(thisLineTop&gt;0){
-				var moveDistance=e.pageY-thisLineTop;
-				if(moveDistance&lt;0){
-					if(thisIndex!=0){
-						moveDistance=Math.abs(moveDistance);
-						if(moveDistance&gt;lineHeight/2){
-							if(moveDistance&gt;topDistance){
-								focusIndex=0;
-							}else{
-								focusIndex=thisIndex-Math.ceil(moveDistance/lineHeight);
-							}
-							$("."+setting.dgLine).eq(focusIndex).before($("#"+setting.linePre+dgid));
-							dg_update(thisIndex,focusIndex);
-						}
-					}
-				}else{
-					if(thisIndex!=lineNum-1){
-						if(moveDistance&gt;lineHeight/2+lineHeight){
-							if(moveDistance&gt;downDistance){
-								focusIndex=lineNum-1;
-							}else{
-								focusIndex=thisIndex+Math.ceil(moveDistance/lineHeight)-1;
-							}
-							$("."+setting.dgLine).eq(focusIndex).after($("#"+setting.linePre+dgid));
-							dg_update(thisIndex,focusIndex);
-						}
-					}
-				}
-				$("#dgf").remove();
-				$("#"+setting.linePre+dgid).css('background','');
-				dgid='';
-				thisLineTop=0;
-				$('body').css('cursor','default');
-				onselect();
-			}
-		});
-		
-		function dg_update(thisIndex,focusIndex){
-			dg_mask();
-			var start=thisIndex&lt;focusIndex?thisIndex:focusIndex;
-			var end=thisIndex&lt;focusIndex?focusIndex:thisIndex;
-			var ids='',vals='';
-			for(var i=start;i&lt;=end;i++){
-				ids+=i==start?$("."+setting.dgLine).eq(i).attr(setting.id):','+$("."+setting.dgLine).eq(i).attr(setting.id);
-				vals+=i==start?i:','+i;
-			}
-			$.getJSON(setting.JSONUrl,{'do':'changeorders','ids':ids,'vals':vals},function(d){
-				$("#dg_mask").remove();	
-			});
-		}
-		
-		function dg_mask(){
-			var W=setting.frame.outerWidth();
-			var H=setting.frame.outerHeight();
-			var top=setting.frame.offset().top;
-			var left=setting.frame.offset().left;
-			var mask="&lt;div id='dg_mask'&gt;&lt;img src='"+setting.maskLoadIcon+"' alt='' /&gt; 正在使劲的保存...&lt;/div&gt;";
-			$('body').append(mask);
-			$("#dg_mask").css({"background":"#999","position":'absolute','width':W+'px','height':H+'px','line-height':H+'px','top':top+'px','left':left+'px','filter':'alpha(opacity='+setting.maskOpacity+')','moz-opacity':setting.maskOpacity/100,'opacity':setting.maskOpacity/100,'text-align':'center','color':'#000'});
-		}
-		
-		function dg_tips(left,top){
-			var floatdiv="&lt;div id='dgf' style='padding:5px 10px;border:1px solid #444;background-color:#fff;filter:alpha(opacity="+setting.tipsOpacity+");moz-opacity:"+setting.tipsOpacity/100+";opacity:"+setting.tipsOpacity/100+";position:absolute;left:"+left+"px;top:"+top+"px;'&gt;移动一条记录&lt;/div&gt;";
-			$('body').append(floatdiv);
-		}
-		
-		function unselect(){
-			$('body').each(function() {           
-				$(this).attr('unselectable', 'on').css({
-					'-moz-user-select':'none',
-					'-webkit-user-select':'none',
-					'user-select':'none'
-				}).each(function() {
-					this.onselectstart = function() { return false; };
-				});
-			});
-		}
-		
-		function onselect(){
-			$('body').each(function() {           
-				$(this).attr('unselectable', '').css({
-					'-moz-user-select':'',
-					'-webkit-user-select':'',
-					'user-select':''
-				});
-			});
-		}
-	}
-})(jQuery);
-</pre>
-<p>
 使用
 </p>
-<pre class="prettyprint lang-html">
-&lt;table cellpadding="5" cellspacing="0" class="listtable" id="listtable"&gt;
-	&lt;thead&gt;
-		&lt;tr&gt;
-			&lt;td class="td50"&gt;拖动&lt;/td&gt;
-			&lt;td class="td220"&gt;名称&lt;/td&gt;
-		&lt;/tr&gt;
-	&lt;/thead&gt;
-	&lt;tbody id="drag_table"&gt;
-		&lt;!--{loop $lists $k $list}--&gt;
-		&lt;tr id="list_{$list['id']}" action-id="{$list['id']}" class="drag_line"&gt;
-			&lt;td&gt;&lt;div class="drag_orders" action-id="{$list['id']}"&gt;&lt;img src="{SYS_URL}views/admin/images/move.png" alt="" /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/td&gt;
-			&lt;td&gt;这里是一行&lt;/td&gt;
-		&lt;/tr&gt;
-		&lt;!--{/loop}--&gt;
-	&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;script type="text/javascript"&gt;
-$("#drag_table").DragList({
-	dgLine:'drag_line',
-	dgButton:'drag_orders',
-	id:'action-id',
-	linePre:'list_',
-	JSONUrl:'{_ADMIN}?controller=contents&method=focus_form',
-	maskLoadIcon:'{SYS_URL}views/admin/images/loading.gif'
-});
-&lt;/script&gt;
+<pre class="prettyprint lang-php">
+average(create($items,1000),1000,1000);
+average(create($items,1000),1000,10000);
 </pre>
 <p>
-参数主要是dgLine，dgButton，id，linePre和JSONUrl，通过看HTML代码，应该不难理解。
+结果
 </p>
 <p>
-关于拖动排序就是这么多了，当然还可以把效果做得更漂亮些，提示更清楚点，有助于用户体验
+<img src="{{ site:url }}/images/201306/0602.jpg" alt="" />
 </p>
+<p>
+基本上是满足的，说明差不到哪里去。如果是抽奖，就可以做一个奖品的对应机率数组，然后传入生成器里，返回来的，就是抽中的奖品啦。
+</p>
+<script type="text/javascript">
+jQuery(function($){
+	window.prettyPrint && prettyPrint();
+});
+</script>
 <script type="text/javascript" src="/DragList.js"></script>
