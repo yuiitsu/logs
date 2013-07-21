@@ -1,0 +1,68 @@
+---
+layout: post
+title: 删除Launchpad中的图标方法
+category: mac
+description: OSX有了Launchpad，是个即cool又实用的东西，但是它确经常不听使唤，比如有些不是通过App Store上安装的程序，删除程序的时候，会将图标留在Launchpad上，让你很难琢磨出删除它的方法。这里总结了一些方法，都是google和自己摸索的，不全，但愿能解决一些问题。
+img: 201307/072201.png
+keywords: mac,Launchpad,删除图标
+---
+<p>
+OSX有了Launchpad，是个即cool又实用的东西，但是它确经常不听使唤，比如有些不是从App Store上下载的程序，删除程序的时候，会将图标留在Launchpad上，让你很难琢磨出删除它的方法。这里总结了一些方法，都是google和自己摸索的，不全，但愿能解决一些问题。
+</p>
+<h2 class="content_h2">
+删除从App Store中安装的程序
+</h2>
+<p>
+这个是最简单的，只需要打开Launchpad，左键点住任意一个程序图标不松开，大约2秒后，所有的图标都会抖起来，而且，只要是通过从App Store中安装的程序图标右上角就会出现一个小X，点它就可以删除掉。
+</p>
+<p>
+除了左键点住不放，还可以在Launchpad界面按住option键，所有图标都会同样的抖动起来。
+</p>
+<h2 class="content_h2">
+删除通过复制进程序到应用程序中，产生的Launchpad图标
+</h2>
+<p>
+一般情况下，这样的图标和程序是连在一起的，只要程序删除了，图标自己也删除了，所以，只需要打开Finder，打开应用程序，将里面需要删除的程序拖到废纸篓里就行了。
+</p>
+<h2 class="content_h2">
+已经删除应用程序，而Launchpad中仍然有相关程序图标
+</h2>
+<p>
+这个就是必须要吐槽的地方，也许apple根本就不太造成不通过App Store来安装应用程序，因此对于这种方式安装程序的Launchpad图标，经常性会没有跟随应用程序的删除而删除，而且系统本身没有提供一个图形化的操作方式来让用户删除图标，所以造成了这样的麻烦
+</p>
+<p>
+对于这样的情况，网上有直接操作数据库的方法，我试了一下，仍然没能成功（也许我遇的情况比较特别）
+</p>
+<p>
+1、在终端里执行：
+</p>
+<pre class="content_pre">
+sqlite3 ~/Library/Applcation\ Support/Dock/*.db "delete from apps where title='你要删除应用程序的名字'"; && killall Dock;
+</pre>
+<p>
+可以看出OSX是用的sqlite3来存储的数据，通过对数据库进行删除操作，来达到删除程序图标的目的，之后的killall Dock，只是让Dock重启，更新数据。
+</p>
+<p>
+试了之后没成功，因为是数据库，所以查了一下关于sqlite的终端操作，进行sqlite3的环境里，查看app表里的数据，发现根本就没有我想删除的应用程序图标名称。基本操作是这样的：
+</p>
+<pre class="content_pre">
+1、sqlite3 ~/Library/Applcation\ Support/Dock/*.db  //进入sqlite3的运行环境
+2、select * from apps;  //查看表apps里的数据
+3、delete from apps where title='你要删除程序的名字';  //这里和前面的删除方法是一样的，因为是操作数据库嘛。当然也可以使用item_id来做条件
+4、.exit退出Sqlite3的环境。
+</pre>
+<p>
+这样操作后，如果发现图标仍然存在，可以重启一下电脑，理论上就会消失了。
+</p>
+<p>
+下面来讲我遇到的情况，我要删除的是Beyond Compare 3 的图标，因为这个程序其实是windows程序，所以是使用CrossOver来运行，安装之后，Launchpad里出现好多个相关的图标，如CrossOver，Beyond Compare 3，Beyond Compare 3卸载程序等。但和Beyond Compare3相关的图标，在Finder的应用程序中是找不到的，只有一个CrossOver，那么将CrossOver拖入废纸篓后，CrossOver图标是消失了，但Beyond Compare 3相关的图标都在，没办法删除，使用上面的方法都不管用。要怎么删除呢，这时注意到Finder中有个Applications文件夹，打开一看，里面就有CrossOver的文件夹，里面刚好有Beyond Compare 3相关的几个程序，于是将它们全部拖到废纸篓里，终于Launchpad里的图标消失了
+</p>
+<p>
+所以，在这里，除了以上的几种方法外，还提供一种可能的方法：
+</p>
+<p>
+查看Finder中Applications文件夹里，是不是有你想要删除而删除不了的程序图标文件夹，如果有，拖到废纸篓里。
+</p>
+<p>
+<img src="{{ site:url }}/images/201307/072201.png" alt="" />
+</p>
