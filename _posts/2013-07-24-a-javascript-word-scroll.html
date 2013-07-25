@@ -1,0 +1,223 @@
+---
+layout: post
+title: js，关于无缝滚动，文字篇
+category: javascript
+description: 以前写过一篇关于无缝滚动的东西，是关于图片的，仔细想想，在克隆本体上，不需要将整个对象都克隆一份，只需要将第一个对象复制到末尾就可以了，所以这里用一个文字滚动来实现一下想法。
+img: 201307/072501.png
+keywords: javascript,jquery,无缝滚动,文字
+---
+<p>
+以前写过一篇关于无缝滚动的东西，是关于图片的，仔细想想，在克隆本体上，不需要将整个对象都克隆一份，只需要将第一个对象复制到末尾就可以了，所以这里用一个文字滚动来实现一下想法。
+</p>
+<p>
+上一篇：<a href="{{ site:url }}/javascript/2012/10/30/a-javascript-projector.html">【JS】幻灯片，无缝循环滚动小解</a>
+</p>
+<h2 class="content_h2">
+演示
+</h2>
+<style type="text/css">
+.integration_users{width:600px;height:30px;overflow: hidden;position: relative;z-index: 10;}
+.integration_users ul{height:30px;position: absolute;z-index: 10;left:40px;top:0px;}
+.integration_users ul li{height:30px;line-height: 30px;}
+.integration_users a{color:#cc0000;}
+.integration_users a:hover{color:#ff696b;}
+</style>
+<div class="integration_users">
+	<ul id="integration_users_ul">
+		<li class="integration_users_li">恭喜 德田重男 兑换到 唯一美食 提供的 梦依臣正品女装短款外套 时尚披肩 松紧带收缩纯色连帽短外套</li>
+		<li class="integration_users_li">恭喜 马中赤兔 兑换到 北碚春林家具直销经营部 提供的 优惠卡全场8折</li>
+	</ul>
+</div>
+<script type="text/javascript">
+jQuery(function($){
+
+	Scroll({
+		'itemsbox':$("#integration_users_ul"),
+		'items':$(".integration_users_li"),
+		'step':1,
+		'timesup':3000
+	});
+
+	function Scroll(options){
+		var _itemsbox=options.itemsbox;
+		var _items=options.items;
+		var _itemNums=_items.size();
+		var _itemHeight=_items.outerHeight();
+		var _allItemHeight=(_itemNums+1)*_itemHeight;
+		var _moveItem=0;
+		var _moveDis=0;
+		var _step=options.step;
+		var _timesup=options.timesup;
+
+		_itemsbox.append("<li class='integration_users_li'>"+_items.eq(0).html()+"</li>");
+
+		function move(){
+			var _this=this;
+			var _moveHeight=parseInt(_itemsbox.css('top'));
+			if(Math.abs(_moveItem)>=_allItemHeight-_itemHeight){
+				_itemsbox.css('top',0);
+				_moveItem=0;
+			}
+			this.itemMove=setInterval(function(){
+				_moveDis=_moveDis+_step;
+				_moveItem=_moveItem-_step;
+				if(_moveDis==_itemHeight){
+					_moveDis=0;
+					clearInterval(_this.itemMove);
+				}else{
+					_itemsbox.css('top',_moveItem);
+				}
+			},20);
+			
+			setTimeout(move,_timesup);
+		}
+		setTimeout(move,_timesup);
+	}
+})
+</script>
+<h2 class="content_h2">
+实现
+</h2>
+<p>
+这里主要是使用了position的相对定位来移动对象，你对象使用overflow:hidden来隐藏移动对象，这样每隔一段时间移动一个整行，当移动到最后一行的时候，将整个移动对象的位置归0，也就是从头开始。
+</p>
+<p>
+因为最后一行其实是我们复制的第一行，所以在移动对象位置归0的时候，是看不到任何变化的。
+</p>
+<h2 class="content_h2">
+HTML结构
+</h2>
+<pre class="prettyprint lang-html">
+&lt;style type="text/css"&gt;
+.integration_users{width:600px;height:30px;overflow: hidden;position: relative;z-index: 10;}
+.integration_users ul{height:30px;position: absolute;z-index: 10;left:40px;top:0px;}
+.integration_users ul li{height:30px;line-height: 30px;}
+&lt;/style&gt;
+&lt;div class="integration_users"&gt;
+	&lt;ul id="integration_users_ul"&gt;
+		&lt;li class="integration_users_li"&gt;恭喜 德田重男 兑换到 唯一美食 提供的 梦依臣正品女装短款外套 时尚披肩 松紧带收缩纯色连帽短外套&lt;/li&gt;
+		&lt;li class="integration_users_li"&gt;恭喜 马中赤兔 兑换到 北碚春林家具直销经营部 提供的 优惠卡全场8折&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+<p>
+这里主要有几点，父对象的定位、行高和隐藏。移动对应的定位，移动对象子元素的行高。行高都得相同，不然移动就会不对了
+</p>
+<h2 class="content_h2">
+JS部分
+</h2>
+<p>
+实际上我们只有两行数据，所以得先将第一行复制到后面，变成3行，目的就是让它无缝的滚动起来
+</p>
+<pre class="prettyprint lang-javascript">
+var _itemsbox=options.itemsbox;
+var _items=options.items;
+_itemsbox.append("&lt;li class='integration_users_li'&gt;"+_items.eq(0).html()+"&lt;/li&gt;");
+</pre>
+<p>
+之后，需要计算它的行高和总的高度
+</p>
+<pre class="prettyprint lang-javascript">
+var _itemNums=_items.size(); //无素个数
+var _itemHeight=_items.outerHeight(); //每一个元素高度
+var _allItemHeight=(_itemNums+1)*_itemHeight; //所有元素总高度
+</pre>
+<p>
+因为我们先复制了一个，所以总高度+1
+</p>
+<p>
+接下来，要定义几个变量
+</p>
+<pre class="prettyprint lang-javascript">
+var _moveItem=0; //移动对象总的移动距离，像素单位
+var _moveDis=0;  //每次移动时的距离，主要是用于判断是否移动了一行，因为移动一行后需要停止
+var _step=options.step; //移动步长
+var _timesup=options.timesup;  //每行移动时间
+</pre>
+<p>
+有了这些东西后，就可以开始滚动了，每次执行滚动时，先判断移动的距离是不是已经到了最后一行，如果是，将整个移动对象位置归0，移动对象总的移动距离归0，也就是_moveItem=0
+</p>
+<pre class="prettyprint lang-javascript">
+var _moveHeight=parseInt(_itemsbox.css('top'));
+if(Math.abs(_moveItem)&gt;=_allItemHeight-_itemHeight){
+	_itemsbox.css('top',0);
+	_moveItem=0;
+}
+</pre>
+<p>
+之后利用setInterval来移动对象，中间使用_moveDis来判断是否移动到一行，如果是停止
+</p>
+<pre class="prettyprint lang-javascript">
+this.itemMove=setInterval(function(){
+	_moveDis=_moveDis+_step;
+	_moveItem=_moveItem-_step;
+	if(_moveDis==_itemHeight){
+		_moveDis=0;
+		clearInterval(_this.itemMove);
+	}else{
+		_itemsbox.css('top',_moveItem);
+	}
+},20);
+</pre>
+<p>
+最后，使用setTimeout()，来定时执行
+</p>
+<pre class="prettyprint lang-javascript">
+setTimeout(move,_timesup);
+</pre>
+<p>
+和之前的思想没什么太大的区别，只是在复制对像上做了一些改进，让整个代码更清楚一些。最后是完整的代码
+</p>
+<pre class="prettyprint lang-javascript">
+function Scroll(options){
+	var _itemsbox=options.itemsbox;
+	var _items=options.items;
+	var _itemNums=_items.size();
+	var _itemHeight=_items.outerHeight();
+	var _allItemHeight=(_itemNums+1)*_itemHeight;
+	var _moveItem=0;
+	var _moveDis=0;
+	var _step=options.step;
+	var _timesup=options.timesup;
+
+	_itemsbox.append("&lt;li class='integration_users_li'&gt;"+_items.eq(0).html()+"&lt;/li&gt;");
+
+	function move(){
+		var _this=this;
+		var _moveHeight=parseInt(_itemsbox.css('top'));
+		if(Math.abs(_moveItem)&gt;=_allItemHeight-_itemHeight){
+			_itemsbox.css('top',0);
+			_moveItem=0;
+		}
+		this.itemMove=setInterval(function(){
+			_moveDis=_moveDis+_step;
+			_moveItem=_moveItem-_step;
+			if(_moveDis==_itemHeight){
+				_moveDis=0;
+				clearInterval(_this.itemMove);
+			}else{
+				_itemsbox.css('top',_moveItem);
+			}
+		},20);
+		
+		setTimeout(move,_timesup);
+	}
+	setTimeout(move,_timesup);
+}
+</pre>
+<p>
+使用：HTML就是上面那一段
+</p>
+<pre class="prettyprint lang-javascript">
+Scroll({
+	'itemsbox':$("#integration_users_ul"),
+	'items':$(".integration_users_li"),
+	'step':1,
+	'timesup':3000
+});
+</pre>
+<script type="text/javascript">
+jQuery(function($){
+	window.prettyPrint && prettyPrint();
+});
+</script>
