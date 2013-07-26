@@ -18,10 +18,8 @@ keywords: javascript,jquery,无缝滚动,文字
 <style type="text/css">
 ul{list-style: none;padding:0px;margin:0px;}
 .integration_users{width:600px;height:30px;overflow: hidden;position: relative;z-index: 10;}
-.integration_users ul{height:30px;position: absolute;z-index: 10;left:40px;top:0px;}
+.integration_users ul{position: absolute;z-index: 10;left:40px;top:0px;}
 .integration_users ul li{height:30px;line-height: 30px;overflow: hidden;}
-.integration_users a{color:#cc0000;}
-.integration_users a:hover{color:#ff696b;}
 </style>
 <div class="integration_users">
 	<ul id="integration_users_ul">
@@ -62,11 +60,10 @@ jQuery(function($){
 			this.itemMove=setInterval(function(){
 				_moveDis=_moveDis+_step;
 				_moveItem=_moveItem-_step;
+				_itemsbox.css('top',_moveItem);
 				if(_moveDis==_itemHeight){
 					_moveDis=0;
 					clearInterval(_this.itemMove);
-				}else{
-					_itemsbox.css('top',_moveItem);
 				}
 			},20);
 			
