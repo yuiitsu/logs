@@ -64,10 +64,9 @@ jQuery(function($){
 				if(_moveDis==_itemHeight){
 					_moveDis=0;
 					clearInterval(_this.itemMove);
+					setTimeout(move,_timesup);
 				}
 			},20);
-			
-			setTimeout(move,_timesup);
 		}
 		setTimeout(move,_timesup);
 	}
@@ -193,10 +192,9 @@ function Scroll(options){
 			if(_moveDis==_itemHeight){
 				_moveDis=0;
 				clearInterval(_this.itemMove);
+				setTimeout(move,_timesup);
 			}
 		},20);
-		
-		setTimeout(move,_timesup);
 	}
 	setTimeout(move,_timesup);
 }
