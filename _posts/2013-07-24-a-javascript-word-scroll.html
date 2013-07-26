@@ -88,7 +88,7 @@ HTML结构
 <pre class="prettyprint lang-html">
 &lt;style type="text/css"&gt;
 .integration_users{width:600px;height:30px;overflow: hidden;position: relative;z-index: 10;}
-.integration_users ul{height:30px;position: absolute;z-index: 10;left:40px;top:0px;}
+.integration_users ul{position: absolute;z-index: 10;left:40px;top:0px;}
 .integration_users ul li{height:30px;line-height: 30px;}
 &lt;/style&gt;
 &lt;div class="integration_users"&gt;
@@ -149,11 +149,10 @@ if(Math.abs(_moveItem)&gt;=_allItemHeight-_itemHeight){
 this.itemMove=setInterval(function(){
 	_moveDis=_moveDis+_step;
 	_moveItem=_moveItem-_step;
+	_itemsbox.css('top',_moveItem+'px');
 	if(_moveDis==_itemHeight){
 		_moveDis=0;
 		clearInterval(_this.itemMove);
-	}else{
-		_itemsbox.css('top',_moveItem);
 	}
 },20);
 </pre>
@@ -184,17 +183,16 @@ function Scroll(options){
 		var _this=this;
 		var _moveHeight=parseInt(_itemsbox.css('top'));
 		if(Math.abs(_moveItem)&gt;=_allItemHeight-_itemHeight){
-			_itemsbox.css('top',0);
+			_itemsbox.css('top','0px');
 			_moveItem=0;
 		}
 		this.itemMove=setInterval(function(){
 			_moveDis=_moveDis+_step;
 			_moveItem=_moveItem-_step;
+			_itemsbox.css('top',_moveItem+'px');
 			if(_moveDis==_itemHeight){
 				_moveDis=0;
 				clearInterval(_this.itemMove);
-			}else{
-				_itemsbox.css('top',_moveItem);
 			}
 		},20);
 		
