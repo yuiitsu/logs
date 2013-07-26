@@ -60,7 +60,7 @@ jQuery(function($){
 			this.itemMove=setInterval(function(){
 				_moveDis=_moveDis+_step;
 				_moveItem=_moveItem-_step;
-				_itemsbox.css('top',_moveItem);
+				_itemsbox.css('top',_moveItem+'px');
 				if(_moveDis==_itemHeight){
 					_moveDis=0;
 					clearInterval(_this.itemMove);
