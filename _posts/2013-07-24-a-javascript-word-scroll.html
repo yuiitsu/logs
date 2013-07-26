@@ -33,7 +33,7 @@ jQuery(function($){
 	Scroll({
 		'itemsbox':$("#integration_users_ul"),
 		'items':$(".integration_users_li"),
-		'step':1,
+		'speed':20,
 		'timesup':3000
 	});
 
@@ -45,7 +45,7 @@ jQuery(function($){
 		var _allItemHeight=(_itemNums+1)*_itemHeight;
 		var _moveItem=0;
 		var _moveDis=0;
-		var _step=options.step;
+		var _speed=options.speed;
 		var _timesup=options.timesup;
 
 		_itemsbox.append("<li class='integration_users_li'>"+_items.eq(0).html()+"</li>");
@@ -58,15 +58,15 @@ jQuery(function($){
 				_moveItem=0;
 			}
 			this.itemMove=setInterval(function(){
-				_moveDis=_moveDis+_step;
-				_moveItem=_moveItem-_step;
+				_moveDis=_moveDis+1;
+				_moveItem=_moveItem-1;
 				_itemsbox.css('top',_moveItem+'px');
 				if(_moveDis==_itemHeight){
 					_moveDis=0;
 					clearInterval(_this.itemMove);
 					setTimeout(move,_timesup);
 				}
-			},20);
+			},_speed);
 		}
 		setTimeout(move,_timesup);
 	}
@@ -128,8 +128,8 @@ var _allItemHeight=(_itemNums+1)*_itemHeight; //所有元素总高度
 <pre class="prettyprint lang-javascript">
 var _moveItem=0; //移动对象总的移动距离，像素单位
 var _moveDis=0;  //每次移动时的距离，主要是用于判断是否移动了一行，因为移动一行后需要停止
-var _step=options.step; //移动步长
-var _timesup=options.timesup;  //每行移动时间
+var _speed=options.speed; //移动知速度
+var _timesup=options.timesup;  //停留时间
 </pre>
 <p>
 有了这些东西后，就可以开始滚动了，每次执行滚动时，先判断移动的距离是不是已经到了最后一行，如果是，将整个移动对象位置归0，移动对象总的移动距离归0，也就是_moveItem=0
@@ -146,8 +146,8 @@ if(Math.abs(_moveItem)&gt;=_allItemHeight-_itemHeight){
 </p>
 <pre class="prettyprint lang-javascript">
 this.itemMove=setInterval(function(){
-	_moveDis=_moveDis+_step;
-	_moveItem=_moveItem-_step;
+	_moveDis=_moveDis+1;
+	_moveItem=_moveItem-1;
 	_itemsbox.css('top',_moveItem+'px');
 	if(_moveDis==_itemHeight){
 		_moveDis=0;
@@ -173,7 +173,7 @@ function Scroll(options){
 	var _allItemHeight=(_itemNums+1)*_itemHeight;
 	var _moveItem=0;
 	var _moveDis=0;
-	var _step=options.step;
+	var _speed=options.speed;
 	var _timesup=options.timesup;
 
 	_itemsbox.append("&lt;li class='integration_users_li'&gt;"+_items.eq(0).html()+"&lt;/li&gt;");
@@ -186,15 +186,15 @@ function Scroll(options){
 			_moveItem=0;
 		}
 		this.itemMove=setInterval(function(){
-			_moveDis=_moveDis+_step;
-			_moveItem=_moveItem-_step;
+			_moveDis=_moveDis+1;
+			_moveItem=_moveItem-1;
 			_itemsbox.css('top',_moveItem+'px');
 			if(_moveDis==_itemHeight){
 				_moveDis=0;
 				clearInterval(_this.itemMove);
 				setTimeout(move,_timesup);
 			}
-		},20);
+		},_speed);
 	}
 	setTimeout(move,_timesup);
 }
@@ -206,7 +206,7 @@ function Scroll(options){
 Scroll({
 	'itemsbox':$("#integration_users_ul"),
 	'items':$(".integration_users_li"),
-	'step':1,
+	'speed':20,
 	'timesup':3000
 });
 </pre>
