@@ -54,7 +54,7 @@ jQuery(function($){
 			var _this=this;
 			var _moveHeight=parseInt(_itemsbox.css('top'));
 			if(Math.abs(_moveItem)>=_allItemHeight-_itemHeight){
-				_itemsbox.css('top',0);
+				_itemsbox.css('top','0px');
 				_moveItem=0;
 			}
 			this.itemMove=setInterval(function(){
