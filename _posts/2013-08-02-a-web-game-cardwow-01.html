@@ -6,8 +6,14 @@ description: 这不是教程，只是博主在娱乐过程中的一些小结记�
 img: 201308/080202.png
 keywords: javascript,jquery,php,webgame,卡片魔兽,魔兽世界
 ---
+<h2 class="content_h2">
+写在前面的话
+</h2>
 <p>
-	这不是教程，只是博主在娱乐过程中的一些小结记录。博主水平有限，没有什么高级的内容，只是将一些小的知识点结合一下，做这么一个养成类型的卡片页面游戏（=。=！有点绕）。做一个完整的游戏，涉及内容很多，所以一步一步来，这一篇，主要是讲《卡片魔兽》的基础战斗的实现。完整的战斗估计要用三篇博文来讲，所以，这是第一篇
+	这不是教程，只是博主在娱乐过程中的一些小结记录。博主水平有限，没有什么高级的内容，只是将一些小的知识点结合一下，做这么一个养成类型的卡片页面游戏（=。=！有点绕）。做一个完整的游戏，涉及内容很多，所以一步一步来，这一篇，主要是讲《卡片魔兽》的基础战斗的实现。完整的战斗估计要用三篇博文来讲，所以，这是第一篇。
+</p>
+<p>
+	关于使用的语言，PHP+Javascript(jQuery)+HTML+CSS。没使用HTML5，因为我还在学HTML5，争取以后可以使用HTML5来进行制作。
 </p>
 <h2 class="content_h2">
 关于游戏设计
@@ -49,7 +55,7 @@ keywords: javascript,jquery,php,webgame,卡片魔兽,魔兽世界
 	在讲这些内容前，还得先讲讲职业角色的内容，关系到战斗时数据的读取与处理
 </p>
 <h2 class="content_h2">
-职业角色的生成
+职业角色的属性
 </h2>
 <p>
 	每一个职业角色，都用一个数组来保存它的各种属性，拿战士为例，它会有以下几个属性
@@ -63,10 +69,182 @@ keywords: javascript,jquery,php,webgame,卡片魔兽,魔兽世界
 	<li>剩余血量</li>
 	<li>能量上限</li>
 	<li>已有能量</li>
+	<li>能量颜色(用于显示)</li>
 	<li>能量类型</li>
 	<li>爆机几率</li>
 	<li>攻击速度</li>
 </ul>
+<p>
+	以上只是本篇博文要介绍的内容，当然一个角色还有很多的属性，如：buff，debuff，角色状态（如：盗贼的潜行）
+</p>
+<p>
+	玩家角色属性数组：
+</p>
+<pre class="prettyprint lang-php">
+$this->_players_status=array(
+	'1'=>array(
+		'profession'=>'priest',  //职业：牧师
+		'race'=>'human',  //种族：人类
+		'sex'=>'female',  //性别：女
+		'lv'=>1,  //等级：1级
+		'blood_total'=>400,  //总血量：400
+		'blood_remain'=>400,  //剩余血量：400
+		'energy_total'=>600,  //能量上限：600
+		'energy'=>600,  //剩余能量：600
+		'energy_type'=>'magic',  //能量类型：魔法
+		'energy_color'=>'blue',  //能量颜色
+		'crit'=>10,  //爆机几率：10%
+		'speed'=>25  //攻击速度：25%
+	),
+	'2'=>array(
+		'profession'=>'warrior',
+		'race'=>'dwarf',
+		'sex'=>'female',
+		'lv'=>1,
+		'blood_total'=>500,
+		'blood_remain'=>500,
+		'energy_total'=>100,
+		'energy'=>0,
+		'energy_type'=>'rage',
+		'energy_color'=>'red',
+		'crit'=>10,
+		'speed'=>10
+	),
+);
+</pre>
+<p>
+	这些属性里很多一看就懂的，也没什么特别。只是要讲讲几个和攻击效果有关的
+</p>
+<p>
+	energy_type：能量类型。我们知道魔兽世界里的能量有三种：
+</p>
+<ul>
+	<li>1、魔法。初始状态是满值，即等于能量上限</li>
+	<li>2、怒气。初始状态是空值，即0</li>
+	<li>3、能量。初始状态是满值，即等于能量上限</li>
+</ul>
+<p>
+	在这里，魔法和能量从类型上讲是一样的，只是颜色不同，所以用energy_color来做一下区分。程序根据它们的值来调用不同的CSS样式，从而显示不同的颜色
+</p>
+<p>
+	crit：爆机几率。是一个百分比。
+</p>
+<p>
+	speed：攻击速度。也是一个百分比，它是决定攻击先后顺序的一个值。比如敌我双方有10个角色，在玩家技能选择结束后，哪个角色先攻击，就靠这个值来做排序，值越大的，越先攻击。
+</p>
+<h2 class="content_h2">
+职业技能的属性
+</h2>
+<p>
+	和角色属性一样，技能属性也用一个数组来保存，看看牧师和战士的技能先：
+</p>
+<pre class="prettyprint lang-php">
+$this->_players_skills=array(
+	'1'=>array(  //对应角色属性数组里的角色
+		'kszl'=>array(  //技能简写（拼音）
+			'id'=>0,	//技能ID
+			'name'=>'快速治疗',  //技能名称
+			'damage'=>120,  //技能基本伤害值（如果是治疗技能，它就是基本补血值）
+			'use_energy'=>50,  //使用能量值
+			'add_energy'=>0,  //增加能量值
+			'cure'=>1,  //是否是治疗技能
+			'unit'=>'1',  //伤害单位，数值或百分比
+			'member'=>1,  //目标单位数，0为群体
+			'explanation'=>'快速治疗一名友放目标，回复120点生命',  //技能介绍
+		),
+		'zldy'=>array(
+			'id'=>1,
+			'name'=>'治疗祷言',
+			'damage'=>80,
+			'use_energy'=>100,
+			'add_energy'=>0,
+			'cure'=>1,
+			'unit'=>'1',
+			'member'=>0,
+			'explanation'=>'为所有队友回复80点生命',
+		),
+		'cj'=>array(
+			'id'=>2,
+			'name'=>'惩击',
+			'damage'=>120,
+			'use_energy'=>80,
+			'add_energy'=>0,
+			'explanation'=>'惩击一名敌人，造成120点神圣伤害',
+		),
+		'tkyz'=>array(
+			'id'=>3,
+			'name'=>'痛苦压制',
+			'damage'=>40,
+			'use_energy'=>120,
+			'add_energy'=>0,
+			'explanation'=>'保护一名队友，使其受到的所有伤害减少40%',
+		),
+		'zysd'=>array(
+			'id'=>4,
+			'name'=>'真言术韧',
+			'damage'=>30,
+			'use_energy'=>80,
+			'add_energy'=>0,
+			'explanation'=>'增加所有小队成员30%生命',
+		),
+
+	),
+	'2'=>array(
+		'zs'=>array(
+			'id'=>0,
+			'name'=>'致死打击',
+			'damage'=>100,
+			'use_energy'=>0,
+			'add_energy'=>20,
+			'explanation'=>'一次强有力的攻击，造成100点伤害，产生20点怒气值',
+		),
+		'jrdj'=>array(
+			'id'=>1,
+			'name'=>'巨人打击',
+			'damage'=>80,
+			'use_energy'=>0,
+			'add_energy'=>0,
+			'explanation'=>'造成80点基础伤害，可以使你接下来的攻击无视目标100%护甲，持续3个回合',
+		),
+		'yy'=>array(
+			'id'=>2,
+			'name'=>'英勇',
+			'damage'=>150,
+			'use_energy'=>30,
+			'add_energy'=>0,
+			'explanation'=>'一次猛烈攻击，造成150点伤害，消耗30点怒气',
+		),
+		'yh'=>array(
+			'id'=>3,
+			'name'=>'援护',
+			'damage'=>0,
+			'use_energy'=>0,
+			'add_energy'=>0,
+			'explanation'=>'高速跑向一名队友，你将代替目标承受下一次攻击',
+		),
+		'jjnh'=>array(
+			'id'=>4,
+			'name'=>'集结呐喊',
+			'damage'=>20,
+			'use_energy'=>0,
+			'add_energy'=>0,
+			'cure'=>1,
+			'unit'=>'%',
+			'member'=>0,
+			'explanation'=>'暂时使全队成员生命值提高20%，持续3个回合，3个回合后，这些生命值将被扣除',
+		),
+	),
+);
+</pre>
+<p>
+	第一个技能写了注释，这里还是要讲一下几个特别一点东西
+</p>
+<p>
+	user_energy和add_energy：消耗能量和增加能量。这就是能量类型中魔法和怒气的区别，魔法，在普通攻击技能下只会消耗，而怒气则不同，有的技能产生怒力，而不消耗怒气，有的消耗而不产生。所以有这两个属性值。
+</p>
+<p>
+	unit：单位。一般情况下就两种，1、数值。2、是百分比。如果是百分比，系统会按伤害值的百分比进行计算，如果是数值，则不用
+</p>
 <script type="text/javascript">
 jQuery(function($){
 	window.prettyPrint && prettyPrint();
