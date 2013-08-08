@@ -1,0 +1,685 @@
+---
+layout: post
+title: 一起来做webgame，《老虎机》
+category: game
+description: 上一篇《卡片魔兽》写得很晕，博主文字功底太浅，虽然喜欢写，但总感觉表述不清楚，所以暂停一下。先来说个简单的，《老虎机》，相信都玩过（没玩过也看过），比起《卡片魔兽》，它就要简单多了
+img: 201308/080801.jpg
+keywords: javascript,jquery,php,game,one-arm bandit,老虎机
+---
+<p>
+	上一篇《卡片魔兽》写得很晕，博主文字功底太浅，虽然喜欢写，但总感觉表述不清楚，所以暂停一下。先来说个简单的，《老虎机》，相信都玩过（没玩过也看过），比起《卡片魔兽》，它就要简单多了。
+</p>
+<h2 class="content_h2">
+测试
+</h2>
+<style type="text/css">
+.integration_park_777{width:720px;height:500px;float:left;background-color:#ccc;position: relative;z-index: 10;}
+.integration_park_777 h3{height:50px;line-height:50px;text-align:center;}
+.integration_park_777_result{height:30px;line-height:30px;text-align:center;}
+.integration_park_777_result span{padding:5px 10px;font-weight:bold;background-color:#444;color:#fff;font-size:18px;}
+.integration_park_777_item_box{width:420px;overflow:hidden;height:150px;margin:0 auto;background-color:#e1e1e1;padding-top:30px;padding-left:20px;}
+.integration_park_777_item{float:left;margin-right:20px;width:120px;height:120px;background-color:#999;}
+.integration_park_777_item_div{width:80px;height:80px;margin-left:20px;margin-top:20px;background-color:#666;overflow: hidden;position: relative;z-index: 10;}
+.integration_park_777_item_div ul{position: absolute;z-index: 10;left:0px;top:0px;}
+.integration_park_777_item_div ul li{width:80px;height:80px;}
+.integration_park_777_item_div ul li div{width:80px;height:80px;overflow: hidden;}
+.integration_park_user{width:440px;margin:0 auto;height:100px;}
+.integration_park_user_avatar{float:left;margin-right:10px;}
+.integration_park_user_info{float:left;}
+#userpoints{font-size:18px;font-weight: bold;font-family: tahoma;}
+.integration_park_777_start_info{position: absolute;top:210px;right:60px;width:16px;}
+.integration_park_777_start{position: absolute;width:30px;height:90px;top:220px;right:90px;background-color:#efefef;}
+.integration_park_777_start_button{position: absolute;width:30px;height:30px;top:0px;left:0px;background-color:#009900;cursor:pointer;}
+.integration_park_start{width:440px;margin:0 auto;margin-top:20px;}
+.integration_park_start p{margin-bottom:10px;}
+</style>
+<div class="integration_park_777">
+	<h3>老虎机</h3>
+	<div id="result" class="integration_park_777_result"></div>
+	<div class="integration_park_777_item_box">
+		<div class="integration_park_777_item integration_park_777_item01">
+			<div class="integration_park_777_item_div">
+				<ul id="integration_park_777_item01">
+					<li class="integration_park_777_item01_li" id="item01_0">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/00/44_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item01_li" id="item01_1">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/04_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item01_li" id="item01_2">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/83_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item01_li" id="item01_3">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/10_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item01_li" id="item01_4">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/15_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item01_li" id="item01_5">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/62_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item01_li" id="item01_6">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/02/36_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item01_li" id="item01_7">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/00/68_avatar_300.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item01_li" id="item01_8">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/51_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item01_li" id="item01_9">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/07_avatar_80.jpg" alt="" /></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="integration_park_777_item integration_park_777_item02">
+			<div class="integration_park_777_item_div">
+				<ul id="integration_park_777_item02">
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/00/44_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/04_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/83_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/10_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/15_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/62_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/02/36_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/00/68_avatar_300.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/51_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item02_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/07_avatar_80.jpg" alt="" /></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="integration_park_777_item integration_park_777_item03">
+			<div class="integration_park_777_item_div">
+				<ul id="integration_park_777_item03">
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/00/44_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/04_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/83_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/10_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/15_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/62_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/02/36_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/00/68_avatar_300.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/51_avatar_80.jpg" alt="" /></div>
+					</li>
+					<li class="integration_park_777_item03_li">
+						<div><img src="http://www.baosse.com/attachments/avatar/000/01/01/07_avatar_80.jpg" alt="" /></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+	<div class="integration_park_777_start_info">往下拖方块</div>
+	<div class="integration_park_777_start" id="integration_park_777_start">
+		<div class="integration_park_777_start_button" id="integration_park_777_start_button"></div>
+	</div>
+</div>
+<script type="text/javascript">
+jQuery(function($){
+	var moveItem01=0;
+	var moveItem02=0;
+	var moveItem03=0;
+	var itemNums=0;
+	var itemHeight=0;
+	var allItemHeight=0;
+	var timer01;
+	var timer02;
+	var timer03;
+
+	var _button=$("#integration_park_777_start_button");
+	var _box=$("#integration_park_777_start");
+	var _button_pos=_button.offset();
+	var _button_height=_button.outerHeight();
+	var _box_height=_box.outerHeight();
+	var _box_pos=_box.offset();
+	var _mouse_top=0;
+	var _button_flag=0;
+
+	init();
+
+	$("#integration_park_777_start_button").mousedown(function(e){
+		if(_button_flag==0){
+			_box.mousemove(function(e){
+				_mouse_top=e.pageY;
+				_button.css('top',_mouse_top-_button_pos.top);
+				if((_mouse_top-_button_pos.top)>=_box_height-_button_height){
+					_button_flag=1;
+					_button.css('top',_box_height-_button_height);
+					_box.unbind('mousemove');
+					$("#result").html('<img src="{SYS_URL}attachments/images/loading.gif" alt="processing" />');
+					timer01=setInterval(function(){
+						start($('#integration_park_777_item01'),1);
+					},70);
+					timer02=setInterval(function(){
+						start($('#integration_park_777_item02'),2);
+					},70);
+					timer03=setInterval(function(){
+						start($('#integration_park_777_item03'),3);
+					},70);
+					setTimeout(function(){
+						var index1=Math.floor(Math.random()*9);
+						var index2=Math.floor(Math.random()*9);
+						var index3=Math.floor(Math.random()*9);
+						move(index1,index2,index3,0,0);
+					},3000);
+				}
+			});
+		}
+	});
+	$('body').mouseup(function(e){
+		$("#integration_park_777_start").unbind('mousemove');
+		if((_mouse_top-_button_pos.top)<_box_height-_button_height){
+			button_init();
+		}
+	});
+
+	function init(){
+		for(var i=1;i<=3;i++){
+			var itembox=$("#integration_park_777_item0"+i);
+			var item=$(".integration_park_777_item0"+i+"_li");
+			itemNums=item.size();
+			itemHeight=item.outerHeight();
+			allItemHeight=(itemNums+1)*itemHeight;
+			var _itemClass=item.attr('class');
+			itembox.append("<li class='"+_itemClass+"'>"+item.eq(0).html()+"</li>");
+		}
+	}
+
+	function button_init(){
+		_button.animate({'top':0},'slow',function(){
+			_button_flag=0;
+		});
+	}
+
+	function start(obj,t){
+		if(t==1){
+			if(Math.abs(moveItem01)>=allItemHeight-itemHeight){
+				obj.css('top','0px');
+				moveItem01=0;
+			}
+			moveItem01=moveItem01+itemHeight;
+			obj.animate({'top':-moveItem01},70);
+		}
+		if(t==2){
+			if(Math.abs(moveItem02)>=allItemHeight-itemHeight){
+				obj.css('top','0px');
+				moveItem02=0;
+			}
+			moveItem02=moveItem02+itemHeight;
+			obj.animate({'top':-moveItem02},70);
+		}
+		if(t==3){
+			if(Math.abs(moveItem03)>=allItemHeight-itemHeight){
+				obj.css('top','0px');
+				moveItem03=0;
+			}
+			moveItem03=moveItem03+itemHeight;
+			obj.animate({'top':-moveItem03},70);
+		}
+	}
+
+	function move(index1,index2,index3,status,points){
+		var item01=$('#integration_park_777_item01');
+		var item02=$('#integration_park_777_item02');
+		var item03=$('#integration_park_777_item03');
+		item01.stop(true);
+		clearInterval(timer01);
+		item01.animate({'top':-itemHeight*index1},'slow',function(){
+			item02.stop(true);
+			clearInterval(timer02);
+			item02.animate({'top':-itemHeight*index2},'slow',function(){
+				item03.stop(true);
+				clearInterval(timer03);
+				item03.animate({'top':-itemHeight*index3},'slow',function(){
+					button_init();
+					if(index1!=index2&&index1!=index3&&index2!=index3){
+						$("#result").html('<span>You lose!</span>');
+					}else if(index1==index2&&index1==index3){
+						$("#result").html('<span>欢呼吧！你中大奖了！</span>');
+					}else{
+						$("#result").html('<span>You win!</span>');
+					}
+				});
+			});
+		});
+	}
+});
+</script>
+<h2 class="content_h2">
+主要问题
+</h2>
+<ul>
+	<li>卡片滚动</li>
+	<li>卡片停止时和数据同步</li>
+	<li>不同卡片选中机率</li>
+	<li>摇杆开始</li>
+</ul>
+<p>
+	看看这4个问题，其中三个是不是可以用前面几篇博文中的方法来解决。
+</p>
+<ul>
+	<li>卡片滚动：无缝滚动</li>
+	<li>不同卡片选中机率：百分比随机获取</li>
+	<li>摇杆开始：记得Drag（拖动）么，就是它了</li>
+</ul>
+<p>
+	里面，只有第二项“卡片停止时和数据同步”稍微有点麻烦，不过合理使用jquery提供的一些方法，也是能很好解决的。下面开始《老虎机》的分析与实现
+</p>
+<h2 class="content_h2">
+老虎机规则
+</h2>
+<p>
+	这里按我定的规则来，不然太复杂了
+</p>
+<ul>
+	<li>1、3个卡片都不相同：你输了</li>
+	<li>2、2个卡片相同：恭喜，你赢了</li>
+	<li>3、3个卡片都相同：你赢大了</li>
+</ul>
+<h2 class="content_h2">
+三个卡片都滚动起来
+</h2>
+<p>
+	前面已经说了，滚动就用无缝滚动的思想，但不能完全使用无缝滚动的代码。有个滚动对象，而且3个对象的位置会在游戏中出现不同，所以，需要分开对待。首先，建几个变量来存放它们的位置、属性
+</p>
+<p>
+	关于无缝滚动，请看 <a href="http://www.fuweiyi.com/javascript/2013/07/24/a-javascript-word-scroll.html">js，关于无缝滚动，文字篇</a>
+</p>
+<pre class="prettyprint lang-javascript">
+var moveItem01=0;  //1号卡片移动距离
+var moveItem02=0;  //2号卡片移动距离
+var moveItem03=0;  //3号卡片移动距离
+var itemNums=0;    //每个位置卡片总数
+var itemHeight=0;  //每个卡片高度
+var allItemHeight=0;  //总高度
+</pre>
+<p>
+	itemNums，其实可以事先就确定，因为基本上是不变的，不过这里还是使用程序来确定它，包括itemHeight和allItemHeight，以免放到另一个界面下，都要重新确定这些数值
+</p>
+<p>
+	接下来还要定义3个变量，用作3个对象的定时器
+</p>
+<pre class="prettyprint lang-javascript">
+var timer01;
+var timer02;
+var timer03;
+</pre>
+<p>
+	跟着指定对象，并初始化，也就是无缝滚动里复制第一个元素到末尾
+</p>
+<pre class="prettyprint lang-javascript">
+var _button=$("#integration_park_777_start_button");
+var _box=$("#integration_park_777_start");
+var _button_height=_button.outerHeight();
+var _box_height=_box.outerHeight();
+
+function init(){
+	for(var i=1;i&lt;=3;i++){
+		var itembox=$("#integration_park_777_item0"+i);
+		var item=$(".integration_park_777_item0"+i+"_li");
+		itemNums=item.size();
+		itemHeight=item.outerHeight();
+		allItemHeight=(itemNums+1)*itemHeight;
+
+		var _itemClass=item.attr('class');
+		itembox.append("&lt;li class='"+_itemClass+"'&gt;"+item.eq(0).html()+"&lt;/li&gt;");
+	}
+}
+</pre>
+<p>
+	注意，前面的几个变量都是全局的。再看看滚动的方法，利用无缝滚动的思路，很好解决
+</p>
+<pre class="prettyprint lang-javascript">
+function start(obj){
+	if(Math.abs(moveItem01)&gt;=allItemHeight-itemHeight){
+		obj.css('top','0px');
+		moveItem01=0;
+	}
+	moveItem01=moveItem01+itemHeight;
+	obj.animate({'top':-moveItem01},70);
+}
+</pre>
+<p>
+	这里使用了jQuery的animate来实现滚动，代码要简练一些。但这里有3个对象，如果只用一个moveItem01来确定移动距离，3个一起滚动是没问题，但3个对象的位置都是一样的，效果就不那么好，所以前面申明了3个变量对应3个对象，这样它们有自己的距离判断变量，后面滚动起来就不会出现一样的画面了。因此，start函数需要改进一下，适应3对象
+</p>
+<pre class="prettyprint lang-javascript">
+function start(obj,t){
+	if(t==1){
+		if(Math.abs(moveItem01)&gt;=allItemHeight-itemHeight){
+			obj.css('top','0px');
+			moveItem01=0;
+		}
+		moveItem01=moveItem01+itemHeight;
+		obj.animate({'top':-moveItem01},70);
+	}
+	if(t==2){
+		if(Math.abs(moveItem02)&gt;=allItemHeight-itemHeight){
+			obj.css('top','0px');
+			moveItem02=0;
+		}
+		moveItem02=moveItem02+itemHeight;
+		obj.animate({'top':-moveItem02},70);
+	}
+	if(t==3){
+		if(Math.abs(moveItem03)&gt;=allItemHeight-itemHeight){
+			obj.css('top','0px');
+			moveItem03=0;
+		}
+		moveItem03=moveItem03+itemHeight;
+		obj.animate({'top':-moveItem03},70);
+	}
+}
+</pre>
+<p>
+	代码有点丑，不过没关系，先实现效果再说。有了start函数，我们就可以让3对象开始滚动了，使用定时器，让它们都动起来
+</p>
+<pre class="prettyprint lang-javascript">
+timer01=setInterval(function(){
+	start($('#integration_park_777_item01'),1);
+},70);
+timer02=setInterval(function(){
+	start($('#integration_park_777_item02'),2);
+},70);
+timer03=setInterval(function(){
+	start($('#integration_park_777_item03'),3);
+},70);
+</pre>
+<p>
+	光动还不行，得让它们停，这里使用自动停止，也就是，卡片开始滚动，3秒后停止滚动。这里使用setTimeout来定时执行
+</p>
+<pre class="prettyprint lang-javascript">
+setTimeout(function(){
+	move(index1,index2,index3,status,points);
+},3000);
+</pre>
+<p>
+	上面使用了move()函数来实现停止滚动，不过这个move里涉及到数据和滚动同步的问题，在讲这个问题之前，得先讲数据问题。
+</p>
+<p>
+	如果不考虑百分比的随机，只用随机数，那在停止前，程序需返回3个数字，这3个数字是滚动卡片的索引值，如，一共有10张卡片，那它们的索引值为0-9，程序就随机返回这3个数，如果3个都不同，就是规则1，如果2个相同，就是规则2，如果3个都相同，那就是规则3。
+</p>
+<p>
+	停止时，显示的卡片就必须和这个索引值对应，如索引为3，那显示就应该是第4个。那怎么来做到这一点呢，我们知道索引其实就是无缝滚动里对应的位置点，我们一开始就知道每个元素的高度，那有了索引，将它们相乘，不就得到高度了。所以，只需要在最后时刻设置对象的top值到这个乘积就对了
+</p>
+<pre class="prettyprint lang-javascript">
+obj.css('top',-itemHeight*index);
+</pre>
+<p>
+	这里使用负值，是因为它向上滚动。不过这里，会遇到一个问题，那就是使用animate()方法，它的动画是独立的，也就是说，JS向后执行，animate()同样在执行，这将会导致，程序已经执行完obj.css()方法了，但仍然在滚动，所以停下来的，根本不是目标卡片。这时候，我们要用到jQuery的另一个方法：obj.stop();
+</p>
+<pre class="prettyprint lang-javascript">
+obj.stop(true);
+</pre>
+<p>
+	stop有两个参数，这里就不说了，具体说明请google。这里带有一个参数true，目的是让动画立刻停卡下来并到最后。如果没有这一句，99.99滚动停止时不会是目标卡片。好了，能停下来了，但还可以增加一点效果，就是让它滚动着停下来，不然，显得有点僵硬，这里，我们继续使用animate()方法（它真的是太好用了），而且打算让它们一个接一个停下来，所以，这里得使用3个animate()，每后一个放到callback里。像这样：
+</p>
+<pre class="prettyprint lang-javascript">
+item01.stop(true);
+clearInterval(timer01);
+item01.animate({'top':-itemHeight*index1},'slow',function(){
+	item02.stop(true);
+	clearInterval(timer02);
+	item02.animate({'top':-itemHeight*index2},'slow',function(){
+		item03.stop(true);
+		clearInterval(timer03);
+		item03.animate({'top':-itemHeight*index3},'slow');
+	});
+});
+</pre>
+<h2 class="content_h2">
+摇杆控制器
+</h2>
+<p>
+	最早的老虎机，是用摇杆的，拉一下，就“啪啪啪”的动了起来，所以我们这里也弄个简易摇杆来控制，形象一点。
+</p>
+<p>
+	摇杆放在哪里，怎么放，这里就不讲了，CSS的事情，可以看看本页面测试中的代码。这里主要要提出的“拖动”，关于拖动，可以看看这一篇 <a href="http://www.fuweiyi.com/javascript/2013/04/10/a-javascript-jquery-drag-sort.html">基于JQuery的列表拖动排序</a>
+</p>
+<p>
+	目标：摇杆初始位置在最上方，拖着它到最底下，便代表老虎机开始运动了。那么这里会有几个问题：
+</p>
+<ul>
+	<li>1、如果没有拖到最底时，就放开了鼠标，摇杆怎么办</li>
+	<li>2、老虎机停止了，摇杆怎么办</li>
+	<li>3、老虎机在运行中，摇杆怎么办</li>
+</ul>
+<p>
+	前两个问题，都可以归结为初始化，也就是归位，如果没拖到底，放开鼠标，摇杆回到原来位置就可以了，同理，老虎机停止的时候也是这样。运行中，当然得让摇标失效，不然会出大问题。好了，先把它初始化
+</p>
+<pre class="prettyprint lang-javascript">
+function button_init(){
+	_button.animate({'top':0},'slow',function(){
+		_button_flag=0;
+	});
+}
+</pre>
+<p>
+	说animate()很好用，所以这里也用它来让摇动滑回初始位置。里面有个_button_flag=0，这个是用以判断老虎机是不是在运行的。
+</p>
+<p>
+	接下看拖动，同“拖动排序”一样，使用mousedown和mousemove、mouseup来实现
+</p>
+<pre class="prettyprint lang-javascript">
+$("#drag").mousedown(function(e){
+	if(_button_flag==0){
+		_box.mousemove(function(e){
+			_mouse_top=e.pageY;
+			_button.css('top',_mouse_top-_button_pos.top);
+			if((_mouse_top-_button_pos.top)&gt;=_box_height-_button_height){
+				_button_flag=1;
+				_button.css('top',_box_height-_button_height);
+				_box.unbind('mousemove');
+				timer01=setInterval(function(){
+					start($('#integration_park_777_item01'),1);
+				},70);
+				timer02=setInterval(function(){
+					start($('#integration_park_777_item02'),2);
+				},70);
+				timer03=setInterval(function(){
+					start($('#integration_park_777_item03'),3);
+				},70);
+				setTimeout(function(){
+					move(index1,index2,index3,status,points);
+				},3000);
+			}
+		});
+	}
+});
+</pre>
+<p>
+	主要就做了几个事情：设置_button_flag，让程序不置于重复运行。取消摇标的事件绑定，如mousedown。然后就是执行start和move。
+</p>
+<p>
+	在确定摇杆位置上，因为有绝对定位和相对定位，所以判断摇杆是不是到最底，不能直接使用它的坐标+它的高度，可以查看(_mouse_top-_button_pos.top)&gt;=_box_height-_button_height这个判断
+</p>
+<p>
+	最后是mouseup，同样的，我们得把它绑定在body上
+</p>
+<pre class="prettyprint lang-javascript">
+$('body').mouseup(function(e){
+	$("#integration_park_777_start").unbind('mousemove');
+	if((_mouse_top-_button_pos.top)&lt;_box_height-_button_height){
+		button_init();
+	}
+});
+</pre>
+<p>
+	放开后，初始化摇杆button_init();
+</p>
+<p>
+	把上面的组合一下，老虎机基本上就可以使用了，当然，还有随机取值，获取机率等等，这里就不讨论了，下面是完整的代码，里面增加了一些提示
+</p>
+<pre class="prettyprint lang-javascript">
+var moveItem01=0;
+var moveItem02=0;
+var moveItem03=0;
+var itemNums=0;
+var itemHeight=0;
+var allItemHeight=0;
+var timer01;
+var timer02;
+var timer03;
+
+var _button=$("#integration_park_777_start_button");
+var _box=$("#integration_park_777_start");
+var _button_pos=_button.offset();
+var _button_height=_button.outerHeight();
+var _box_height=_box.outerHeight();
+var _box_pos=_box.offset();
+var _mouse_top=0;
+var _button_flag=0;
+
+init();
+
+$("#integration_park_777_start_button").mousedown(function(e){
+	if(_button_flag==0){
+		_box.mousemove(function(e){
+			_mouse_top=e.pageY;
+			_button.css('top',_mouse_top-_button_pos.top);
+			if((_mouse_top-_button_pos.top)&gt;=_box_height-_button_height){
+				_button_flag=1;
+				_button.css('top',_box_height-_button_height);
+				_box.unbind('mousemove');
+				timer01=setInterval(function(){
+					start($('#integration_park_777_item01'),1);
+				},70);
+				timer02=setInterval(function(){
+					start($('#integration_park_777_item02'),2);
+				},70);
+				timer03=setInterval(function(){
+					start($('#integration_park_777_item03'),3);
+				},70);
+				setTimeout(function(){
+					move(index1,index2,index3,status,points);
+				},3000);
+			}
+		});
+	}
+});
+$('body').mouseup(function(e){
+	$("#integration_park_777_start").unbind('mousemove');
+	if((_mouse_top-_button_pos.top)&lt;_box_height-_button_height){
+		button_init();
+	}
+});
+
+function init(){
+	for(var i=1;i&lt;=3;i++){
+		var itembox=$("#integration_park_777_item0"+i);
+		var item=$(".integration_park_777_item0"+i+"_li");
+		itemNums=item.size();
+		itemHeight=item.outerHeight();
+		allItemHeight=(itemNums+1)*itemHeight;
+		var _itemClass=item.attr('class');
+		itembox.append("&lt;li class='"+_itemClass+"'&gt;"+item.eq(0).html()+"&lt;/li&gt;");
+	}
+}
+
+function button_init(){
+	_button.animate({'top':0},'slow',function(){
+		_button_flag=0;
+	});
+}
+
+function start(obj,t){
+	if(t==1){
+		if(Math.abs(moveItem01)&gt;=allItemHeight-itemHeight){
+			obj.css('top','0px');
+			moveItem01=0;
+		}
+		moveItem01=moveItem01+itemHeight;
+		obj.animate({'top':-moveItem01},70);
+	}
+	if(t==2){
+		if(Math.abs(moveItem02)&gt;=allItemHeight-itemHeight){
+			obj.css('top','0px');
+			moveItem02=0;
+		}
+		moveItem02=moveItem02+itemHeight;
+		obj.animate({'top':-moveItem02},70);
+	}
+	if(t==3){
+		if(Math.abs(moveItem03)&gt;=allItemHeight-itemHeight){
+			obj.css('top','0px');
+			moveItem03=0;
+		}
+		moveItem03=moveItem03+itemHeight;
+		obj.animate({'top':-moveItem03},70);
+	}
+}
+
+function move(index1,index2,index3,status,points){
+	var item01=$('#integration_park_777_item01');
+	var item02=$('#integration_park_777_item02');
+	var item03=$('#integration_park_777_item03');
+	item01.stop(true);
+	clearInterval(timer01);
+	item01.animate({'top':-itemHeight*index1},'slow',function(){
+		item02.stop(true);
+		clearInterval(timer02);
+		item02.animate({'top':-itemHeight*index2},'slow',function(){
+			item03.stop(true);
+			clearInterval(timer03);
+			item03.animate({'top':-itemHeight*index3},'slow',function(){
+				button_init();
+				if(index1!=index2&&index1!=index3&&index2!=index3){
+					$("#result").html('&lt;span&gt;You lose!&lt;/span&gt;');
+				}else if(index1==index2&&index1==index3){
+					$("#result").html('&lt;span&gt;欢呼吧！你中大奖了！&lt;/span&gt;');
+				}else{
+					$("#result").html('&lt;span&gt;You win!&lt;/span&gt;');
+				}
+				if(status==1){
+					userPoints=userPoints-points;
+				}else{
+					userPoints=userPoints+points;
+				}
+				$("#userpoints").html(userPoints);
+			});
+		});
+	});
+}
+</pre>
+<script type="text/javascript">
+jQuery(function($){
+	window.prettyPrint && prettyPrint();
+});
+</script>
