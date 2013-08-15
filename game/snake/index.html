@@ -5,7 +5,7 @@
         <title>Javascript game_贪食蛇</title>
         <meta name="keywords" content="javascript,game,贪食蛇"/>
         <meta name="description" content="Javascript小游戏贪食蛇" />
-        <script src="../../jquery.js" type="text/javascript"></script>
+        <script src="../jquery.js" type="text/javascript"></script>
 </head>
 <body>
 <style type="text/css">
@@ -18,6 +18,7 @@ body{background-color:#fff;font:14px Tahoma;}
 .snakebody{background-color:#000;}
 #debug{display:none;position: absolute;left:0px;top:0px;width:220px;height:500px;background-color:#fff;overflow: auto;}
 .mouse{background-color:#ff0000;}
+.corner{background-color:#999;}
 #snake_len{font-size:18px;font-weight:bold;font-family: tahoma;color:#000099;}
 #snake_speed{font-size:18px;font-weight:bold;font-family: tahoma;color:#009900;}
 </style>
@@ -159,6 +160,7 @@ jQuery(function($){
 
 	function clearCorners(x,y){
 		if(corner[0]['x']==x&&corner[0]['y']==y){
+			$("#mapItem_"+corner[0]['x']+'_'+corner[0]['y']).removeClass('corner');
 			corner.shift();
 			cornerNum=corner.length;
 		}
@@ -255,26 +257,46 @@ jQuery(function($){
 
 	function keyDirection(e){
 		var evt = e ||window.event; 
-		var key=evt.which||evt.keyCode; 
+		var key=evt.which||evt.keyCode;
+		var notdo=false; 
 		switch(key){
 			case 37:
-				snakeMoveDirection='W';
+				if(snakeMoveDirection=='W'){
+					notdo=true;
+				}else{
+					snakeMoveDirection='W';
+				}
 				break;
 			case 38:
-				snakeMoveDirection='N';
+				if(snakeMoveDirection=='N'){
+					notdo=true;
+				}else{
+					snakeMoveDirection='N';
+				}
 				break;
 			case 39:
-				snakeMoveDirection='E';
+				if(snakeMoveDirection=='E'){
+					notdo=true;
+				}else{
+					snakeMoveDirection='E';
+				}
 				break;
 			case 40:
-				snakeMoveDirection='S';
+				if(snakeMoveDirection=='S'){
+					notdo=true;
+				}else{
+					snakeMoveDirection='S';
+				}
 				break;
 		}
-		corner[cornerNum]=new Array();
-		corner[cornerNum]['x']=snake[0]['x'];
-		corner[cornerNum]['y']=snake[0]['y'];
-		corner[cornerNum]['d']=snakeMoveDirection;
-		cornerNum++;
+		if(notdo==false){
+			corner[cornerNum]=new Array();
+			corner[cornerNum]['x']=snake[0]['x'];
+			corner[cornerNum]['y']=snake[0]['y'];
+			corner[cornerNum]['d']=snakeMoveDirection;
+			$("#mapItem_"+corner[cornerNum]['x']+'_'+corner[cornerNum]['y']).addClass('corner');
+			cornerNum++;
+		}
 	}
 
 	function timeing(){
@@ -296,5 +318,11 @@ jQuery(function($){
 	}
 });
 </script>
+<div style="display:none;">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F02dd3320304085dfa94f6456bb126ed4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
 </body>
 </html>
