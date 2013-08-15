@@ -24,6 +24,7 @@ keywords: javascript,jquery,php,game,snake,贪食蛇
 .snakebody{background-color:#000;}
 #debug{display:none;position: absolute;left:0px;top:0px;width:220px;height:500px;background-color:#fff;overflow: auto;}
 .mouse{background-color:#ff0000;}
+.corner{background-color:#999;}
 #snake_len{font-size:18px;font-weight:bold;font-family: tahoma;color:#000099;}
 #snake_speed{font-size:18px;font-weight:bold;font-family: tahoma;color:#009900;}
 </style>
@@ -165,6 +166,7 @@ jQuery(function($){
 
 	function clearCorners(x,y){
 		if(corner[0]['x']==x&&corner[0]['y']==y){
+			$("#mapItem_"+corner[0]['x']+'_'+corner[0]['y']).removeClass('corner');
 			corner.shift();
 			cornerNum=corner.length;
 		}
@@ -261,26 +263,61 @@ jQuery(function($){
 
 	function keyDirection(e){
 		var evt = e ||window.event; 
-		var key=evt.which||evt.keyCode; 
+		var key=evt.which||evt.keyCode;
+		var notdo=false; 
+		var _snakeMoveDirection=snakeMoveDirection;
 		switch(key){
 			case 37:
-				snakeMoveDirection='W';
+				if(snakeMoveDirection=='W'){
+					notdo=true;
+				}else{
+					snakeMoveDirection='W';
+				}
 				break;
 			case 38:
-				snakeMoveDirection='N';
+				if(snakeMoveDirection=='N'){
+					notdo=true;
+				}else{
+					snakeMoveDirection='N';
+				}
 				break;
 			case 39:
-				snakeMoveDirection='E';
+				if(snakeMoveDirection=='E'){
+					notdo=true;
+				}else{
+					snakeMoveDirection='E';
+				}
 				break;
 			case 40:
-				snakeMoveDirection='S';
+				if(snakeMoveDirection=='S'){
+					notdo=true;
+				}else{
+					snakeMoveDirection='S';
+				}
 				break;
 		}
-		corner[cornerNum]=new Array();
-		corner[cornerNum]['x']=snake[0]['x'];
-		corner[cornerNum]['y']=snake[0]['y'];
-		corner[cornerNum]['d']=snakeMoveDirection;
-		cornerNum++;
+		
+
+		this.createCorner=function(){
+			corner[cornerNum]=new Array();
+			corner[cornerNum]['x']=snake[0]['x'];
+			corner[cornerNum]['y']=snake[0]['y'];
+			corner[cornerNum]['d']=snakeMoveDirection;
+			$("#mapItem_"+corner[cornerNum]['x']+'_'+corner[cornerNum]['y']).addClass('corner');
+			cornerNum++;
+		}
+
+		if(notdo==false){
+			if(cornerNum>0){
+				if(corner[cornerNum-1]['x']!=snake[0]['x']||corner[cornerNum-1]['y']!=snake[0]['y']){
+					this.createCorner();
+				}else{
+					snakeMoveDirection=_snakeMoveDirection;
+				}
+			}else{
+				this.createCorner();
+			}
+		}
 	}
 
 	function timeing(){
