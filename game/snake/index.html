@@ -21,12 +21,17 @@ body{background-color:#fff;font:14px Tahoma;}
 .corner{background-color:#999;}
 #snake_len{font-size:18px;font-weight:bold;font-family: tahoma;color:#000099;}
 #snake_speed{font-size:18px;font-weight:bold;font-family: tahoma;color:#009900;}
+.scores{float:right;font-size:16px;}
+#scores{font-size:18px;font-weight:bold;font-family: tahoma;color:#ff0000;}
 </style>
 <div class="game_tips">说明：点击屏幕中间开始，使用方向键控制小蛇，再次点击屏幕暂停。每吃20个老鼠速度增加10ms，祝你好运！</div>
 <div class="game_tips">
 	蛇长：<span id="snake_len">5</span> 格 
 	速度：<span id="snake_speed">100</span> ms 
-	时间：<span id="minute">0</span> 分 <span id="second">0</span> 秒
+	时间：<span id="minute">0</span> 分 <span id="second">0</span> 秒 
+	<div class="scores">
+		分数：<span id="scores">0</span> 分
+	</div>
 </div>
 <div id="game_map">正在努力加载...</div>
 <script type="text/javascript">
@@ -40,9 +45,10 @@ jQuery(function($){
 	var corner=new Array();
 	var cornerNum=0;
 	var timer,speed=100;
-	var timeiner,timeSecond=0,timeMinute=0,timestr=0;
+	var timeiner,timeSecond=0,timeMinute=0,timestr=0,timeoldstr=0;;
 	var mouseX,mouseY;
 	var start=false;
+	var totalScore=0;
 
 	$("#game_map").click(function(){
 		if(start==false){
@@ -169,9 +175,8 @@ jQuery(function($){
 	function checkDie(x,y){
 		if(x<0||x>mapItemX-1||y<0||y>mapItemY-1){
 			clearInterval(timer);
-			clearInterval(timeiner);
-			var _scores=scores();
-			alert('你死了！总分：'+_scores.toFixed(2));
+			clearInterval(timeiner); 
+			alert('你死了！总分：'+totalScore);
 			location.reload();
 			return false;
 		}
@@ -179,8 +184,7 @@ jQuery(function($){
 			if(snake[i]['x']==x&&snake[i]['y']==y){
 				clearInterval(timer);
 				clearInterval(timeiner);
-				var _scores=scores();
-				alert('你死了！总分：'+_scores.toFixed(2));
+				alert('你死了！总分：'+totalScore);
 				location.reload();
 				return false;
 			}
@@ -189,6 +193,9 @@ jQuery(function($){
 
 	function eat(x,y){
 		if(mouseX==x&&mouseY==y){
+			timeoldstr=timeoldstr==0?0:timestr;
+			scores();
+			
 			var _snakeLast=snake[snakeLen-1];
 			snake[snakeLen]=new Array();
 			switch(_snakeLast['d']){
@@ -329,7 +336,21 @@ jQuery(function($){
 
 	function scores(){
 		var _snakeLen=snakeLen-5
-		return Math.abs(_snakeLen*_snakeLen-timestr)/timestr*1000/speed;
+		var _s=0;
+		var _times=timestr-timeoldstr;
+		if(_snakeLen==0){
+			_s=0;
+		}else{
+			if(_times==0){
+				_s=10;
+			}
+			if(_times>0){
+				_s=parseInt((_snakeLen+1/_times)/_times*100);
+			}
+		}
+		
+		totalScore=totalScore+_s;
+		$("#scores").html(totalScore);
 	}
 });
 </script>
