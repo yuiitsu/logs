@@ -259,6 +259,7 @@ jQuery(function($){
 		var evt = e ||window.event; 
 		var key=evt.which||evt.keyCode;
 		var notdo=false; 
+		var _snakeMoveDirection=snakeMoveDirection;
 		switch(key){
 			case 37:
 				if(snakeMoveDirection=='W'){
@@ -289,13 +290,27 @@ jQuery(function($){
 				}
 				break;
 		}
-		if(notdo==false){
+		
+
+		this.createCorner=function(){
 			corner[cornerNum]=new Array();
 			corner[cornerNum]['x']=snake[0]['x'];
 			corner[cornerNum]['y']=snake[0]['y'];
 			corner[cornerNum]['d']=snakeMoveDirection;
 			$("#mapItem_"+corner[cornerNum]['x']+'_'+corner[cornerNum]['y']).addClass('corner');
 			cornerNum++;
+		}
+
+		if(notdo==false){
+			if(cornerNum>0){
+				if(corner[cornerNum-1]['x']!=snake[0]['x']||corner[cornerNum-1]['y']!=snake[0]['y']){
+					this.createCorner();
+				}else{
+					snakeMoveDirection=_snakeMoveDirection;
+				}
+			}else{
+				this.createCorner();
+			}
 		}
 	}
 
