@@ -194,8 +194,6 @@ jQuery(function($){
 	function eat(x,y){
 		if(mouseX==x&&mouseY==y){
 			timeoldstr=timeoldstr==0?0:timestr;
-			scores();
-			
 			var _snakeLast=snake[snakeLen-1];
 			snake[snakeLen]=new Array();
 			switch(_snakeLast['d']){
@@ -220,6 +218,7 @@ jQuery(function($){
 			snakeLen=snake.length;
 			$("#snake_len").html(snakeLen);
 			$("#mapItem_"+mouseX+"_"+mouseY).removeClass('mouse');
+			scores();
 			initMouse();
 			changeSpeed();
 		}
