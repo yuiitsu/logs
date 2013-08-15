@@ -659,8 +659,96 @@ function keyDirection(e){
 }
 </pre>
 <p>
-	很简单，获取按键值，判断方向，设定snakeMoveDirection，然后增加一个转角点。
+	很简单，获取按键值，判断方向，设定snakeMoveDirection，然后增加一个转角点。但这里会有一个问题，那就是，当连续两次按键的速度快过蛇的移动速度时，两个转角点会重合，这就会让整个转角代码失控，出现不能清除的情况，那当蛇再次经过这些点的时候，它会自动转向，所以，这里还得加强一下
 </p>
+<pre class="prettyprint lang-javascript">
+var _snakeMoveDirection=snakeMoveDirection;  //先将方向附给_snakMoveDirection
+
+this.createCorner=function(){
+	corner[cornerNum]=new Array();
+	corner[cornerNum]['x']=snake[0]['x'];
+	corner[cornerNum]['y']=snake[0]['y'];
+	corner[cornerNum]['d']=snakeMoveDirection;
+	$("#mapItem_"+corner[cornerNum]['x']+'_'+corner[cornerNum]['y']).addClass('corner');
+	cornerNum++;
+}
+
+if(cornerNum>0){  //判断转角数是不是大于0
+	if(corner[cornerNum-1]['x']!=snake[0]['x']||corner[cornerNum-1]['y']!=snake[0]['y']){
+		this.createCorner();
+	}else{
+		snakeMoveDirection=_snakeMoveDirection;
+	}
+}else{
+	this.createCorner();
+}
+</pre>
+<p>
+	使用一个变量_snakeMoveDirection来保存之前的方向，目的是为了，当判断点重合的时候，再将方向改过来，不然蛇会不听话的。判断转角数大于0后，再判断一下目标点的坐标和前一个转角点的坐标，是不是重合，如果不重合，那么记录新点，重合就不记录点了，而是将之前的方向再附给snakeMoveDirection。这样就不会出现快速按键时的问题了。
+</p>
+<p>
+	为了避免按下蛇前进方向的方向时仍然记录转角点，这里还可以增加一个判断，如果目标方向和前进方向相同，则不做任何记录。完整的控制代码：
+</p>
+<pre class="prettyprint lang-javascript">
+function keyDirection(e){
+	var evt = e ||window.event; 
+	var key=evt.which||evt.keyCode;
+	var notdo=false; 
+	var _snakeMoveDirection=snakeMoveDirection;
+	switch(key){
+		case 37:
+			if(snakeMoveDirection=='W'){
+				notdo=true;
+			}else{
+				snakeMoveDirection='W';
+			}
+			break;
+		case 38:
+			if(snakeMoveDirection=='N'){
+				notdo=true;
+			}else{
+				snakeMoveDirection='N';
+			}
+			break;
+		case 39:
+			if(snakeMoveDirection=='E'){
+				notdo=true;
+			}else{
+				snakeMoveDirection='E';
+			}
+			break;
+		case 40:
+			if(snakeMoveDirection=='S'){
+				notdo=true;
+			}else{
+				snakeMoveDirection='S';
+			}
+			break;
+	}
+	
+
+	this.createCorner=function(){
+		corner[cornerNum]=new Array();
+		corner[cornerNum]['x']=snake[0]['x'];
+		corner[cornerNum]['y']=snake[0]['y'];
+		corner[cornerNum]['d']=snakeMoveDirection;
+		$("#mapItem_"+corner[cornerNum]['x']+'_'+corner[cornerNum]['y']).addClass('corner');
+		cornerNum++;
+	}
+
+	if(notdo==false){
+		if(cornerNum>0){
+			if(corner[cornerNum-1]['x']!=snake[0]['x']||corner[cornerNum-1]['y']!=snake[0]['y']){
+				this.createCorner();
+			}else{
+				snakeMoveDirection=_snakeMoveDirection;
+			}
+		}else{
+			this.createCorner();
+		}
+	}
+}
+</pre>
 <p>
 	程序基本上就这些内容，后面的计数、计分、计时，就不说了。最后是使用定时器，让蛇移动起来
 </p>
@@ -812,6 +900,7 @@ function corners(x,y){
 
 function clearCorners(x,y){
 	if(corner[0]['x']==x&&corner[0]['y']==y){
+		$("#mapItem_"+corner[0]['x']+'_'+corner[0]['y']).removeClass('corner');
 		corner.shift();
 		cornerNum=corner.length;
 	}
@@ -908,26 +997,61 @@ function initMouse(){
 
 function keyDirection(e){
 	var evt = e ||window.event; 
-	var key=evt.which||evt.keyCode; 
+	var key=evt.which||evt.keyCode;
+	var notdo=false; 
+	var _snakeMoveDirection=snakeMoveDirection;
 	switch(key){
 		case 37:
-			snakeMoveDirection='W';
+			if(snakeMoveDirection=='W'){
+				notdo=true;
+			}else{
+				snakeMoveDirection='W';
+			}
 			break;
 		case 38:
-			snakeMoveDirection='N';
+			if(snakeMoveDirection=='N'){
+				notdo=true;
+			}else{
+				snakeMoveDirection='N';
+			}
 			break;
 		case 39:
-			snakeMoveDirection='E';
+			if(snakeMoveDirection=='E'){
+				notdo=true;
+			}else{
+				snakeMoveDirection='E';
+			}
 			break;
 		case 40:
-			snakeMoveDirection='S';
+			if(snakeMoveDirection=='S'){
+				notdo=true;
+			}else{
+				snakeMoveDirection='S';
+			}
 			break;
 	}
-	corner[cornerNum]=new Array();
-	corner[cornerNum]['x']=snake[0]['x'];
-	corner[cornerNum]['y']=snake[0]['y'];
-	corner[cornerNum]['d']=snakeMoveDirection;
-	cornerNum++;
+	
+
+	this.createCorner=function(){
+		corner[cornerNum]=new Array();
+		corner[cornerNum]['x']=snake[0]['x'];
+		corner[cornerNum]['y']=snake[0]['y'];
+		corner[cornerNum]['d']=snakeMoveDirection;
+		$("#mapItem_"+corner[cornerNum]['x']+'_'+corner[cornerNum]['y']).addClass('corner');
+		cornerNum++;
+	}
+
+	if(notdo==false){
+		if(cornerNum>0){
+			if(corner[cornerNum-1]['x']!=snake[0]['x']||corner[cornerNum-1]['y']!=snake[0]['y']){
+				this.createCorner();
+			}else{
+				snakeMoveDirection=_snakeMoveDirection;
+			}
+		}else{
+			this.createCorner();
+		}
+	}
 }
 
 function timeing(){
