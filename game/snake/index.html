@@ -10,10 +10,10 @@
 <body>
 <style type="text/css">
 body{background-color:#fff;font:14px Tahoma;}
-.game_tips{width:850px;margin:0 auto;}
-#game_map{width:850px;margin:0 auto;margin-top:10px;height:500px;}
+.game_tips{width:440px;margin:0 auto;}
+#game_map{width:440px;margin:0 auto;margin-top:10px;height:450px;background-color:#e1e1e1;}
 
-.mapItem{width:10px;height:10px;float:left;border:1px solid #ccc;margin:1px;}
+.mapItem{width:10px;height:10px;float:left;}
 .snakehead{background-color:#cc0000;}
 .snakebody{background-color:#000;}
 #debug{display:none;position: absolute;left:0px;top:0px;width:220px;height:500px;background-color:#fff;overflow: auto;}
@@ -36,8 +36,9 @@ body{background-color:#fff;font:14px Tahoma;}
 <div id="game_map">正在努力加载...</div>
 <script type="text/javascript">
 jQuery(function($){
-	var mapItemX=60;
+	var mapItemX=31;
 	var mapItemY=31;
+	var mapItemW=10;
 	var snakeLen=5;
 	var snakeMoveDirection='E';
 	var snakeStartPoints={'x':5,'y':15};
@@ -79,6 +80,8 @@ jQuery(function($){
 				maps=maps+'<div id="mapItem_'+j+'_'+i+'" class="mapItem"></div>';
 			}
 		}
+		var _mapW=mapItemX*mapItemW;
+		$("#game_map").css({'width':_mapW,'height':_mapW});
 		$("#game_map").html(maps);
 		initSnake();
 		initMouse();
