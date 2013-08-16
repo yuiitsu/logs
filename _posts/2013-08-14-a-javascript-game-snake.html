@@ -16,10 +16,11 @@ keywords: javascript,jquery,php,game,snake,贪食蛇
 	<a href="{{ site:url }}/game/snake/">这里效果好点</a>
 </p>
 <style type="text/css">
-.game_tips{width:850px;margin:0 auto;}
-#game_map{width:850px;margin:0 auto;margin-top:10px;height:500px;}
+body{background-color:#fff;font:14px Tahoma;}
+.game_tips{width:440px;margin:0 auto;}
+#game_map{width:440px;margin:0 auto;margin-top:10px;height:450px;background-color:#e1e1e1;}
 
-.mapItem{width:10px;height:10px;float:left;border:1px solid #ccc;margin:1px;}
+.mapItem{width:10px;height:10px;float:left;}
 .snakehead{background-color:#cc0000;}
 .snakebody{background-color:#000;}
 #debug{display:none;position: absolute;left:0px;top:0px;width:220px;height:500px;background-color:#fff;overflow: auto;}
@@ -27,18 +28,24 @@ keywords: javascript,jquery,php,game,snake,贪食蛇
 .corner{background-color:#999;}
 #snake_len{font-size:18px;font-weight:bold;font-family: tahoma;color:#000099;}
 #snake_speed{font-size:18px;font-weight:bold;font-family: tahoma;color:#009900;}
+.scores{float:right;font-size:16px;}
+#scores{font-size:18px;font-weight:bold;font-family: tahoma;color:#ff0000;}
 </style>
 <div class="game_tips">说明：点击屏幕中间开始，使用方向键控制小蛇，再次点击屏幕暂停。每吃20个老鼠速度增加10ms，祝你好运！</div>
 <div class="game_tips">
 	蛇长：<span id="snake_len">5</span> 格 
 	速度：<span id="snake_speed">100</span> ms 
-	时间：<span id="minute">0</span> 分 <span id="second">0</span> 秒
+	时间：<span id="minute">0</span> 分 <span id="second">0</span> 秒 
+	<div class="scores">
+		分数：<span id="scores">0</span> 分
+	</div>
 </div>
 <div id="game_map">正在努力加载...</div>
 <script type="text/javascript">
 jQuery(function($){
-	var mapItemX=60;
+	var mapItemX=31;
 	var mapItemY=31;
+	var mapItemW=10;
 	var snakeLen=5;
 	var snakeMoveDirection='E';
 	var snakeStartPoints={'x':5,'y':15};
@@ -46,9 +53,10 @@ jQuery(function($){
 	var corner=new Array();
 	var cornerNum=0;
 	var timer,speed=100;
-	var timeiner,timeSecond=0,timeMinute=0,timestr=0;
+	var timeiner,timeSecond=0,timeMinute=0,timestr=0,timeoldstr=0;;
 	var mouseX,mouseY;
 	var start=false;
+	var totalScore=0;
 
 	$("#game_map").click(function(){
 		if(start==false){
@@ -79,6 +87,8 @@ jQuery(function($){
 				maps=maps+'<div id="mapItem_'+j+'_'+i+'" class="mapItem"></div>';
 			}
 		}
+		var _mapW=mapItemX*mapItemW;
+		$("#game_map").css({'width':_mapW,'height':_mapW});
 		$("#game_map").html(maps);
 		initSnake();
 		initMouse();
@@ -175,9 +185,8 @@ jQuery(function($){
 	function checkDie(x,y){
 		if(x<0||x>mapItemX-1||y<0||y>mapItemY-1){
 			clearInterval(timer);
-			clearInterval(timeiner);
-			var _scores=scores();
-			alert('你死了！总分：'+_scores.toFixed(2));
+			clearInterval(timeiner); 
+			alert('你死了！总分：'+totalScore);
 			location.reload();
 			return false;
 		}
@@ -185,8 +194,7 @@ jQuery(function($){
 			if(snake[i]['x']==x&&snake[i]['y']==y){
 				clearInterval(timer);
 				clearInterval(timeiner);
-				var _scores=scores();
-				alert('你死了！总分：'+_scores.toFixed(2));
+				alert('你死了！总分：'+totalScore);
 				location.reload();
 				return false;
 			}
@@ -195,6 +203,7 @@ jQuery(function($){
 
 	function eat(x,y){
 		if(mouseX==x&&mouseY==y){
+			timeoldstr=timeoldstr==0?0:timestr;
 			var _snakeLast=snake[snakeLen-1];
 			snake[snakeLen]=new Array();
 			switch(_snakeLast['d']){
@@ -219,6 +228,7 @@ jQuery(function($){
 			snakeLen=snake.length;
 			$("#snake_len").html(snakeLen);
 			$("#mapItem_"+mouseX+"_"+mouseY).removeClass('mouse');
+			scores();
 			initMouse();
 			changeSpeed();
 		}
@@ -335,7 +345,21 @@ jQuery(function($){
 
 	function scores(){
 		var _snakeLen=snakeLen-5
-		return Math.abs(_snakeLen*_snakeLen-timestr)/timestr*1000/speed;
+		var _s=0;
+		var _times=timestr-timeoldstr;
+		if(_snakeLen==0){
+			_s=0;
+		}else{
+			if(_times==0){
+				_s=10;
+			}
+			if(_times>0){
+				_s=parseInt((_snakeLen+1/_times)/_times*100);
+			}
+		}
+		
+		totalScore=totalScore+_s;
+		$("#scores").html(totalScore);
 	}
 });
 </script>
