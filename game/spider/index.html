@@ -455,51 +455,51 @@ jQuery(function($){
 			if(error==0&&comNum.length>=13){
 				for(var i in comNum){
 					obj.eq(comNum[i]).remove();
-				}
-				if(i==0){
-					obj.eq(comNum[i]-1).removeClass('back');
-					obj.eq(comNum[i]-1).attr('action-t','');
-					switch(line){
-						case '0':
-							var len=_cards_table0.length;
-							_cards_table0.splice(comNum[i],len);
-							break;
-						case '1':
-							var len=_cards_table1.length;
-							_cards_table1.splice(comNum[i],len);
-							break;
-						case '2':
-							var len=_cards_table2.length;
-							_cards_table2.splice(comNum[i],len);
-							break;
-						case '3':
-							var len=_cards_table3.length;
-							_cards_table3.splice(comNum[i],len);
-							break;
-						case '4':
-							var len=_cards_table4.length;
-							_cards_table4.splice(comNum[i],len);
-							break;
-						case '5':
-							var len=_cards_table5.length;
-							_cards_table5.splice(comNum[i],len);
-							break;
-						case '6':
-							var len=_cards_table6.length;
-							_cards_table6.splice(comNum[i],len);
-							break;
-						case '7':
-							var len=_cards_table7.length;
-							_cards_table7.splice(comNum[i],len);
-							break;
-						case '8':
-							var len=_cards_table8.length;
-							_cards_table8.splice(comNum[i],len);
-							break;
-						case '9':
-							var len=_cards_table9.length;
-							_cards_table9.splice(comNum[i],len);
-							break;
+					if(i==0){
+						obj.eq(comNum[i]-1).removeClass('back');
+						obj.eq(comNum[i]-1).attr('action-t','');
+						switch(line){
+							case '0':
+								var len=_cards_table0.length;
+								_cards_table0.splice(comNum[i],len);
+								break;
+							case '1':
+								var len=_cards_table1.length;
+								_cards_table1.splice(comNum[i],len);
+								break;
+							case '2':
+								var len=_cards_table2.length;
+								_cards_table2.splice(comNum[i],len);
+								break;
+							case '3':
+								var len=_cards_table3.length;
+								_cards_table3.splice(comNum[i],len);
+								break;
+							case '4':
+								var len=_cards_table4.length;
+								_cards_table4.splice(comNum[i],len);
+								break;
+							case '5':
+								var len=_cards_table5.length;
+								_cards_table5.splice(comNum[i],len);
+								break;
+							case '6':
+								var len=_cards_table6.length;
+								_cards_table6.splice(comNum[i],len);
+								break;
+							case '7':
+								var len=_cards_table7.length;
+								_cards_table7.splice(comNum[i],len);
+								break;
+							case '8':
+								var len=_cards_table8.length;
+								_cards_table8.splice(comNum[i],len);
+								break;
+							case '9':
+								var len=_cards_table9.length;
+								_cards_table9.splice(comNum[i],len);
+								break;
+						}
 					}
 				}
 			}
