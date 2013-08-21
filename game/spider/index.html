@@ -5,7 +5,7 @@
         <title>Javascript game_蜘蛛纸牌</title>
         <meta name="keywords" content="javascript,game,蜘蛛纸牌"/>
         <meta name="description" content="Javascript小游戏蜘蛛纸牌" />
-        <script src="../../jquery.js" type="text/javascript"></script>
+        <script src="../jquery.js" type="text/javascript"></script>
 </head>
 <body>
 <style type="text/css">
@@ -457,8 +457,8 @@ jQuery(function($){
 					obj.eq(comNum[i]).remove();
 				}
 				if(i==0){
-					obj.eq(comNum[i-1]).removeClass('back');
-					obj.eq(comNum[i-1]).attr('action-t','');
+					obj.eq(comNum[i]-1).removeClass('back');
+					obj.eq(comNum[i]-1).attr('action-t','');
 					switch(line){
 						case '0':
 							var len=_cards_table0.length;
