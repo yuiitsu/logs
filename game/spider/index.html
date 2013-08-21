@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Javascript game_蜘蛛纸牌</title>
+        <meta name="keywords" content="javascript,game,蜘蛛纸牌"/>
+        <meta name="description" content="Javascript小游戏蜘蛛纸牌" />
+        <script src="../../jquery.js" type="text/javascript"></script>
+</head>
+<body>
+<style type="text/css">
+body{background-color:#fff;font:12px Tahoma;}
+.game_tips{width:800px;margin:0 auto;font-size:14px;font-weight: bold;}
+#game_map{width:800px;margin:0 auto;margin-top:10px;height:450px;background-color:#e1e1e1;padding:10px;position: relative;}
+#post{width:59px;border:1px solid #666;height:90px;background-color:#999;position: absolute;padding:5px;right:-81px;bottom:0px;}
+.card{width:59px;border:1px solid #666;height:90px;background-color:#999;position: absolute;padding:5px;}
+.card0{left:10px;}
+.card1{left:91px;}
+.card2{left:172px;}
+.card3{left:253px;}
+.card4{left:334px;}
+.card5{left:415px;}
+.card6{left:496px;}
+.card7{left:577px;}
+.card8{left:658px;}
+.card9{left:739px;}
+.cardbg{width:59px;border:1px solid #e1e1e1;height:90px;background-color:#e1e1e1;position: absolute;padding:5px;}
+.cardbg0{left:10px;}
+.cardbg1{left:91px;}
+.cardbg2{left:172px;}
+.cardbg3{left:253px;}
+.cardbg4{left:334px;}
+.cardbg5{left:415px;}
+.cardbg6{left:496px;}
+.cardbg7{left:577px;}
+.cardbg8{left:658px;}
+.cardbg9{left:739px;}
+
+.ct0{top:10px;}
+.ct1{top:30px;}
+.ct2{top:50px;}
+.ct3{top:70px;}
+.ct4{top:90px;}
+.ct5{top:110px;}
+.ct6{top:130px;}
+.ct7{top:150px;}
+.ct8{top:170px;}
+.ct9{top:190px;}
+.ct10{top:210px;}
+.ct11{top:230px;}
+.ct12{top:250px;}
+.ct13{top:270px;}
+.ct14{top:290px;}
+.ct15{top:310px;}
+.ct16{top:330px;}
+
+.back{font-size:0px;background-color:#777;}
+
+.scores{float:right;font-size:16px;}
+#scores{font-size:18px;font-weight:bold;font-family: tahoma;color:#ff0000;}
+</style>
+<div class="game_tips" id="tips">
+	<div class="scores">移牌 <span id="scores">0</span> 次</div>
+	Javascript game_蜘蛛纸牌
+</div>
+<div id="game_map">
+</div>
+<script type="text/javascript">
+jQuery(function($){
+	var _difficulty=1;
+	var _cards_init=['1','2','3','4','5','6','7','8','9','10','J','Q','K'];
+	var _cards=[];
+	var _cards_table0=[];
+	var _cards_table1=[];
+	var _cards_table2=[];
+	var _cards_table3=[];
+	var _cards_table4=[];
+	var _cards_table5=[];
+	var _cards_table6=[];
+	var _cards_table7=[];
+	var _cards_table8=[];
+	var _cards_table9=[];
+	var _cards_selected=[];
+
+	init();
+	//初始化牌，洗牌
+	function init(){
+		var _this=this;
+		_cards_init=_cards_init.concat(_cards_init,_cards_init,_cards_init);
+		_cards_init=_cards_init.concat(_cards_init);
+		this.shuffle=function(){
+			var len=_cards_init.length;
+			if(len>=1){
+				var i=random(len);
+				_cards.push(_cards_init[i]);
+				_cards_init.splice(i,1);
+				_this.shuffle();
+			}
+		}
+		this.shuffle();
+		var _cards_table='';
+		
+		for(var i=0;i<54;i++){
+			if(i<=9){
+				j=i;
+				_cards_table+="<div class='cardbg cardbg"+j+"' action-t='' action-line='"+j+"'></div>";
+			}else{
+				var s=i.toString();
+				j=s.substring(s.length-1);
+			}
+			j=j.toString();
+			var num=cardNum(_cards[i]);
+			var back='';
+			//背面牌
+			if(i>=0&&i<44){
+				back='back';
+			}
+			switch(j){
+				case '0':
+					var l=_cards_table0.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table0.push(num);
+					break;
+				case '1':
+					var l=_cards_table1.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table1.push(num);
+					break;
+				case '2':
+					var l=_cards_table2.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table2.push(num);
+					break;
+				case '3':
+					var l=_cards_table3.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table3.push(num);
+					break;
+				case '4':
+					var l=_cards_table4.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table4.push(num);
+					break;
+				case '5':
+					var l=_cards_table5.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table5.push(num);
+					break;
+				case '6':
+					var l=_cards_table6.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table6.push(num);
+					break;
+				case '7':
+					var l=_cards_table7.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table7.push(num);
+					break;
+				case '8':
+					var l=_cards_table8.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table8.push(num);
+					break;
+				case '9':
+					var l=_cards_table9.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table9.push(num);
+					break;
+			}
+		}
+		_cards.splice(0,54);
+		_cards_table+='<div id="post">发牌<span id="postnum">5</span></div>';
+		$("#game_map").html(_cards_table);
+		cardBg();
+		clickCard();
+		post();
+	}
+
+	//发牌
+	function post(){
+		$("#post").click(function(){
+			if(_cards.length<=0){
+				alert('无牌可发了');
+				return false;
+			}
+			var _cards_table='';
+			for(var i=0;i<10;i++){
+				j=i.toString();
+				var num=cardNum(_cards[i]);
+				switch(j){
+					case '0':
+						var l=_cards_table0.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table0.push(num);
+						break;
+					case '1':
+						var l=_cards_table1.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table1.push(num);
+						break;
+					case '2':
+						var l=_cards_table2.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table2.push(num);
+						break;
+					case '3':
+						var l=_cards_table3.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table3.push(num);
+						break;
+					case '4':
+						var l=_cards_table4.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table4.push(num);
+						break;
+					case '5':
+						var l=_cards_table5.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table5.push(num);
+						break;
+					case '6':
+						var l=_cards_table6.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table6.push(num);
+						break;
+					case '7':
+						var l=_cards_table7.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table7.push(num);
+						break;
+					case '8':
+						var l=_cards_table8.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table8.push(num);
+						break;
+					case '9':
+						var l=_cards_table9.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table9.push(num);
+						break;
+				}
+			}
+			_cards.splice(0,10);
+			$("#game_map").append(_cards_table);
+			$("#postnum").html(parseInt($("#postnum").html())-1);
+			clickCard();
+		});
+	}
+
+	//为牌添加事件
+	function clickCard(){
+		$(".card").unbind('click').click(function(){
+			var line=$(this).attr('action-line');
+			var back=$(this).attr('action-t');
+			if(back){
+				return false;
+			}
+			var index=$(".card"+line).index($(this));
+			var cards_num;
+			switch(line){
+				case '0':
+					cards_num=_cards_table0[index];
+					break;
+				case '1':
+					cards_num=_cards_table1[index];
+					break;
+				case '2':
+					cards_num=_cards_table2[index];
+					break;
+				case '3':
+					cards_num=_cards_table3[index];
+					break;
+				case '4':
+					cards_num=_cards_table4[index];
+					break;
+				case '5':
+					cards_num=_cards_table5[index];
+					break;
+				case '6':
+					cards_num=_cards_table6[index];
+					break;
+				case '7':
+					cards_num=_cards_table7[index];
+					break;
+				case '8':
+					cards_num=_cards_table8[index];
+					break;
+				case '9':
+					cards_num=_cards_table9[index];
+					break;
+			}
+			if(_cards_selected.length==1){
+				if((cards_num-1)==_cards_selected[0][2]){
+					var _index=index+1;
+					moveCard(line,_index,_cards_selected[0][2]);
+				}else{
+					alert('不能移动到那个位置2_'+cards_num+'_'+_cards_selected[0][2]);
+				}
+				css_remove();
+				_cards_selected.shift();
+				clickCard();
+			}else{
+				if(getCards(line,index)==0){
+					_cards_selected[0]=[];
+					_cards_selected[0][0]=line;
+					_cards_selected[0][1]=index;
+					_cards_selected[0][2]=cards_num;
+				}else{
+					css_remove();
+					//alert('不能移动到那个位置_'+cards_num+'_'+_cards_selected[0][2]);
+				}
+			}
+		});
+	}
+
+	function cardBg(){
+		$(".cardbg").unbind('click').click(function(){
+			var line=$(this).attr('action-line');
+			moveCard(line,0,_cards_selected[0][2]);
+			css_remove();
+			_cards_selected.shift();
+			clickCard();
+		});
+	}
+
+	function cardNum(i){
+		switch(i){
+			case 'J':
+				return 11;
+				break;
+			case 'Q':
+				return 12;
+				break;
+			case 'K':
+				return 13;
+				break;
+			default:
+				return i;
+				break;
+		}
+	}
+
+	function moveCard(line,index,cards_num){
+		
+		switch(_cards_selected[0][0]){
+			case '0':
+				var len=_cards_table0.length;
+				_cards_table0.splice(_cards_selected[0][1],len);
+				break;
+			case '1':
+				var len=_cards_table1.length;
+				_cards_table1.splice(_cards_selected[0][1],len);
+				break;
+			case '2':
+				var len=_cards_table2.length;
+				_cards_table2.splice(_cards_selected[0][1],len);
+				break;
+			case '3':
+				var len=_cards_table3.length;
+				_cards_table3.splice(_cards_selected[0][1],len);
+				break;
+			case '4':
+				var len=_cards_table4.length;
+				_cards_table4.splice(_cards_selected[0][1],len);
+				break;
+			case '5':
+				var len=_cards_table5.length;
+				_cards_table5.splice(_cards_selected[0][1],len);
+				break;
+			case '6':
+				var len=_cards_table6.length;
+				_cards_table6.splice(_cards_selected[0][1],len);
+				break;
+			case '7':
+				var len=_cards_table7.length;
+				_cards_table7.splice(_cards_selected[0][1],len);
+				break;
+			case '8':
+				var len=_cards_table8.length;
+				_cards_table8.splice(_cards_selected[0][1],len);
+				break;
+			case '9':
+				var len=_cards_table9.length;
+				_cards_table9.splice(_cards_selected[0][1],len);
+				break;
+		}
+		var html='';
+		var moveCardIndex=index;
+		for(var i=_cards_selected[0][1];i<len;i++){
+			html+="<div class='card card"+line+" ct"+moveCardIndex+"' action-line='"+line+"' action-t=''>"+$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html()+"</div>";
+			moveCardIndex++;
+			var num=cardNum($(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html());
+			switch(line){
+				case '0':
+					_cards_table0.push(num);
+					break;
+				case '1':
+					_cards_table1.push(num);
+					break;
+				case '2':
+					_cards_table2.push(num);
+					break;
+				case '3':
+					_cards_table3.push(num);
+					break;
+				case '4':
+					_cards_table4.push(num);
+					break;
+				case '5':
+					_cards_table5.push(num);
+					break;
+				case '6':
+					_cards_table6.push(num);
+					break;
+				case '7':
+					_cards_table7.push(num);
+					break;
+				case '8':
+					_cards_table8.push(num);
+					break;
+				case '9':
+					_cards_table9.push(num);
+					break;
+			}
+			$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).remove();
+		}
+		$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).removeClass('back');
+		$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).attr('action-t','');
+		$("#game_map").append(html);
+		$("#scores").html(parseInt($("#scores").html())+1);
+		checkComplate(line);
+	}
+
+	function checkComplate(line){
+		var obj=$(".card"+line)
+		var len=obj.length;
+		var preNum=0;
+		var error=0;
+		var comNum=[];
+		if(len>=13){
+			for(var i=0;i<len;i++){
+				if(obj.eq(i).attr('action-t')==''){
+					if(preNum>0){
+						if(parseInt(cardNum(obj.eq(i).html()))+1==preNum){
+							preNum=parseInt(cardNum(obj.eq(i).html()));
+						}else{
+							error=1;
+						}
+					}else{
+						preNum=parseInt(cardNum(obj.eq(i).html()));
+					}
+					comNum.push(i);
+				}
+			}
+			if(error==0&&comNum.length>=13){
+				for(var i in comNum){
+					obj.eq(comNum[i]).remove();
+				}
+				if(i==0){
+					obj.eq(comNum[i-1]).removeClass('back');
+					obj.eq(comNum[i-1]).attr('action-t','');
+					switch(line){
+						case '0':
+							var len=_cards_table0.length;
+							_cards_table0.splice(comNum[i],len);
+							break;
+						case '1':
+							var len=_cards_table1.length;
+							_cards_table1.splice(comNum[i],len);
+							break;
+						case '2':
+							var len=_cards_table2.length;
+							_cards_table2.splice(comNum[i],len);
+							break;
+						case '3':
+							var len=_cards_table3.length;
+							_cards_table3.splice(comNum[i],len);
+							break;
+						case '4':
+							var len=_cards_table4.length;
+							_cards_table4.splice(comNum[i],len);
+							break;
+						case '5':
+							var len=_cards_table5.length;
+							_cards_table5.splice(comNum[i],len);
+							break;
+						case '6':
+							var len=_cards_table6.length;
+							_cards_table6.splice(comNum[i],len);
+							break;
+						case '7':
+							var len=_cards_table7.length;
+							_cards_table7.splice(comNum[i],len);
+							break;
+						case '8':
+							var len=_cards_table8.length;
+							_cards_table8.splice(comNum[i],len);
+							break;
+						case '9':
+							var len=_cards_table9.length;
+							_cards_table9.splice(comNum[i],len);
+							break;
+					}
+				}
+			}
+		}
+	}
+
+	function getCards(line,index){
+		switch(line){
+			case "0":
+				var len=_cards_table0.length;
+				break;
+			case "1":
+				var len=_cards_table1.length;
+				break;
+			case "2":
+				var len=_cards_table2.length;
+				break;
+			case "3":
+				var len=_cards_table3.length;
+				break;
+			case "4":
+				var len=_cards_table4.length;
+				break;
+			case "5":
+				var len=_cards_table5.length;
+				break;
+			case "6":
+				var len=_cards_table6.length;
+				break;
+			case "7":
+				var len=_cards_table7.length;
+				break;
+			case "8":
+				var len=_cards_table8.length;
+				break;
+			case "9":
+				var len=_cards_table9.length;
+				break;
+		}
+		var preNum=0;
+		var error=0;
+		for(var i=index;i<len;i++){
+			if(preNum>0){
+				if(parseInt(cardNum($(".card"+line).eq(i).html()))+1==preNum){
+					preNum=parseInt(cardNum($(".card"+line).eq(i).html()));
+				}else{
+					error=1;
+				}
+			}else{
+				preNum=parseInt(cardNum($(".card"+line).eq(i).html()));
+			}
+			css_click($(".card"+line).eq(i));
+		}
+		return error;
+	}
+
+	function css_click(obj){
+		obj.css('border','1px solid #ffff00');
+	}
+
+	function css_remove(){
+		$(".card").css('border','1px solid #666');
+	}
+
+	//取随机数
+	function random(len){
+		return Math.floor(Math.random()*(len-1));
+	}
+
+	$("#button").click(function(){
+		alert(_cards);
+	});
+});
+</script>
+</body>
+</html>
