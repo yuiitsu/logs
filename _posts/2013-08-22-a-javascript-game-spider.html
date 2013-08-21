@@ -1,0 +1,1109 @@
+---
+layout: post
+title: 一起来做webgame，《Javascript蜘蛛纸牌》
+category: game
+description: 不得不说，做游戏是会上瘾的，这次带来的是win系统上的经典游戏《蜘蛛纸牌》，不能完美，但求一玩
+img: 201308/082201.jpg
+keywords: javascript,jquery,php,game,spider,蜘蛛纸牌
+---
+<p>
+	不得不说，做游戏是会上瘾的，这次带来的是win系统上的经典游戏《蜘蛛纸牌》，不能完美，但求一玩
+</p>
+<h2 class="content_h2">
+试玩
+</h2>
+<p>
+	<a href="{{ site:url }}/game/spider/">这里效果好点</a>
+</p>
+<style type="text/css">
+.game_tips{width:800px;margin:0 auto;font-size:14px;font-weight: bold;}
+#game_map{width:800px;margin:0 auto;margin-top:10px;height:450px;background-color:#e1e1e1;padding:10px;position: relative;}
+#post{width:59px;border:1px solid #666;height:90px;background-color:#999;position: absolute;padding:5px;right:-81px;bottom:0px;}
+.card{width:59px;border:1px solid #666;height:90px;background-color:#999;position: absolute;padding:5px;}
+.card0{left:10px;}
+.card1{left:91px;}
+.card2{left:172px;}
+.card3{left:253px;}
+.card4{left:334px;}
+.card5{left:415px;}
+.card6{left:496px;}
+.card7{left:577px;}
+.card8{left:658px;}
+.card9{left:739px;}
+.cardbg{width:59px;border:1px solid #e1e1e1;height:90px;background-color:#e1e1e1;position: absolute;padding:5px;}
+.cardbg0{left:10px;}
+.cardbg1{left:91px;}
+.cardbg2{left:172px;}
+.cardbg3{left:253px;}
+.cardbg4{left:334px;}
+.cardbg5{left:415px;}
+.cardbg6{left:496px;}
+.cardbg7{left:577px;}
+.cardbg8{left:658px;}
+.cardbg9{left:739px;}
+
+.ct0{top:10px;}
+.ct1{top:30px;}
+.ct2{top:50px;}
+.ct3{top:70px;}
+.ct4{top:90px;}
+.ct5{top:110px;}
+.ct6{top:130px;}
+.ct7{top:150px;}
+.ct8{top:170px;}
+.ct9{top:190px;}
+.ct10{top:210px;}
+.ct11{top:230px;}
+.ct12{top:250px;}
+.ct13{top:270px;}
+.ct14{top:290px;}
+.ct15{top:310px;}
+.ct16{top:330px;}
+.ct17{top:350px;}
+.ct18{top:370px;}
+.ct19{top:390px;}
+.ct20{top:410px;}
+
+.back{font-size:0px;background-color:#777;}
+
+.scores{float:right;font-size:16px;}
+#scores{font-size:18px;font-weight:bold;font-family: tahoma;color:#ff0000;}
+</style>
+<div class="game_tips" id="tips">
+	<div class="scores">移牌 <span id="scores">0</span> 次</div>
+	Javascript game_蜘蛛纸牌
+</div>
+<div id="game_map">
+正在努力加载...
+</div>
+<script type="text/javascript">
+jQuery(function($){
+	var _difficulty=1;
+	var _cards_init=['1','2','3','4','5','6','7','8','9','10','J','Q','K'];
+	var _cards=[];
+	var _cards_table0=[];
+	var _cards_table1=[];
+	var _cards_table2=[];
+	var _cards_table3=[];
+	var _cards_table4=[];
+	var _cards_table5=[];
+	var _cards_table6=[];
+	var _cards_table7=[];
+	var _cards_table8=[];
+	var _cards_table9=[];
+	var _cards_selected=[];
+
+	init();
+	//初始化牌，洗牌
+	function init(){
+		var _this=this;
+		_cards_init=_cards_init.concat(_cards_init,_cards_init,_cards_init);
+		_cards_init=_cards_init.concat(_cards_init);
+		this.shuffle=function(){
+			var len=_cards_init.length;
+			if(len>=1){
+				var i=random(len);
+				_cards.push(_cards_init[i]);
+				_cards_init.splice(i,1);
+				_this.shuffle();
+			}
+		}
+		this.shuffle();
+		var _cards_table='';
+		
+		for(var i=0;i<54;i++){
+			if(i<=9){
+				j=i;
+				_cards_table+="<div class='cardbg cardbg"+j+"' action-t='' action-line='"+j+"'></div>";
+			}else{
+				var s=i.toString();
+				j=s.substring(s.length-1);
+			}
+			j=j.toString();
+			var num=cardNum(_cards[i]);
+			var back='';
+			//背面牌
+			if(i>=0&&i<44){
+				back='back';
+			}
+			switch(j){
+				case '0':
+					var l=_cards_table0.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table0.push(num);
+					break;
+				case '1':
+					var l=_cards_table1.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table1.push(num);
+					break;
+				case '2':
+					var l=_cards_table2.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table2.push(num);
+					break;
+				case '3':
+					var l=_cards_table3.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table3.push(num);
+					break;
+				case '4':
+					var l=_cards_table4.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table4.push(num);
+					break;
+				case '5':
+					var l=_cards_table5.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table5.push(num);
+					break;
+				case '6':
+					var l=_cards_table6.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table6.push(num);
+					break;
+				case '7':
+					var l=_cards_table7.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table7.push(num);
+					break;
+				case '8':
+					var l=_cards_table8.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table8.push(num);
+					break;
+				case '9':
+					var l=_cards_table9.length;
+					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table9.push(num);
+					break;
+			}
+		}
+		_cards.splice(0,54);
+		_cards_table+='<div id="post">发牌<span id="postnum">5</span></div>';
+		$("#game_map").html(_cards_table);
+		cardBg();
+		clickCard();
+		post();
+	}
+
+	//发牌
+	function post(){
+		$("#post").click(function(){
+			if(_cards.length<=0){
+				alert('无牌可发了');
+				return false;
+			}
+			var _cards_table='';
+			for(var i=0;i<10;i++){
+				j=i.toString();
+				var num=cardNum(_cards[i]);
+				switch(j){
+					case '0':
+						var l=_cards_table0.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table0.push(num);
+						break;
+					case '1':
+						var l=_cards_table1.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table1.push(num);
+						break;
+					case '2':
+						var l=_cards_table2.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table2.push(num);
+						break;
+					case '3':
+						var l=_cards_table3.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table3.push(num);
+						break;
+					case '4':
+						var l=_cards_table4.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table4.push(num);
+						break;
+					case '5':
+						var l=_cards_table5.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table5.push(num);
+						break;
+					case '6':
+						var l=_cards_table6.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table6.push(num);
+						break;
+					case '7':
+						var l=_cards_table7.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table7.push(num);
+						break;
+					case '8':
+						var l=_cards_table8.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table8.push(num);
+						break;
+					case '9':
+						var l=_cards_table9.length;
+						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table9.push(num);
+						break;
+				}
+			}
+			_cards.splice(0,10);
+			$("#game_map").append(_cards_table);
+			$("#postnum").html(parseInt($("#postnum").html())-1);
+			clickCard();
+		});
+	}
+
+	//为牌添加事件
+	function clickCard(){
+		$(".card").unbind('click').click(function(){
+			var line=$(this).attr('action-line');
+			var back=$(this).attr('action-t');
+			if(back){
+				return false;
+			}
+			var index=$(".card"+line).index($(this));
+			var cards_num;
+			switch(line){
+				case '0':
+					cards_num=_cards_table0[index];
+					break;
+				case '1':
+					cards_num=_cards_table1[index];
+					break;
+				case '2':
+					cards_num=_cards_table2[index];
+					break;
+				case '3':
+					cards_num=_cards_table3[index];
+					break;
+				case '4':
+					cards_num=_cards_table4[index];
+					break;
+				case '5':
+					cards_num=_cards_table5[index];
+					break;
+				case '6':
+					cards_num=_cards_table6[index];
+					break;
+				case '7':
+					cards_num=_cards_table7[index];
+					break;
+				case '8':
+					cards_num=_cards_table8[index];
+					break;
+				case '9':
+					cards_num=_cards_table9[index];
+					break;
+			}
+			if(_cards_selected.length==1){
+				if((cards_num-1)==_cards_selected[0][2]){
+					var _index=index+1;
+					moveCard(line,_index,_cards_selected[0][2]);
+				}else{
+					alert('不能移动到那个位置2_'+cards_num+'_'+_cards_selected[0][2]);
+				}
+				css_remove();
+				_cards_selected.shift();
+				clickCard();
+			}else{
+				if(getCards(line,index)==0){
+					_cards_selected[0]=[];
+					_cards_selected[0][0]=line;
+					_cards_selected[0][1]=index;
+					_cards_selected[0][2]=cards_num;
+				}else{
+					css_remove();
+					//alert('不能移动到那个位置_'+cards_num+'_'+_cards_selected[0][2]);
+				}
+			}
+		});
+	}
+
+	function cardBg(){
+		$(".cardbg").unbind('click').click(function(){
+			var line=$(this).attr('action-line');
+			moveCard(line,0,_cards_selected[0][2]);
+			css_remove();
+			_cards_selected.shift();
+			clickCard();
+		});
+	}
+
+	function cardNum(i){
+		switch(i){
+			case 'J':
+				return 11;
+				break;
+			case 'Q':
+				return 12;
+				break;
+			case 'K':
+				return 13;
+				break;
+			default:
+				return i;
+				break;
+		}
+	}
+
+	function moveCard(line,index,cards_num){
+		
+		switch(_cards_selected[0][0]){
+			case '0':
+				var len=_cards_table0.length;
+				_cards_table0.splice(_cards_selected[0][1],len);
+				break;
+			case '1':
+				var len=_cards_table1.length;
+				_cards_table1.splice(_cards_selected[0][1],len);
+				break;
+			case '2':
+				var len=_cards_table2.length;
+				_cards_table2.splice(_cards_selected[0][1],len);
+				break;
+			case '3':
+				var len=_cards_table3.length;
+				_cards_table3.splice(_cards_selected[0][1],len);
+				break;
+			case '4':
+				var len=_cards_table4.length;
+				_cards_table4.splice(_cards_selected[0][1],len);
+				break;
+			case '5':
+				var len=_cards_table5.length;
+				_cards_table5.splice(_cards_selected[0][1],len);
+				break;
+			case '6':
+				var len=_cards_table6.length;
+				_cards_table6.splice(_cards_selected[0][1],len);
+				break;
+			case '7':
+				var len=_cards_table7.length;
+				_cards_table7.splice(_cards_selected[0][1],len);
+				break;
+			case '8':
+				var len=_cards_table8.length;
+				_cards_table8.splice(_cards_selected[0][1],len);
+				break;
+			case '9':
+				var len=_cards_table9.length;
+				_cards_table9.splice(_cards_selected[0][1],len);
+				break;
+		}
+		var html='';
+		var moveCardIndex=index;
+		for(var i=_cards_selected[0][1];i<len;i++){
+			html+="<div class='card card"+line+" ct"+moveCardIndex+"' action-line='"+line+"' action-t=''>"+$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html()+"</div>";
+			moveCardIndex++;
+			var num=cardNum($(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html());
+			switch(line){
+				case '0':
+					_cards_table0.push(num);
+					break;
+				case '1':
+					_cards_table1.push(num);
+					break;
+				case '2':
+					_cards_table2.push(num);
+					break;
+				case '3':
+					_cards_table3.push(num);
+					break;
+				case '4':
+					_cards_table4.push(num);
+					break;
+				case '5':
+					_cards_table5.push(num);
+					break;
+				case '6':
+					_cards_table6.push(num);
+					break;
+				case '7':
+					_cards_table7.push(num);
+					break;
+				case '8':
+					_cards_table8.push(num);
+					break;
+				case '9':
+					_cards_table9.push(num);
+					break;
+			}
+			$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).remove();
+		}
+		$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).removeClass('back');
+		$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).attr('action-t','');
+		$("#game_map").append(html);
+		$("#scores").html(parseInt($("#scores").html())+1);
+		checkComplate(line);
+	}
+
+	function checkComplate(line){
+		var obj=$(".card"+line)
+		var len=obj.length;
+		var preNum=0;
+		var error=0;
+		var comNum=[];
+		if(len>=13){
+			for(var i=0;i<len;i++){
+				if(obj.eq(i).attr('action-t')==''){
+					if(preNum>0){
+						if(parseInt(cardNum(obj.eq(i).html()))+1==preNum){
+							preNum=parseInt(cardNum(obj.eq(i).html()));
+						}else{
+							error=1;
+						}
+					}else{
+						preNum=parseInt(cardNum(obj.eq(i).html()));
+					}
+					comNum.push(i);
+				}
+			}
+			if(error==0&&comNum.length>=13){
+				for(var i in comNum){
+					obj.eq(comNum[i]).remove();
+					if(i==0){
+						obj.eq(comNum[i]-1).removeClass('back');
+						obj.eq(comNum[i]-1).attr('action-t','');
+						switch(line){
+							case '0':
+								var len=_cards_table0.length;
+								_cards_table0.splice(comNum[i],len);
+								break;
+							case '1':
+								var len=_cards_table1.length;
+								_cards_table1.splice(comNum[i],len);
+								break;
+							case '2':
+								var len=_cards_table2.length;
+								_cards_table2.splice(comNum[i],len);
+								break;
+							case '3':
+								var len=_cards_table3.length;
+								_cards_table3.splice(comNum[i],len);
+								break;
+							case '4':
+								var len=_cards_table4.length;
+								_cards_table4.splice(comNum[i],len);
+								break;
+							case '5':
+								var len=_cards_table5.length;
+								_cards_table5.splice(comNum[i],len);
+								break;
+							case '6':
+								var len=_cards_table6.length;
+								_cards_table6.splice(comNum[i],len);
+								break;
+							case '7':
+								var len=_cards_table7.length;
+								_cards_table7.splice(comNum[i],len);
+								break;
+							case '8':
+								var len=_cards_table8.length;
+								_cards_table8.splice(comNum[i],len);
+								break;
+							case '9':
+								var len=_cards_table9.length;
+								_cards_table9.splice(comNum[i],len);
+								break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function getCards(line,index){
+		switch(line){
+			case "0":
+				var len=_cards_table0.length;
+				break;
+			case "1":
+				var len=_cards_table1.length;
+				break;
+			case "2":
+				var len=_cards_table2.length;
+				break;
+			case "3":
+				var len=_cards_table3.length;
+				break;
+			case "4":
+				var len=_cards_table4.length;
+				break;
+			case "5":
+				var len=_cards_table5.length;
+				break;
+			case "6":
+				var len=_cards_table6.length;
+				break;
+			case "7":
+				var len=_cards_table7.length;
+				break;
+			case "8":
+				var len=_cards_table8.length;
+				break;
+			case "9":
+				var len=_cards_table9.length;
+				break;
+		}
+		var preNum=0;
+		var error=0;
+		for(var i=index;i<len;i++){
+			if(preNum>0){
+				if(parseInt(cardNum($(".card"+line).eq(i).html()))+1==preNum){
+					preNum=parseInt(cardNum($(".card"+line).eq(i).html()));
+				}else{
+					error=1;
+				}
+			}else{
+				preNum=parseInt(cardNum($(".card"+line).eq(i).html()));
+			}
+			css_click($(".card"+line).eq(i));
+		}
+		return error;
+	}
+
+	function css_click(obj){
+		obj.css('border','1px solid #ffff00');
+	}
+
+	function css_remove(){
+		$(".card").css('border','1px solid #666');
+	}
+
+	//取随机数
+	function random(len){
+		return Math.floor(Math.random()*(len-1));
+	}
+
+	$("#button").click(function(){
+		alert(_cards);
+	});
+});
+</script>
+<h2 class="content_h2">
+	关于蜘蛛纸牌
+</h2>
+<p>
+	规则请打开win系统的蜘蛛纸牌，然后点击帮助
+</p>
+<h2 class="content_h2">
+	这里要实现的
+</h2>
+<ul>
+	<li>同样是两副牌，一共104张</li>
+	<li>同一种花色的低难度游戏</li>
+</ul>
+<h2 class="content_h2">
+	需要解决的问题
+</h2>
+<ul>
+	<li>1、洗牌</li>
+	<li>2、判断点击牌所在序列是否符合可移动条件</li>
+	<li>3、判断目标位置是否符合可移动条件</li>
+	<li>4、移动符合条件的纸牌序列到目标位置</li>
+	<li>5、完成一个完整序列时的清除</li>
+	<li>6、发牌</li>
+</ul>
+<p>
+	综合起来，《蜘蛛纸牌》基本上就这么6个问题，解决了，也就完成了。下面一个一个来实现
+</p>
+<h2 class="content_h2">
+	1、洗牌
+</h2>
+<p>
+	光洗牌，不难。如果要做到每次洗牌都有解就不是我能解决的问题了（win系统里的蜘蛛纸牌是不是每次都有解，我确实不知道）。这里就随便洗洗，没解也没办法，即使有解，你也不一定能解完，是吧。
+</p>
+<p>
+	这里是同色，所以不用去考虑4个花色，那一副牌，从A-K，是13张，有4组，就是13*4=52张牌。两副就是104张。先初始化一组牌
+</p>
+<pre class="prettyprint lang-javascript">
+var _cards_init=['1','2','3','4','5','6','7','8','9','10','J','Q','K'];
+</pre>
+<p>
+	跟着把它变成1副牌
+</p>
+<pre class="prettyprint lang-javascript">
+_cards_init=_cards_init.concat(_cards_init,_cards_init,_cards_init);  //使用concat来链接数组
+</pre>
+<p>
+	这里自己链接自己3次，就变成了4组，一副牌。再接着链接自己一次，就变成两副牌
+</p>
+<pre class="prettyprint lang-javascript">
+_cards_init=_cards_init.concat(_cards_init);
+</pre>
+<p>
+	两副牌有了，接着就洗牌，这里简单的使用随机数来洗。
+</p>
+<pre class="prettyprint lang-javascript">
+this.shuffle=function(){
+	var len=_cards_init.length;
+	if(len&gt;=1){
+		var i=random(len);
+		_cards.push(_cards_init[i]);
+		_cards_init.splice(i,1);
+		_this.shuffle();
+	}
+}
+</pre>
+<p>
+	这是一个递归，每次从初始化的剩余牌序列里随机取一个，放到新牌的数组里，然后将取走的牌从初始化的数组里移除，重计长度，只要长度不小于1，那么重复这个操作，至到全部取完为止。这样生成的新牌数组里的牌基本上就是乱序了，达到洗牌的效果。
+</p>
+<p>
+	牌洗好之后，就得将最开始的牌面放到界面上。win7的蜘蛛纸牌是10列，前4列5张扣牌，1张明牌，后6列4张扣牌，1张明牌。这里也按这样的方式开始。
+</p>
+<p>
+	因为是按列为基础进行摆牌，所以程序在确定牌所在位置的时候，需要分别记录，每一列等于是一个序列，有牌移进来，要增加它的长度，有牌移走的时候，要减少它的长度。所以这里使用了10个数组来分别记录牌的信息
+</p>
+<pre class="prettyprint lang-javascript">
+var _cards_table0=[];
+var _cards_table1=[];
+var _cards_table2=[];
+var _cards_table3=[];
+var _cards_table4=[];
+var _cards_table5=[];
+var _cards_table6=[];
+var _cards_table7=[];
+var _cards_table8=[];
+var _cards_table9=[];
+var _cards_selected=[];
+</pre>
+<p>
+	接着确定位置，按照初始化的界面，一共要放54张牌到牌面上，其中44张是扣牌，10张是明牌，所以，先从新牌数组里取54张牌出来，其中前10张，也就是0-9，是个位数，直接将下标做了牌的参数
+</p>
+<pre class="prettyprint lang-javascript">
+for(var i=0;i&lt;54;i++){
+	if(i&lt;=9){
+		j=i;
+		_cards_table+="&lt;div class='cardbg cardbg"+j+"' action-t='' action-line='"+j+"'&gt;&lt;/div&gt;";
+	}else{
+		var s=i.toString();
+		j=s.substring(s.length-1);  //两位数则取最后一位
+	}
+	j=j.toString();
+	var num=cardNum(_cards[i]);  //转换J、Q、K为数字11，12，13
+	var back='';
+	//扣牌
+	if(i&gt;=0&&i&lt;44){  //前44张是扣牌，所以特别对待，为div加上一个back的class
+		back='back';
+	}
+	switch(j){  //判断是第几列0-9
+		case '0':
+			var l=_cards_table0.length;  //每次计算各列数组的长度，以便对不同的牌设置不同的class，来固定它的位置
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table0.push(num);
+			break;
+		case '1':
+			var l=_cards_table1.length;
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table1.push(num);
+			break;
+		case '2':
+			var l=_cards_table2.length;
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table2.push(num);
+			break;
+		case '3':
+			var l=_cards_table3.length;
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table3.push(num);
+			break;
+		case '4':
+			var l=_cards_table4.length;
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table4.push(num);
+			break;
+		case '5':
+			var l=_cards_table5.length;
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table5.push(num);
+			break;
+		case '6':
+			var l=_cards_table6.length;
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table6.push(num);
+			break;
+		case '7':
+			var l=_cards_table7.length;
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table7.push(num);
+			break;
+		case '8':
+			var l=_cards_table8.length;
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table8.push(num);
+			break;
+		case '9':
+			var l=_cards_table9.length;
+			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table9.push(num);
+			break;
+	}
+}
+</pre>
+<p>
+	其实，这里固定牌的位置，直接使用了CSS样式，不太好，因为有时候你不知道到底一列会出现多少个纸牌，要是CSS样式写少了，那多出来的纸牌放的位置就会出现问题。最好的办法是JS直接判断索引值，根据索引值*固定数来确定位置。
+</p>
+<p>
+	这些牌放出去后，自然得将它们从新牌的数组里移除，以后发牌，就是数组里剩下的牌了
+</p>
+<pre class="prettyprint lang-javascript">
+_cards.splice(0,54);
+_cards_table+='&lt;div id="post"&gt;发牌&lt;span id="postnum"&gt;5&lt;/span&gt;&lt;/div&gt;';  //顺便添加一个发牌的按钮
+$("#game_map").html(_cards_table);  //将生成的牌放到游戏地图上
+</pre>
+<p>
+	这里除了这些初始牌面外，还有一个东西，那就是隐藏的一个牌，因为每列的牌都有可能完全的移出，这时候符合条件的牌序列又可以移到这个空列里来，所以，得在那个位置放一个看不见的牌，但这个牌只有列号，没有其它的东西。
+</p>
+<pre class="prettyprint lang-javascript">
+if(i&lt;=9){
+	j=i;
+	_cards_table+="&lt;div class='cardbg cardbg"+j+"' action-t='' action-line='"+j+"'&gt;&lt;/div&gt;";
+}
+</pre>
+<h2 class="content_h2">
+	2、判断点击牌所在序列是否符合可移动条件。3、判断目标位置是否符合可移动条件
+</h2>
+<p>
+	首先，得为各牌添加单击事件。然后第一次点的牌要记录下它的3个东西：1、所在列。2、列上的索引值。3、牌面值（A-K）。再次点击其它牌的时候，进行判断，它是不是符合移动条件，如：被点击牌及之后的牌序列是不是符合条件（递减），目标牌是不是比第一次点击牌大1，如果是，移动牌到新位置，如果不是，给出提示，不符合条件
+</p>
+<pre class="prettyprint lang-javascript">
+function clickCard(){
+	$(".card").unbind('click').click(function(){
+		var line=$(this).attr('action-line');
+		var back=$(this).attr('action-t');
+		if(back){
+			return false;
+		}
+		var index=$(".card"+line).index($(this));
+		var cards_num;
+		switch(line){
+			case '0':
+				cards_num=_cards_table0[index];
+				break;
+			case '1':
+				cards_num=_cards_table1[index];
+				break;
+			case '2':
+				cards_num=_cards_table2[index];
+				break;
+			case '3':
+				cards_num=_cards_table3[index];
+				break;
+			case '4':
+				cards_num=_cards_table4[index];
+				break;
+			case '5':
+				cards_num=_cards_table5[index];
+				break;
+			case '6':
+				cards_num=_cards_table6[index];
+				break;
+			case '7':
+				cards_num=_cards_table7[index];
+				break;
+			case '8':
+				cards_num=_cards_table8[index];
+				break;
+			case '9':
+				cards_num=_cards_table9[index];
+				break;
+		}
+		if(_cards_selected.length==1){
+			if((cards_num-1)==_cards_selected[0][2]){
+				var _index=index+1;
+				moveCard(line,_index,_cards_selected[0][2]);
+			}else{
+				alert('不能移动到那个位置2_'+cards_num+'_'+_cards_selected[0][2]);
+			}
+			css_remove();
+			_cards_selected.shift();
+			clickCard();
+		}else{
+			if(getCards(line,index)==0){
+				_cards_selected[0]=[];
+				_cards_selected[0][0]=line;
+				_cards_selected[0][1]=index;
+				_cards_selected[0][2]=cards_num;
+			}else{
+				css_remove();
+			}
+		}
+	});
+}
+</pre>
+<h2 class="content_h2">
+	4、移动符合条件的纸牌序列到目标位置
+</h2>
+<p>
+	移走了，也就得把它从该列的数组里清除掉，这里使用splice()，只需要传入起始索引值，将它和它之后的所有牌都清除。然后创建新的牌加入到目标列的数组里
+</p>
+<pre class="prettyprint lang-javascript">
+function moveCard(line,index,cards_num){
+		
+	switch(_cards_selected[0][0]){
+		case '0':
+			var len=_cards_table0.length;
+			_cards_table0.splice(_cards_selected[0][1],len);
+			break;
+		case '1':
+			var len=_cards_table1.length;
+			_cards_table1.splice(_cards_selected[0][1],len);
+			break;
+		case '2':
+			var len=_cards_table2.length;
+			_cards_table2.splice(_cards_selected[0][1],len);
+			break;
+		case '3':
+			var len=_cards_table3.length;
+			_cards_table3.splice(_cards_selected[0][1],len);
+			break;
+		case '4':
+			var len=_cards_table4.length;
+			_cards_table4.splice(_cards_selected[0][1],len);
+			break;
+		case '5':
+			var len=_cards_table5.length;
+			_cards_table5.splice(_cards_selected[0][1],len);
+			break;
+		case '6':
+			var len=_cards_table6.length;
+			_cards_table6.splice(_cards_selected[0][1],len);
+			break;
+		case '7':
+			var len=_cards_table7.length;
+			_cards_table7.splice(_cards_selected[0][1],len);
+			break;
+		case '8':
+			var len=_cards_table8.length;
+			_cards_table8.splice(_cards_selected[0][1],len);
+			break;
+		case '9':
+			var len=_cards_table9.length;
+			_cards_table9.splice(_cards_selected[0][1],len);
+			break;
+	}
+	var html='';
+	var moveCardIndex=index;
+	for(var i=_cards_selected[0][1];i&lt;len;i++){
+		html+="&lt;div class='card card"+line+" ct"+moveCardIndex+"' action-line='"+line+"' action-t=''&gt;"+$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html()+"&lt;/div&gt;";
+		moveCardIndex++;
+		var num=cardNum($(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html());
+		switch(line){
+			case '0':
+				_cards_table0.push(num);
+				break;
+			case '1':
+				_cards_table1.push(num);
+				break;
+			case '2':
+				_cards_table2.push(num);
+				break;
+			case '3':
+				_cards_table3.push(num);
+				break;
+			case '4':
+				_cards_table4.push(num);
+				break;
+			case '5':
+				_cards_table5.push(num);
+				break;
+			case '6':
+				_cards_table6.push(num);
+				break;
+			case '7':
+				_cards_table7.push(num);
+				break;
+			case '8':
+				_cards_table8.push(num);
+				break;
+			case '9':
+				_cards_table9.push(num);
+				break;
+		}
+		$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).remove();
+	}
+	$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).removeClass('back');
+	$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).attr('action-t','');
+	$("#game_map").append(html);
+	$("#scores").html(parseInt($("#scores").html())+1);
+	checkComplate(line);
+}
+</pre>
+<p>
+	checkComplate(line);用于判断是否已经实现A-K，如果是将它清除
+</p>
+<h2 class="content_h2">
+	5、完成一个完整序列时的清除
+</h2>
+<p>
+	首先判断该列的纸牌数是否超过13张，因为如果连13张都没有，又怎么会有完整的A-K呢。之后再判断明牌是不是有13张，而且明显的大小是不是从大到小减1的。如果都符合，那将它们全部清除，并从该列的数组里将它们清除。
+</p>
+<pre class="prettyprint lang-javascript">
+function checkComplate(line){
+	var obj=$(".card"+line)
+	var len=obj.length;
+	var preNum=0;
+	var error=0;
+	var comNum=[];
+	if(len&gt;=13){
+		for(var i=0;i&lt;len;i++){
+			if(obj.eq(i).attr('action-t')==''){
+				if(preNum&gt;0){
+					if(parseInt(cardNum(obj.eq(i).html()))+1==preNum){
+						preNum=parseInt(cardNum(obj.eq(i).html()));
+					}else{
+						error=1;
+					}
+				}else{
+					preNum=parseInt(cardNum(obj.eq(i).html()));
+				}
+				comNum.push(i);
+			}
+		}
+		if(error==0&&comNum.length&gt;=13){
+			for(var i in comNum){
+				obj.eq(comNum[i]).remove();
+				if(i==0){
+					obj.eq(comNum[i]-1).removeClass('back');
+					obj.eq(comNum[i]-1).attr('action-t','');
+					switch(line){
+						case '0':
+							var len=_cards_table0.length;
+							_cards_table0.splice(comNum[i],len);
+							break;
+						case '1':
+							var len=_cards_table1.length;
+							_cards_table1.splice(comNum[i],len);
+							break;
+						case '2':
+							var len=_cards_table2.length;
+							_cards_table2.splice(comNum[i],len);
+							break;
+						case '3':
+							var len=_cards_table3.length;
+							_cards_table3.splice(comNum[i],len);
+							break;
+						case '4':
+							var len=_cards_table4.length;
+							_cards_table4.splice(comNum[i],len);
+							break;
+						case '5':
+							var len=_cards_table5.length;
+							_cards_table5.splice(comNum[i],len);
+							break;
+						case '6':
+							var len=_cards_table6.length;
+							_cards_table6.splice(comNum[i],len);
+							break;
+						case '7':
+							var len=_cards_table7.length;
+							_cards_table7.splice(comNum[i],len);
+							break;
+						case '8':
+							var len=_cards_table8.length;
+							_cards_table8.splice(comNum[i],len);
+							break;
+						case '9':
+							var len=_cards_table9.length;
+							_cards_table9.splice(comNum[i],len);
+							break;
+					}
+				}
+			}
+		}
+	}
+}
+</pre>
+<h2 class="content_h2">
+	6、发牌
+</h2>
+<p>
+	发牌其实和初始化牌面没什么区别，只是每次只发10张，也就是向0-9列分别增加一张牌，发出去后，剩于牌就减去这些牌
+</p>
+<pre class="prettyprint lang-javascript">
+function post(){
+	$("#post").click(function(){
+		if(_cards.length&lt;=0){
+			alert('无牌可发了');
+			return false;
+		}
+		var _cards_table='';
+		for(var i=0;i&lt;10;i++){
+			j=i.toString();
+			var num=cardNum(_cards[i]);
+			switch(j){
+				case '0':
+					var l=_cards_table0.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table0.push(num);
+					break;
+				case '1':
+					var l=_cards_table1.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table1.push(num);
+					break;
+				case '2':
+					var l=_cards_table2.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table2.push(num);
+					break;
+				case '3':
+					var l=_cards_table3.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table3.push(num);
+					break;
+				case '4':
+					var l=_cards_table4.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table4.push(num);
+					break;
+				case '5':
+					var l=_cards_table5.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table5.push(num);
+					break;
+				case '6':
+					var l=_cards_table6.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table6.push(num);
+					break;
+				case '7':
+					var l=_cards_table7.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table7.push(num);
+					break;
+				case '8':
+					var l=_cards_table8.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table8.push(num);
+					break;
+				case '9':
+					var l=_cards_table9.length;
+					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
+					_cards_table9.push(num);
+					break;
+			}
+		}
+		_cards.splice(0,10);
+		$("#game_map").append(_cards_table);
+		$("#postnum").html(parseInt($("#postnum").html())-1);
+		clickCard();
+	});
+}
+</pre>
+<p>
+	以上6点，就是《蜘蛛纸牌》的基本内容，代码里还有一些方法，是为了增加一些方便，比如返回J-K的值等等，这里就不说了。直接编辑源代码，还是很累的。
+</p>
+<p>
+	全部代码这里就不帖了，可以查看试玩页面的源文件。
+</p>
+<script type="text/javascript">
+jQuery(function($){
+	window.prettyPrint && prettyPrint();
+});
+</script>
