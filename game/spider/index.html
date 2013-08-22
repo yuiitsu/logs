@@ -82,6 +82,7 @@ jQuery(function($){
 	var _cards_table8=[];
 	var _cards_table9=[];
 	var _cards_selected=[];
+	var _left_group=8;
 
 	init();
 	//初始化牌，洗牌
@@ -503,6 +504,11 @@ jQuery(function($){
 								break;
 						}
 					}
+				}
+				_left_group--;
+				if(_left_group==0){
+					alert('你赢了，共移动'+$('#scores').html()+'次');
+					$("#re").click();
 				}
 			}
 		}
