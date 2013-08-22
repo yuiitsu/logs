@@ -11,9 +11,10 @@
 <style type="text/css">
 body{background-color:#fff;font:12px Tahoma;}
 .game_tips{width:800px;margin:0 auto;font-size:14px;font-weight: bold;}
-#game_map{width:800px;margin:0 auto;margin-top:10px;height:450px;background-color:#e1e1e1;padding:10px;position: relative;}
-#post{width:59px;border:1px solid #666;height:90px;background-color:#999;position: absolute;padding:5px;right:-81px;bottom:0px;}
-.card{width:59px;border:1px solid #666;height:90px;background-color:#999;position: absolute;padding:5px;}
+#game_map{width:802px;margin:0 auto;margin-top:10px;height:450px;background-color:#088131;padding:10px;position: relative;}
+#post{width:61px;height:86px;background-color:#999;position: absolute;padding:5px;right:-81px;bottom:0px;background:url('bg.jpg');background-position: -923px 0px;}
+#postnum{position: absolute;top:-20px;left:0px;}
+.card{width:71px;height:96px;background-color:#999;position: absolute;background:url('bg.jpg');font-size:0px;border:1px solid #088131;}
 .card0{left:10px;}
 .card1{left:91px;}
 .card2{left:172px;}
@@ -24,7 +25,21 @@ body{background-color:#fff;font:12px Tahoma;}
 .card7{left:577px;}
 .card8{left:658px;}
 .card9{left:739px;}
-.cardbg{width:59px;border:1px solid #e1e1e1;height:90px;background-color:#e1e1e1;position: absolute;padding:5px;}
+.cardv1{background-position: 0px 0px;}
+.cardv2{background-position: -71px 0px;}
+.cardv3{background-position: -142px 0px;}
+.cardv4{background-position: -213px 0px;}
+.cardv5{background-position: -284px 0px;}
+.cardv6{background-position: -355px 0px;}
+.cardv7{background-position: -426px 0px;}
+.cardv8{background-position: -497px 0px;}
+.cardv9{background-position: -568px 0px;}
+.cardv10{background-position: -639px 0px;}
+.cardv11,.cardvJ{background-position: -710px 0px;}
+.cardv12,.cardvQ{background-position: -781px 0px;}
+.cardv13,.cardvK{background-position: -852px 0px;}
+
+.cardbg{width:59px;border:1px solid #088131;height:90px;background-color:#088131;position: absolute;padding:5px;}
 .cardbg0{left:10px;}
 .cardbg1{left:91px;}
 .cardbg2{left:172px;}
@@ -54,7 +69,7 @@ body{background-color:#fff;font:12px Tahoma;}
 .ct15{top:310px;}
 .ct16{top:330px;}
 
-.back{font-size:0px;background-color:#777;}
+.back{font-size:0px;background-color:#777;background-position: -923px 0px;}
 
 .scores{float:right;font-size:16px;}
 #scores{font-size:18px;font-weight:bold;font-family: tahoma;color:#ff0000;}
@@ -84,7 +99,13 @@ jQuery(function($){
 	var _cards_selected=[];
 	var _left_group=8;
 
-	init();
+	var img = new Image;
+	img.src='bg.jpg';
+	img.onload = function(){
+		init();
+	}
+
+	
 	//初始化牌，洗牌
 	function init(){
 		var _this=this;
@@ -120,58 +141,58 @@ jQuery(function($){
 			switch(j){
 				case '0':
 					var l=_cards_table0.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table0.push(num);
 					break;
 				case '1':
 					var l=_cards_table1.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table1.push(num);
 					break;
 				case '2':
 					var l=_cards_table2.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table2.push(num);
 					break;
 				case '3':
 					var l=_cards_table3.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table3.push(num);
 					break;
 				case '4':
 					var l=_cards_table4.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table4.push(num);
 					break;
 				case '5':
 					var l=_cards_table5.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table5.push(num);
 					break;
 				case '6':
 					var l=_cards_table6.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table6.push(num);
 					break;
 				case '7':
 					var l=_cards_table7.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table7.push(num);
 					break;
 				case '8':
 					var l=_cards_table8.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table8.push(num);
 					break;
 				case '9':
 					var l=_cards_table9.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
+					_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
 					_cards_table9.push(num);
 					break;
 			}
 		}
 		_cards.splice(0,54);
-		_cards_table+='<div id="post">发牌<span id="postnum">5</span></div>';
+		_cards_table+='<div id="post"><span id="postnum">5</span></div>';
 		$("#game_map").html(_cards_table);
 		$("#scores").html(0);
 		cardBg();
@@ -193,52 +214,52 @@ jQuery(function($){
 				switch(j){
 					case '0':
 						var l=_cards_table0.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table0.push(num);
 						break;
 					case '1':
 						var l=_cards_table1.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table1.push(num);
 						break;
 					case '2':
 						var l=_cards_table2.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table2.push(num);
 						break;
 					case '3':
 						var l=_cards_table3.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table3.push(num);
 						break;
 					case '4':
 						var l=_cards_table4.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table4.push(num);
 						break;
 					case '5':
 						var l=_cards_table5.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table5.push(num);
 						break;
 					case '6':
 						var l=_cards_table6.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table6.push(num);
 						break;
 					case '7':
 						var l=_cards_table7.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table7.push(num);
 						break;
 					case '8':
 						var l=_cards_table8.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table8.push(num);
 						break;
 					case '9':
 						var l=_cards_table9.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
+						_cards_table+="<div class='card cardv"+num+" card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
 						_cards_table9.push(num);
 						break;
 				}
@@ -390,7 +411,8 @@ jQuery(function($){
 		var html='';
 		var moveCardIndex=index;
 		for(var i=_cards_selected[0][1];i<len;i++){
-			html+="<div class='card card"+line+" ct"+moveCardIndex+"' action-line='"+line+"' action-t=''>"+$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html()+"</div>";
+			var v=$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html();
+			html+="<div class='card cardv"+v+" card"+line+" ct"+moveCardIndex+"' action-line='"+line+"' action-t=''>"+v+"</div>";
 			moveCardIndex++;
 			var num=cardNum($(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html());
 			switch(line){
@@ -569,7 +591,7 @@ jQuery(function($){
 	}
 
 	function css_remove(){
-		$(".card").css('border','1px solid #666');
+		$(".card").css('border','1px solid #088131');
 	}
 
 	//取随机数
@@ -595,5 +617,11 @@ jQuery(function($){
 	});
 });
 </script>
+<div style="display:none;">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F02dd3320304085dfa94f6456bb126ed4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
 </body>
 </html>
