@@ -967,17 +967,18 @@ function checkComplate(line){
 			if(obj.eq(i).attr('action-t')==''){
 				if(preNum&gt;0){
 					if(parseInt(cardNum(obj.eq(i).html()))+1==preNum){
-						preNum=parseInt(cardNum(obj.eq(i).html()));
+						
 					}else{
-						error=1;
+						comNum=[];
 					}
+					comNum.push(i);
 				}else{
-					preNum=parseInt(cardNum(obj.eq(i).html()));
+					comNum.push(i);
 				}
-				comNum.push(i);
+				preNum=parseInt(cardNum(obj.eq(i).html()));
 			}
 		}
-		if(error==0&&comNum.length&gt;=13){
+		if(comNum.length&gt;=13){
 			for(var i in comNum){
 				obj.eq(comNum[i]).remove();
 				if(i==0){
@@ -1026,6 +1027,11 @@ function checkComplate(line){
 							break;
 					}
 				}
+			}
+			_left_group--;
+			if(_left_group==0){
+				alert('你赢了，共移动'+$('#scores').html()+'次');
+				$("#re").click();
 			}
 		}
 	}
