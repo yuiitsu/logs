@@ -53,18 +53,15 @@ body{background-color:#fff;font:12px Tahoma;}
 .ct14{top:290px;}
 .ct15{top:310px;}
 .ct16{top:330px;}
-.ct17{top:350px;}
-.ct18{top:370px;}
-.ct19{top:390px;}
-.ct20{top:410px;}
 
 .back{font-size:0px;background-color:#777;}
 
 .scores{float:right;font-size:16px;}
 #scores{font-size:18px;font-weight:bold;font-family: tahoma;color:#ff0000;}
+.re{float:right;}
 </style>
 <div class="game_tips" id="tips">
-	<div class="scores">移牌 <span id="scores">0</span> 次</div>
+	<input type="button" value="重来" id="re" class="re" /><div class="scores">移牌 <span id="scores">0</span> 次</div>
 	Javascript game_蜘蛛纸牌
 </div>
 <div id="game_map">
@@ -175,6 +172,7 @@ jQuery(function($){
 		_cards.splice(0,54);
 		_cards_table+='<div id="post">发牌<span id="postnum">5</span></div>';
 		$("#game_map").html(_cards_table);
+		$("#scores").html(0);
 		cardBg();
 		clickCard();
 		post();
@@ -573,16 +571,23 @@ jQuery(function($){
 		return Math.floor(Math.random()*(len-1));
 	}
 
-	$("#button").click(function(){
-		alert(_cards);
+	$("#re").click(function(){
+		_cards_init=['1','2','3','4','5','6','7','8','9','10','J','Q','K'];
+		_cards=[];
+		_cards_table0=[];
+		_cards_table1=[];
+		_cards_table2=[];
+		_cards_table3=[];
+		_cards_table4=[];
+		_cards_table5=[];
+		_cards_table6=[];
+		_cards_table7=[];
+		_cards_table8=[];
+		_cards_table9=[];
+		_cards_selected=[];
+		init();
 	});
 });
 </script>
-<div style="display:none;">
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F02dd3320304085dfa94f6456bb126ed4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-</div>
 </body>
 </html>
