@@ -442,13 +442,14 @@ _cards_init=_cards_init.concat(_cards_init);
 	两副牌有了，接着就洗牌，这里简单的使用随机数来洗。
 </p>
 <pre class="prettyprint lang-javascript">
-this.shuffle=function(){
+//洗牌
+function shuffle(){
 	var len=_cards_init.length;
-	if(len&gt;=1){
+	if(len&gt;0){
 		var i=random(len);
 		_cards.push(_cards_init[i]);
 		_cards_init.splice(i,1);
-		_this.shuffle();
+		shuffle();
 	}
 }
 </pre>
@@ -459,92 +460,38 @@ this.shuffle=function(){
 	牌洗好之后，就得将最开始的牌面放到界面上。win7的蜘蛛纸牌是10列，前4列5张扣牌，1张明牌，后6列4张扣牌，1张明牌。这里也按这样的方式开始。
 </p>
 <p>
-	因为是按列为基础进行摆牌，所以程序在确定牌所在位置的时候，需要分别记录，每一列等于是一个序列，有牌移进来，要增加它的长度，有牌移走的时候，要减少它的长度。所以这里使用了10个数组来分别记录牌的信息
+	因为是按列为基础进行摆牌，所以程序在确定牌所在位置的时候，需要分别记录，每一列等于是一个序列，有牌移进来，要增加它的长度，有牌移走的时候，要减少它的长度。所以这里使用了一个数组来分别记录牌的信息
 </p>
 <pre class="prettyprint lang-javascript">
-var _cards_table0=[];
-var _cards_table1=[];
-var _cards_table2=[];
-var _cards_table3=[];
-var _cards_table4=[];
-var _cards_table5=[];
-var _cards_table6=[];
-var _cards_table7=[];
-var _cards_table8=[];
-var _cards_table9=[];
-var _cards_selected=[];
+var _cards_table=new Array();
 </pre>
 <p>
 	接着确定位置，按照初始化的界面，一共要放54张牌到牌面上，其中44张是扣牌，10张是明牌，所以，先从新牌数组里取54张牌出来，其中前10张，也就是0-9，是个位数，直接将下标做了牌的参数
 </p>
 <pre class="prettyprint lang-javascript">
+for(var i=0;i&lt;10;i++){
+	_cards_table[i]=new Array();
+}
+var _html_cards_table='';
+
 for(var i=0;i&lt;54;i++){
 	if(i&lt;=9){
 		j=i;
-		_cards_table+="&lt;div class='cardbg cardbg"+j+"' action-t='' action-line='"+j+"'&gt;&lt;/div&gt;";
+		_html_cards_table+="&lt;div class='cardbg cardbg"+j+"' action-t='' action-line='"+j+"'&gt;&lt;/div&gt;";
 	}else{
 		var s=i.toString();
-		j=s.substring(s.length-1);  //两位数则取最后一位
+		j=s.substring(s.length-1);
 	}
-	j=j.toString();
-	var num=cardNum(_cards[i]);  //转换J、Q、K为数字11，12，13
+	j=parseInt(j);
+	var num=cardNum(_cards[i]);
 	var back='';
-	//扣牌
-	if(i&gt;=0&&i&lt;44){  //前44张是扣牌，所以特别对待，为div加上一个back的class
+	//背面牌
+	if(i&gt;=0&&i&lt;44){
 		back='back';
 	}
-	switch(j){  //判断是第几列0-9
-		case '0':
-			var l=_cards_table0.length;  //每次计算各列数组的长度，以便对不同的牌设置不同的class，来固定它的位置
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table0.push(num);
-			break;
-		case '1':
-			var l=_cards_table1.length;
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table1.push(num);
-			break;
-		case '2':
-			var l=_cards_table2.length;
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table2.push(num);
-			break;
-		case '3':
-			var l=_cards_table3.length;
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table3.push(num);
-			break;
-		case '4':
-			var l=_cards_table4.length;
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table4.push(num);
-			break;
-		case '5':
-			var l=_cards_table5.length;
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table5.push(num);
-			break;
-		case '6':
-			var l=_cards_table6.length;
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table6.push(num);
-			break;
-		case '7':
-			var l=_cards_table7.length;
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table7.push(num);
-			break;
-		case '8':
-			var l=_cards_table8.length;
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table8.push(num);
-			break;
-		case '9':
-			var l=_cards_table9.length;
-			_cards_table+="&lt;div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-			_cards_table9.push(num);
-			break;
-	}
+	var l=_cards_table[j].length;
+	_html_cards_table+="&lt;div class='card cardv"+num+" card"+j+" "+back+"' action-t='"+back+"' action-line='"+j+"' action-index='"+l+"' style='z-index:1;position:absolute;left:"+_cardsPostion[0]+"px;top:"+_cardsPostion[1]+"px;'&gt;"+_cards[i]+"&lt;/div&gt;";
+	_cards_table[j].push(num);
 }
 </pre>
 <p>
@@ -581,40 +528,10 @@ function clickCard(){
 		if(back){
 			return false;
 		}
-		var index=$(".card"+line).index($(this));
+		var index=parseInt($(this).attr('action-index'));
 		var cards_num;
-		switch(line){
-			case '0':
-				cards_num=_cards_table0[index];
-				break;
-			case '1':
-				cards_num=_cards_table1[index];
-				break;
-			case '2':
-				cards_num=_cards_table2[index];
-				break;
-			case '3':
-				cards_num=_cards_table3[index];
-				break;
-			case '4':
-				cards_num=_cards_table4[index];
-				break;
-			case '5':
-				cards_num=_cards_table5[index];
-				break;
-			case '6':
-				cards_num=_cards_table6[index];
-				break;
-			case '7':
-				cards_num=_cards_table7[index];
-				break;
-			case '8':
-				cards_num=_cards_table8[index];
-				break;
-			case '9':
-				cards_num=_cards_table9[index];
-				break;
-		}
+		line=parseInt(line);
+		cards_num=_cards_table[line][index];
 		if(_cards_selected.length==1){
 			if((cards_num-1)==_cards_selected[0][2]){
 				var _index=index+1;
@@ -646,94 +563,29 @@ function clickCard(){
 </p>
 <pre class="prettyprint lang-javascript">
 function moveCard(line,index,cards_num){
-		
-	switch(_cards_selected[0][0]){
-		case '0':
-			var len=_cards_table0.length;
-			_cards_table0.splice(_cards_selected[0][1],len);
-			break;
-		case '1':
-			var len=_cards_table1.length;
-			_cards_table1.splice(_cards_selected[0][1],len);
-			break;
-		case '2':
-			var len=_cards_table2.length;
-			_cards_table2.splice(_cards_selected[0][1],len);
-			break;
-		case '3':
-			var len=_cards_table3.length;
-			_cards_table3.splice(_cards_selected[0][1],len);
-			break;
-		case '4':
-			var len=_cards_table4.length;
-			_cards_table4.splice(_cards_selected[0][1],len);
-			break;
-		case '5':
-			var len=_cards_table5.length;
-			_cards_table5.splice(_cards_selected[0][1],len);
-			break;
-		case '6':
-			var len=_cards_table6.length;
-			_cards_table6.splice(_cards_selected[0][1],len);
-			break;
-		case '7':
-			var len=_cards_table7.length;
-			_cards_table7.splice(_cards_selected[0][1],len);
-			break;
-		case '8':
-			var len=_cards_table8.length;
-			_cards_table8.splice(_cards_selected[0][1],len);
-			break;
-		case '9':
-			var len=_cards_table9.length;
-			_cards_table9.splice(_cards_selected[0][1],len);
-			break;
-	}
+	line=parseInt(line);
+	var len=_cards_table[_cards_selected[0][0]].length;
+	_cards_table[_cards_selected[0][0]].splice(_cards_selected[0][1],len);
 	var html='';
 	var moveCardIndex=index;
+	_moveCardNum=len-_cards_selected[0][1];
 	for(var i=_cards_selected[0][1];i&lt;len;i++){
-		html+="&lt;div class='card card"+line+" ct"+moveCardIndex+"' action-line='"+line+"' action-t=''&gt;"+$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html()+"&lt;/div&gt;";
+		var v=$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html();
+		var o=$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]);
+		var num=cardNum(o.html());
+		_cards_table[line].push(num);
+		var cardline=o.attr('action-line');
+		o.removeClass('card'+cardline);
+		o.addClass('card'+line);
+		o.attr('action-line',line);
+		o.attr('action-index',moveCardIndex);
+		move_animation(o,line,moveCardIndex,1);
 		moveCardIndex++;
-		var num=cardNum($(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html());
-		switch(line){
-			case '0':
-				_cards_table0.push(num);
-				break;
-			case '1':
-				_cards_table1.push(num);
-				break;
-			case '2':
-				_cards_table2.push(num);
-				break;
-			case '3':
-				_cards_table3.push(num);
-				break;
-			case '4':
-				_cards_table4.push(num);
-				break;
-			case '5':
-				_cards_table5.push(num);
-				break;
-			case '6':
-				_cards_table6.push(num);
-				break;
-			case '7':
-				_cards_table7.push(num);
-				break;
-			case '8':
-				_cards_table8.push(num);
-				break;
-			case '9':
-				_cards_table9.push(num);
-				break;
-		}
-		$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).remove();
 	}
 	$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).removeClass('back');
 	$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).attr('action-t','');
-	$("#game_map").append(html);
 	$("#scores").html(parseInt($("#scores").html())+1);
-	checkComplate(line);
+	
 }
 </pre>
 <p>
@@ -757,7 +609,6 @@ function checkComplate(line){
 			if(obj.eq(i).attr('action-t')==''){
 				if(preNum&gt;0){
 					if(parseInt(cardNum(obj.eq(i).html()))+1==preNum){
-						
 					}else{
 						comNum=[];
 					}
@@ -774,48 +625,8 @@ function checkComplate(line){
 				if(i==0){
 					obj.eq(comNum[i]-1).removeClass('back');
 					obj.eq(comNum[i]-1).attr('action-t','');
-					switch(line){
-						case '0':
-							var len=_cards_table0.length;
-							_cards_table0.splice(comNum[i],len);
-							break;
-						case '1':
-							var len=_cards_table1.length;
-							_cards_table1.splice(comNum[i],len);
-							break;
-						case '2':
-							var len=_cards_table2.length;
-							_cards_table2.splice(comNum[i],len);
-							break;
-						case '3':
-							var len=_cards_table3.length;
-							_cards_table3.splice(comNum[i],len);
-							break;
-						case '4':
-							var len=_cards_table4.length;
-							_cards_table4.splice(comNum[i],len);
-							break;
-						case '5':
-							var len=_cards_table5.length;
-							_cards_table5.splice(comNum[i],len);
-							break;
-						case '6':
-							var len=_cards_table6.length;
-							_cards_table6.splice(comNum[i],len);
-							break;
-						case '7':
-							var len=_cards_table7.length;
-							_cards_table7.splice(comNum[i],len);
-							break;
-						case '8':
-							var len=_cards_table8.length;
-							_cards_table8.splice(comNum[i],len);
-							break;
-						case '9':
-							var len=_cards_table9.length;
-							_cards_table9.splice(comNum[i],len);
-							break;
-					}
+					var len=_cards_table[line].length;
+					_cards_table[line].splice(comNum[i],len);
 				}
 			}
 			_left_group--;
@@ -840,65 +651,28 @@ function post(){
 			alert('无牌可发了');
 			return false;
 		}
-		var _cards_table='';
-		for(var i=0;i&lt;10;i++){
-			j=i.toString();
+		var _html_cards_table='';
+		for(var i=0;i&lt;10;i++){;
 			var num=cardNum(_cards[i]);
-			switch(j){
-				case '0':
-					var l=_cards_table0.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table0.push(num);
-					break;
-				case '1':
-					var l=_cards_table1.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table1.push(num);
-					break;
-				case '2':
-					var l=_cards_table2.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table2.push(num);
-					break;
-				case '3':
-					var l=_cards_table3.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table3.push(num);
-					break;
-				case '4':
-					var l=_cards_table4.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table4.push(num);
-					break;
-				case '5':
-					var l=_cards_table5.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table5.push(num);
-					break;
-				case '6':
-					var l=_cards_table6.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table6.push(num);
-					break;
-				case '7':
-					var l=_cards_table7.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table7.push(num);
-					break;
-				case '8':
-					var l=_cards_table8.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table8.push(num);
-					break;
-				case '9':
-					var l=_cards_table9.length;
-					_cards_table+="&lt;div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'&gt;"+_cards[i]+"&lt;/div&gt;";
-					_cards_table9.push(num);
-					break;
-			}
+			var l=_cards_table[i].length;
+			_html_cards_table+="&lt;div class='card cardv"+num+" card"+i+"' action-t='' action-index='"+l+"' action-line='"+i+"' style='z-index:1;position:absolute;left:"+_cardsPostion[0]+"px;top:"+_cardsPostion[1]+"px;'&gt;"+_cards[i]+"&lt;/div&gt;";
+			_cards_table[i].push(num);
 		}
 		_cards.splice(0,10);
-		$("#game_map").append(_cards_table);
+		var cardbenum=$(".card").length;
+		$("#game_map").append(_html_cards_table);
+		var _i=cardbenum;
+		var _this=this;
+		this.move_animation=function(){
+			var line=$(".card").eq(_i).attr('action-line');
+			var index=$(".card").eq(_i).attr('action-index');
+			move_animation($(".card").eq(_i),line,index);
+			_i++;
+			if(_i&lt;cardbenum+10){
+				setTimeout(_this.move_animation,100);
+			}
+		}
+		this.move_animation();
 		$("#postnum").html(parseInt($("#postnum").html())-1);
 		clickCard();
 	});
@@ -908,7 +682,7 @@ function post(){
 	以上6点，就是《蜘蛛纸牌》的基本内容，代码里还有一些方法，是为了增加一些方便，比如返回J-K的值等等，这里就不说了。直接编辑源代码，还是很累的。
 </p>
 <p>
-	全部代码这里就不帖了，可以查看试玩页面的源文件。
+	里面还有关于动画的内容，暂时就不讲了，全部代码也不帖了，可以查看试玩页面的源文件
 </p>
 <script type="text/javascript">
 jQuery(function($){
