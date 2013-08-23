@@ -197,11 +197,13 @@ jQuery(function($){
 			line=parseInt(line);
 			cards_num=_cards_table[line][index];
 			if(_cards_selected.length==1){
-				if((cards_num-1)==_cards_selected[0][2]){
-					var _index=index+1;
-					moveCard(line,_index,_cards_selected[0][2]);
-				}else{
-					alert('不能移动到那个位置2_'+cards_num+'_'+_cards_selected[0][2]);
+				if(line!=_cards_selected[0][0]){
+					if((cards_num-1)==_cards_selected[0][2]){
+						var _index=index+1;
+						moveCard(line,_index,_cards_selected[0][2]);
+					}else{
+						alert('不能移动到那个位置2_'+cards_num+'_'+_cards_selected[0][2]);
+					}
 				}
 				css_remove();
 				_cards_selected.shift();
