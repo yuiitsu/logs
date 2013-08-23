@@ -16,21 +16,27 @@ keywords: javascript,jquery,php,game,spider,蜘蛛纸牌
 	<a href="{{ site:url }}/game/spider/">这里效果好点</a>
 </p>
 <style type="text/css">
-.game_tips{width:800px;margin:0 auto;font-size:14px;font-weight: bold;}
-#game_map{width:800px;margin:0 auto;margin-top:10px;height:450px;background-color:#e1e1e1;padding:10px;position: relative;font:12px Tahoma;}
-#post{width:59px;border:1px solid #666;height:90px;background-color:#999;position: absolute;padding:5px;right:-81px;bottom:0px;}
-.card{width:59px;border:1px solid #666;height:90px;background-color:#999;position: absolute;padding:5px;}
-.card0{left:10px;}
-.card1{left:91px;}
-.card2{left:172px;}
-.card3{left:253px;}
-.card4{left:334px;}
-.card5{left:415px;}
-.card6{left:496px;}
-.card7{left:577px;}
-.card8{left:658px;}
-.card9{left:739px;}
-.cardbg{width:59px;border:1px solid #e1e1e1;height:90px;background-color:#e1e1e1;position: absolute;padding:5px;}
+.game_tips{width:800px;font-size:14px;font-weight: bold;}
+#game_map{width:802px;margin-top:10px;height:450px;background-color:#088131;padding:10px;position: relative;}
+#post{width:61px;height:86px;background-color:#999;position: absolute;padding:5px;right:-81px;bottom:0px;background:url('{{ site:url }}/game/spider/bg.jpg');background-position: -923px 0px;z-index: 100;}
+#postnum{position: absolute;top:-20px;left:0px;}
+.card{width:71px;height:96px;background-color:#999;position: absolute;background:url('{{ site:url }}/game/spider/bg.jpg');font-size:0px;border:1px solid #088131;right:-81px;bottom:0px;z-index: 1;text-align: right;}
+
+.cardv1{background-position: 0px 0px;}
+.cardv2{background-position: -71px 0px;}
+.cardv3{background-position: -142px 0px;}
+.cardv4{background-position: -213px 0px;}
+.cardv5{background-position: -284px 0px;}
+.cardv6{background-position: -355px 0px;}
+.cardv7{background-position: -426px 0px;}
+.cardv8{background-position: -497px 0px;}
+.cardv9{background-position: -568px 0px;}
+.cardv10{background-position: -639px 0px;}
+.cardv11,.cardvJ{background-position: -710px 0px;}
+.cardv12,.cardvQ{background-position: -781px 0px;}
+.cardv13,.cardvK{background-position: -852px 0px;}
+
+.cardbg{width:59px;border:1px solid #088131;height:90px;background-color:#088131;position: absolute;padding:5px;z-index: 0;}
 .cardbg0{left:10px;}
 .cardbg1{left:91px;}
 .cardbg2{left:172px;}
@@ -42,40 +48,14 @@ keywords: javascript,jquery,php,game,spider,蜘蛛纸牌
 .cardbg8{left:658px;}
 .cardbg9{left:739px;}
 
-.ct0{top:10px;}
-.ct1{top:30px;}
-.ct2{top:50px;}
-.ct3{top:70px;}
-.ct4{top:90px;}
-.ct5{top:110px;}
-.ct6{top:130px;}
-.ct7{top:150px;}
-.ct8{top:170px;}
-.ct9{top:190px;}
-.ct10{top:210px;}
-.ct11{top:230px;}
-.ct12{top:250px;}
-.ct13{top:270px;}
-.ct14{top:290px;}
-.ct15{top:310px;}
-.ct16{top:330px;}
-.ct17{top:350px;}
-.ct18{top:370px;}
-.ct19{top:390px;}
-.ct20{top:410px;}
-.ct21{top:430px;}
-.ct22{top:450px;}
-.ct23{top:470px;}
-.ct24{top:490px;}
-.ct25{top:510px;}
-
-.back{font-size:0px;background-color:#777;}
+.back{font-size:0px;background-color:#777;background-position: -923px 0px;text-align: right;color:#ff0000;}
 
 .scores{float:right;font-size:16px;}
 #scores{font-size:18px;font-weight:bold;font-family: tahoma;color:#ff0000;}
+.re{float:right;}
 </style>
 <div class="game_tips" id="tips">
-	<div class="scores">移牌 <span id="scores">0</span> 次</div>
+	<input type="button" value="重来" id="re" class="re" /><div class="scores">移牌 <span id="scores">0</span> 次</div>
 	Javascript game_蜘蛛纸牌
 </div>
 <div id="game_map">
@@ -83,114 +63,97 @@ keywords: javascript,jquery,php,game,spider,蜘蛛纸牌
 </div>
 <script type="text/javascript">
 jQuery(function($){
-	var _difficulty=1;
-	var _cards_init=['1','2','3','4','5','6','7','8','9','10','J','Q','K'];
+	var _cards_init=['1','2','3','4','5','6','7','8','9','10','11','12','13'];
 	var _cards=[];
-	var _cards_table0=[];
-	var _cards_table1=[];
-	var _cards_table2=[];
-	var _cards_table3=[];
-	var _cards_table4=[];
-	var _cards_table5=[];
-	var _cards_table6=[];
-	var _cards_table7=[];
-	var _cards_table8=[];
-	var _cards_table9=[];
+	var _cards_table=new Array();
 	var _cards_selected=[];
 	var _left_group=8;
+	var _moveCardNum=0;
 
-	init();
+	var _top_base=10;
+	var _top_step=20;
+	var _cardsPostion=[832,372];
+
+	var _cards_left=new Array();
+	_cards_left[0]='10';
+	_cards_left[1]='91';
+	_cards_left[2]='172';
+	_cards_left[3]='253';
+	_cards_left[4]='334';
+	_cards_left[5]='415';
+	_cards_left[6]='496';
+	_cards_left[7]='577';
+	_cards_left[8]='658';
+	_cards_left[9]='739';
+
+	var img = new Image;
+	img.src='{{ site:url }}/game/spider/bg.jpg';
+	img.onload = function(){
+		init();
+	}
+	
 	//初始化牌，洗牌
 	function init(){
 		var _this=this;
 		_cards_init=_cards_init.concat(_cards_init,_cards_init,_cards_init);
 		_cards_init=_cards_init.concat(_cards_init);
-		this.shuffle=function(){
-			var len=_cards_init.length;
-			if(len>=1){
-				var i=random(len);
-				_cards.push(_cards_init[i]);
-				_cards_init.splice(i,1);
-				_this.shuffle();
-			}
+
+		shuffle();
+		for(var i=0;i<10;i++){
+			_cards_table[i]=new Array();
 		}
-		this.shuffle();
-		var _cards_table='';
+		var _html_cards_table='';
 		
 		for(var i=0;i<54;i++){
 			if(i<=9){
 				j=i;
-				_cards_table+="<div class='cardbg cardbg"+j+"' action-t='' action-line='"+j+"'></div>";
+				_html_cards_table+="<div class='cardbg cardbg"+j+"' action-t='' action-line='"+j+"'></div>";
 			}else{
 				var s=i.toString();
 				j=s.substring(s.length-1);
 			}
-			j=j.toString();
+			j=parseInt(j);
 			var num=cardNum(_cards[i]);
 			var back='';
 			//背面牌
 			if(i>=0&&i<44){
 				back='back';
 			}
-			switch(j){
-				case '0':
-					var l=_cards_table0.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table0.push(num);
-					break;
-				case '1':
-					var l=_cards_table1.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table1.push(num);
-					break;
-				case '2':
-					var l=_cards_table2.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table2.push(num);
-					break;
-				case '3':
-					var l=_cards_table3.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table3.push(num);
-					break;
-				case '4':
-					var l=_cards_table4.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table4.push(num);
-					break;
-				case '5':
-					var l=_cards_table5.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table5.push(num);
-					break;
-				case '6':
-					var l=_cards_table6.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table6.push(num);
-					break;
-				case '7':
-					var l=_cards_table7.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table7.push(num);
-					break;
-				case '8':
-					var l=_cards_table8.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table8.push(num);
-					break;
-				case '9':
-					var l=_cards_table9.length;
-					_cards_table+="<div class='card card"+j+" ct"+l+" "+back+"' action-t='"+back+"' action-line='"+j+"'>"+_cards[i]+"</div>";
-					_cards_table9.push(num);
-					break;
-			}
+			var l=_cards_table[j].length;
+			_html_cards_table+="<div class='card cardv"+num+" card"+j+" "+back+"' action-t='"+back+"' action-line='"+j+"' action-index='"+l+"' style='z-index:1;position:absolute;left:"+_cardsPostion[0]+"px;top:"+_cardsPostion[1]+"px;'>"+_cards[i]+"</div>";
+			_cards_table[j].push(num);
 		}
 		_cards.splice(0,54);
-		_cards_table+='<div id="post">发牌<span id="postnum">5</span></div>';
-		$("#game_map").html(_cards_table);
+		_html_cards_table+='<div id="post"><span id="postnum">5</span></div>';
+		$("#game_map").html(_html_cards_table);
+		$("#scores").html(0);
+
+		var _i=0;
+		this.move_animation=function(){
+			//alert($(".card").eq(_i).css('bottom'));
+			var line=$(".card").eq(_i).attr('action-line');
+			var index=$(".card").eq(_i).attr('action-index');
+			move_animation($(".card").eq(_i),line,index);
+			_i++;
+			if(_i<54){
+				setTimeout(_this.move_animation,100);
+			}
+		}
+		this.move_animation();
 		cardBg();
 		clickCard();
 		post();
+	}
+
+	//洗牌
+	function shuffle(){
+		var len=_cards_init.length;
+		if(len>0){
+			var i=random(len);
+			_cards.push(_cards_init[i]);
+			_cards_init.splice(i,1);
+			shuffle();
+		}
 	}
 
 	//发牌
@@ -200,65 +163,28 @@ jQuery(function($){
 				alert('无牌可发了');
 				return false;
 			}
-			var _cards_table='';
-			for(var i=0;i<10;i++){
-				j=i.toString();
+			var _html_cards_table='';
+			for(var i=0;i<10;i++){;
 				var num=cardNum(_cards[i]);
-				switch(j){
-					case '0':
-						var l=_cards_table0.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table0.push(num);
-						break;
-					case '1':
-						var l=_cards_table1.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table1.push(num);
-						break;
-					case '2':
-						var l=_cards_table2.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table2.push(num);
-						break;
-					case '3':
-						var l=_cards_table3.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table3.push(num);
-						break;
-					case '4':
-						var l=_cards_table4.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table4.push(num);
-						break;
-					case '5':
-						var l=_cards_table5.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table5.push(num);
-						break;
-					case '6':
-						var l=_cards_table6.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table6.push(num);
-						break;
-					case '7':
-						var l=_cards_table7.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table7.push(num);
-						break;
-					case '8':
-						var l=_cards_table8.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table8.push(num);
-						break;
-					case '9':
-						var l=_cards_table9.length;
-						_cards_table+="<div class='card card"+j+" ct"+l+"' action-t='' action-line='"+j+"'>"+_cards[i]+"</div>";
-						_cards_table9.push(num);
-						break;
-				}
+				var l=_cards_table[i].length;
+				_html_cards_table+="<div class='card cardv"+num+" card"+i+"' action-t='' action-index='"+l+"' action-line='"+i+"' style='z-index:1;position:absolute;left:"+_cardsPostion[0]+"px;top:"+_cardsPostion[1]+"px;'>"+_cards[i]+"</div>";
+				_cards_table[i].push(num);
 			}
 			_cards.splice(0,10);
-			$("#game_map").append(_cards_table);
+			var cardbenum=$(".card").length;
+			$("#game_map").append(_html_cards_table);
+			var _i=cardbenum;
+			var _this=this;
+			this.move_animation=function(){
+				var line=$(".card").eq(_i).attr('action-line');
+				var index=$(".card").eq(_i).attr('action-index');
+				move_animation($(".card").eq(_i),line,index);
+				_i++;
+				if(_i<cardbenum+10){
+					setTimeout(_this.move_animation,100);
+				}
+			}
+			this.move_animation();
 			$("#postnum").html(parseInt($("#postnum").html())-1);
 			clickCard();
 		});
@@ -272,40 +198,10 @@ jQuery(function($){
 			if(back){
 				return false;
 			}
-			var index=$(".card"+line).index($(this));
+			var index=parseInt($(this).attr('action-index'));
 			var cards_num;
-			switch(line){
-				case '0':
-					cards_num=_cards_table0[index];
-					break;
-				case '1':
-					cards_num=_cards_table1[index];
-					break;
-				case '2':
-					cards_num=_cards_table2[index];
-					break;
-				case '3':
-					cards_num=_cards_table3[index];
-					break;
-				case '4':
-					cards_num=_cards_table4[index];
-					break;
-				case '5':
-					cards_num=_cards_table5[index];
-					break;
-				case '6':
-					cards_num=_cards_table6[index];
-					break;
-				case '7':
-					cards_num=_cards_table7[index];
-					break;
-				case '8':
-					cards_num=_cards_table8[index];
-					break;
-				case '9':
-					cards_num=_cards_table9[index];
-					break;
-			}
+			line=parseInt(line);
+			cards_num=_cards_table[line][index];
 			if(_cards_selected.length==1){
 				if((cards_num-1)==_cards_selected[0][2]){
 					var _index=index+1;
@@ -324,7 +220,6 @@ jQuery(function($){
 					_cards_selected[0][2]=cards_num;
 				}else{
 					css_remove();
-					//alert('不能移动到那个位置_'+cards_num+'_'+_cards_selected[0][2]);
 				}
 			}
 		});
@@ -358,94 +253,32 @@ jQuery(function($){
 	}
 
 	function moveCard(line,index,cards_num){
-		
-		switch(_cards_selected[0][0]){
-			case '0':
-				var len=_cards_table0.length;
-				_cards_table0.splice(_cards_selected[0][1],len);
-				break;
-			case '1':
-				var len=_cards_table1.length;
-				_cards_table1.splice(_cards_selected[0][1],len);
-				break;
-			case '2':
-				var len=_cards_table2.length;
-				_cards_table2.splice(_cards_selected[0][1],len);
-				break;
-			case '3':
-				var len=_cards_table3.length;
-				_cards_table3.splice(_cards_selected[0][1],len);
-				break;
-			case '4':
-				var len=_cards_table4.length;
-				_cards_table4.splice(_cards_selected[0][1],len);
-				break;
-			case '5':
-				var len=_cards_table5.length;
-				_cards_table5.splice(_cards_selected[0][1],len);
-				break;
-			case '6':
-				var len=_cards_table6.length;
-				_cards_table6.splice(_cards_selected[0][1],len);
-				break;
-			case '7':
-				var len=_cards_table7.length;
-				_cards_table7.splice(_cards_selected[0][1],len);
-				break;
-			case '8':
-				var len=_cards_table8.length;
-				_cards_table8.splice(_cards_selected[0][1],len);
-				break;
-			case '9':
-				var len=_cards_table9.length;
-				_cards_table9.splice(_cards_selected[0][1],len);
-				break;
-		}
+		line=parseInt(line);
+		var len=_cards_table[_cards_selected[0][0]].length;
+		_cards_table[_cards_selected[0][0]].splice(_cards_selected[0][1],len);
 		var html='';
 		var moveCardIndex=index;
+		_moveCardNum=len-_cards_selected[0][1];
 		for(var i=_cards_selected[0][1];i<len;i++){
-			html+="<div class='card card"+line+" ct"+moveCardIndex+"' action-line='"+line+"' action-t=''>"+$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html()+"</div>";
+			var v=$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html();
+			//html+="<div class='card cardv"+v+" card"+line+" ct"+moveCardIndex+"' action-line='"+line+"' action-t=''>"+v+"</div>";
+			var o=$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]);
+			var num=cardNum(o.html());
+			_cards_table[line].push(num);
+			//$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).remove();
+			var cardline=o.attr('action-line');
+			o.removeClass('card'+cardline);
+			o.addClass('card'+line);
+			o.attr('action-line',line);
+			o.attr('action-index',moveCardIndex);
+			move_animation(o,line,moveCardIndex,1);
 			moveCardIndex++;
-			var num=cardNum($(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).html());
-			switch(line){
-				case '0':
-					_cards_table0.push(num);
-					break;
-				case '1':
-					_cards_table1.push(num);
-					break;
-				case '2':
-					_cards_table2.push(num);
-					break;
-				case '3':
-					_cards_table3.push(num);
-					break;
-				case '4':
-					_cards_table4.push(num);
-					break;
-				case '5':
-					_cards_table5.push(num);
-					break;
-				case '6':
-					_cards_table6.push(num);
-					break;
-				case '7':
-					_cards_table7.push(num);
-					break;
-				case '8':
-					_cards_table8.push(num);
-					break;
-				case '9':
-					_cards_table9.push(num);
-					break;
-			}
-			$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]).remove();
 		}
 		$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).removeClass('back');
 		$(".card"+_cards_selected[0][0]).eq(_cards_selected[0][1]-1).attr('action-t','');
-		$("#game_map").append(html);
+		//$("#game_map").append(html);
 		$("#scores").html(parseInt($("#scores").html())+1);
-		checkComplate(line);
+		
 	}
 
 	function checkComplate(line){
@@ -459,7 +292,6 @@ jQuery(function($){
 				if(obj.eq(i).attr('action-t')==''){
 					if(preNum>0){
 						if(parseInt(cardNum(obj.eq(i).html()))+1==preNum){
-							
 						}else{
 							comNum=[];
 						}
@@ -476,48 +308,8 @@ jQuery(function($){
 					if(i==0){
 						obj.eq(comNum[i]-1).removeClass('back');
 						obj.eq(comNum[i]-1).attr('action-t','');
-						switch(line){
-							case '0':
-								var len=_cards_table0.length;
-								_cards_table0.splice(comNum[i],len);
-								break;
-							case '1':
-								var len=_cards_table1.length;
-								_cards_table1.splice(comNum[i],len);
-								break;
-							case '2':
-								var len=_cards_table2.length;
-								_cards_table2.splice(comNum[i],len);
-								break;
-							case '3':
-								var len=_cards_table3.length;
-								_cards_table3.splice(comNum[i],len);
-								break;
-							case '4':
-								var len=_cards_table4.length;
-								_cards_table4.splice(comNum[i],len);
-								break;
-							case '5':
-								var len=_cards_table5.length;
-								_cards_table5.splice(comNum[i],len);
-								break;
-							case '6':
-								var len=_cards_table6.length;
-								_cards_table6.splice(comNum[i],len);
-								break;
-							case '7':
-								var len=_cards_table7.length;
-								_cards_table7.splice(comNum[i],len);
-								break;
-							case '8':
-								var len=_cards_table8.length;
-								_cards_table8.splice(comNum[i],len);
-								break;
-							case '9':
-								var len=_cards_table9.length;
-								_cards_table9.splice(comNum[i],len);
-								break;
-						}
+						var len=_cards_table[line].length;
+						_cards_table[line].splice(comNum[i],len);
 					}
 				}
 				_left_group--;
@@ -530,38 +322,7 @@ jQuery(function($){
 	}
 
 	function getCards(line,index){
-		switch(line){
-			case "0":
-				var len=_cards_table0.length;
-				break;
-			case "1":
-				var len=_cards_table1.length;
-				break;
-			case "2":
-				var len=_cards_table2.length;
-				break;
-			case "3":
-				var len=_cards_table3.length;
-				break;
-			case "4":
-				var len=_cards_table4.length;
-				break;
-			case "5":
-				var len=_cards_table5.length;
-				break;
-			case "6":
-				var len=_cards_table6.length;
-				break;
-			case "7":
-				var len=_cards_table7.length;
-				break;
-			case "8":
-				var len=_cards_table8.length;
-				break;
-			case "9":
-				var len=_cards_table9.length;
-				break;
-		}
+		var len=_cards_table[line].length;
 		var preNum=0;
 		var error=0;
 		for(var i=index;i<len;i++){
@@ -584,7 +345,7 @@ jQuery(function($){
 	}
 
 	function css_remove(){
-		$(".card").css('border','1px solid #666');
+		$(".card").css('border','1px solid #088131');
 	}
 
 	//取随机数
@@ -592,8 +353,37 @@ jQuery(function($){
 		return Math.floor(Math.random()*(len-1));
 	}
 
-	$("#button").click(function(){
-		alert(_cards);
+	//返回top值
+	function get_top(index){
+		return _top_base+index*_top_step;
+	}
+
+	//移动纸牌动画
+	function move_animation(obj,line,index,re){
+		var line_index=_cards_table[line].length-1;
+		obj.css('z-index',index);
+		obj.animate({'left':_cards_left[line],'top':get_top(index)},'fast',function(){
+			if(re){
+				var num=obj.html();
+				var opt=obj.position();
+				obj.remove();
+				$("#game_map").append("<div class='card cardv"+num+" card"+line+"' action-index='"+index+"' action-line='"+line+"' action-t='' style='left:"+opt.left+"px;top:"+opt.top+"px;z-index:"+index+"'>"+num+"</div>");
+				clickCard();
+				_moveCardNum--;
+				if(_moveCardNum==0){
+					checkComplate(line);
+				}
+			}
+		});
+	}
+
+	$("#re").click(function(){
+		_cards_init=['1','2','3','4','5','6','7','8','9','10','11','12','13'];
+		_cards=[];
+		_cards_table=new Array();
+		_cards_selected=[];
+		_left_group=8;
+		init();
 	});
 });
 </script>
