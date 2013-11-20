@@ -2,22 +2,342 @@
 layout: post
 title: 一起来做webgame，《Javascript仿天朝教育委员会》
 category: javascript
-description: 天朝教育委员会》，一个很简单很有意思的游戏。简单的来说，它分为两个部分，1、投骰子走棋盘。2、倒计时答题。倒计时答题就是一个计时器，可能从效果上说，需要做一个进度条，进度条要做得好看，加个颜色渐变。上一篇的内容也可以用上。
+description: 《天朝教育委员会》，一个很简单很有意思的游戏。简单的来说，它分为两个部分，1、投骰子走棋盘。2、倒计时答题。倒计时答题就是一个计时器，可能从效果上说，需要做一个进度条，进度条要做得好看，加个颜色渐变。上一篇的内容也可以用上。
 img: 20131111/2013111101.jpg
 keywords: javascript,jquery,game,tianchao
 ---
 <p>
-《天朝教育委员会》，一个很简单很有意思的游戏。简单的来说，它分为两个部分，1、投骰子走棋盘。2、倒计时答题。倒计时答题就是一个计时器，可能从效果上说，需要做一个进度条，进度条要做得好看，加个颜色渐变。上一篇的内容也可以用上。
+《天朝教育委员会》，一个很简单很有意思的游戏。简单的来说，它分为两个部分，1、投骰子走棋盘。2、倒计时答题。倒计时答题就是一个计时器，可能从效果上说，需要做一个进度条，进度条要做得好看，加个颜色渐变。上一篇的内容就可以用上。
 </p>
 <p>
 这里只涉及一些JS的内容，关于题目数据的读取相关的东西就不讲了。同样，先放上测试
 </p>
 <h2 class="content_h2">
-    测试
+    测试（投骰子走棋盘）
 </h2>
+<style type="text/css">
+.play_question_box{width:100%;height:500px;background-color:#088131;opacity: 0.5;}
+.play_question_map{height: 385px;list-style: none outside none;margin: 0 auto;padding: 0;position: absolute;width: 780px;}
+.play_question_map li{background: url("http://www.dinlei.com/views/default/images/play_road.png") repeat scroll 0 0 rgba(0, 0, 0, 0);border: 1px none;height: 48px;line-height: 48px;position: absolute;text-align: center;width: 48px;}
+#person {
+    background: url("http://www.dinlei.com/views/default/images/ch.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 60px;
+    position: absolute;
+    width: 43px;
+}
+.dice1 {
+    background: url("http://www.dinlei.com/views/default/game_images/p.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 62px;
+    width: 62px;
+}
+.dice2{width:62px;height:62px;background:url('http://www.dinlei.com/views/default/game_images/p.png');background-position: -62px 0px;}
+.dice3{width:62px;height:62px;background:url('http://www.dinlei.com/views/default/game_images/p.png');background-position: -124px 0px;}
+.dice4{width:62px;height:62px;background:url('http://www.dinlei.com/views/default/game_images/p.png');background-position: -186px 0px;}
+.dice5{width:62px;height:62px;background:url('http://www.dinlei.com/views/default/game_images/p.png');background-position: -248px 0px;}
+.dice6{width:62px;height:62px;background:url('http://www.dinlei.com/views/default/game_images/p.png');background-position: -310px 0px;}
+.ttips {
+    background-color: #F1F1F1;
+    box-shadow: 0 0 15px #323232;
+    left: 0;
+    margin-left: -25px;
+    padding: 5px;
+    position: absolute;
+    text-align: center;
+    top: -45px;
+    width: 110px;
+}
+.ttips .arr {
+    border-color: #FFFFFF rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    border-style: solid;
+    border-width: 5px;
+    font-size: 0;
+    height: 0;
+    left: 0;
+    margin-left: 53px;
+    position: absolute;
+    top: 34px;
+    width: 0;
+}
+#game_p {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #323232;
+    height: 62px;
+    left: -15px;
+    padding: 5px;
+    position: absolute;
+    top: -70px;
+    width: 62px;
+}
+.dtips{position: absolute;padding:10px;background-color:#f1f1f1;box-shadow: 0 0 15px rgba(50, 50, 50, 1);font-size:14px;display: none;}
+.dtips .arr{position: absolute;border-color:transparent #fff transparent transparent;border-style: solid;border-width: 5px;font-size: 0;height: 0;width: 0;top:14px;left:-8px;}
+.ltips{position: absolute;padding:10px;background-color:#f1f1f1;box-shadow: 0 0 15px rgba(50, 50, 50, 1);font-size:14px;display: none;}
+.ltips .arr{position: absolute;border-color:transparent transparent transparent #fff;border-style: solid;border-width: 5px;font-size: 0;height: 0;width: 0;top:14px;left:70px;}
+.atips{position: absolute;padding:10px;background-color:#f1f1f1;box-shadow: 0 0 15px rgba(50, 50, 50, 1);font-size:14px;left:280px;top:250px;}
+.atips .arr{position: absolute;border-color:transparent #fff transparent transparent;border-style: solid;border-width: 5px;font-size: 0;height: 0;width: 0;top:14px;left:-8px;}
+.game_reset {
+    background-color: #000000;
+    border-radius: 10px;
+    color: #FFFFFF;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 20px;
+}
+</style>
+<div style="height:40px;">
+    <div class="game_reset right" id="reset">重来</div>
+</div>
 
+<div class="w900 alpha3 radius play_question_box" id="game_box"></div>
+<ul class="play_question_map" id="map"></ul>
+<div class="play_question_answer radius" id="answer" style="display:none;">
 
+</div>
+<div class='dtips radius tips' id='tips'><b class='arr'></b><span id="tips_txt"></span></div>
+<div class='ltips radius tips' id='load'><b class='arr'></b><span id="load_txt"></span></div>
+<script type="text/javascript">
+jQuery(function($){
+var gboxOpt=$("#game_box").offset();
+$("#map").css({'left':gboxOpt.left+60,'top':gboxOpt.top+60});
+$("#answer").css({'left':gboxOpt.left+60,'top':gboxOpt.top+60});
+var _clickDice=false;
+//生成大地图
+var mapItem=256;
+var maps='';
+var mapItemX=14;
+var mapItemY=7;
+var roadNow=0,roadCount=0;
+var _leftX=3;
+var _topX=35;
+var categorys=['数学','音乐','地理','英文','科技','动漫','游戏'];
+var cateLen=categorys.length;
 
+var road=new Array();
+var roadNum=30;
+
+var countdown=20;
+var countdownBarLen=490;
+var countdownBarColor="#009966";
+var countdownBarToColor="#ff0000";
+var countdownTimer;
+
+var questionNum=questionNumLeft=10;
+//生成移动地图
+createMap();
+roll();
+
+$("#reset").click(function(){
+$("#answer").css('display','none');
+$("#map").css('display','block');
+roadNow=0;
+roadCount=0;
+_clickDice=false;
+maps='';
+road=new Array();
+hiddenTips($(".tips"));
+clearInterval(countdownTimer);
+questionNumLeft=questionNum;
+createMap();
+roll();
+});
+
+function createMap(){
+    for(var i=0;i<roadNum;i++){
+        //随机点
+        var newRoad=randomRoad();
+        if(newRoad==false){
+            break;
+        }
+        road[i]=new Array();
+        road[i]['x']=newRoad[0];
+        road[i]['y']=newRoad[1];
+        var txt=categorys[Math.floor(Math.random()*cateLen)];
+        maps+="<li id='mapItem_"+road[i]['x']+"_"+road[i]['y']+"' class='radius' style='background-color:none;left:"+road[i]['x']*55+"px;top:"+road[i]['y']*55+"px;'>"+txt+"</li>";
+    }
+    $("#map").html(maps);
+    $("#mapItem_"+road[0]['x']+'_'+road[0]['y']).css({'background':'none','background-color':'#fff000'});
+    $("#mapItem_"+road[0]['x']+'_'+road[0]['y']).html('开始');
+    var startPostion=$("#mapItem_"+road[0]['x']+'_'+road[0]['y']).position();
+    roadCount=road.length;
+    var end=road.length-1;
+    $("#mapItem_"+road[end]['x']+'_'+road[end]['y']).css({'background':'none','background-color':'#009900'});
+    $("#mapItem_"+road[end]['x']+'_'+road[end]['y']).html('奖品');
+    //初始化角色
+    var person="<div id='person'><div id='game_p'><div class='ttips radius'><b class='arr'></b>点击骰子前进</div><div class='dice1' id='dice'></div></div></div>";
+    $("#map").append(person);
+    $("#person").css({'left':startPostion.left+_leftX,'top':startPostion.top-_topX});
+}
+
+function getDice(n){
+    var _r=n;
+    var _i=1;
+
+    var toPosition=$("#mapItem_"+road[1]['x']+'_'+road[1]['y']).position();
+    var thisPostion=$("#person").position();
+    //移动对象
+    var timer=setInterval(function(){
+        var _p=roadNow+_i;
+        var toPosition=$("#mapItem_"+road[_p]['x']+'_'+road[_p]['y']).position();
+        var thisPostion=$("#person").position();
+        var _toPositionLeft=Math.ceil(toPosition.left);
+        var _toPositionTop=Math.ceil(toPosition.top);
+        var _thisPostionLeft=Math.ceil(thisPostion.left);
+        var _thisPostionTop=Math.ceil(thisPostion.top);
+        if(_toPositionLeft+_leftX==_thisPostionLeft&&_toPositionTop-_topX==_thisPostionTop){
+            if(_i<_r){
+                _i++;
+            }else{
+                roadNow+=_r;
+                var txt=$("#map li").eq(roadNow).html();
+                clearInterval(timer);
+                showTips('tips',txt,'r');
+                showTips('load','选题中...','l');
+                setTimeout(function(){
+                    hiddenTips($(".tips"));
+                    $("#game_p").css('display','block');
+                },1000);
+            }
+        }else{
+            var _nextLeft=_toPositionLeft+_leftX>_thisPostionLeft?_thisPostionLeft+1:(_toPositionLeft+_leftX<_thisPostionLeft?_thisPostionLeft-1:_thisPostionLeft);
+            var _nextTop=_toPositionTop-_topX>_thisPostionTop?_thisPostionTop+1:(_toPositionTop-_topX<_thisPostionTop?_thisPostionTop-1:_thisPostionTop);
+            $("#person").css({'left':_nextLeft,'top':_nextTop});
+        }
+
+    },10);
+}
+
+function getRandomNum(){
+    if((roadCount-roadNow)>=6){
+        return Math.floor(Math.random()*6+1);
+    }else{
+        return Math.floor(Math.random()*(roadCount-roadNow-1)+1);
+    }
+}
+
+function randomRoad(){
+    var roadLen=road.length;
+    if(roadLen==0){ //第一个点
+        var _x=Math.floor(Math.random()*(mapItemX-1));
+        var _y=Math.floor(Math.random()*(mapItemY-1));
+        return [_x,_y];
+    }else{
+        var roadLast=road[roadLen-1];
+        //周围4点
+        var _NESW=new Array();
+        for(var i=0;i<4;i++){
+            _NESW[i]=new Array();
+            switch(i){
+                case 0:
+                    _NESW[i]['x']=roadLast['x'];
+                    _NESW[i]['y']=roadLast['y']-1;
+                    break;
+                case 1:
+                    _NESW[i]['x']=roadLast['x']+1;
+                    _NESW[i]['y']=roadLast['y'];
+                    break;
+                case 2:
+                    _NESW[i]['x']=roadLast['x'];
+                    _NESW[i]['y']=roadLast['y']+1;
+                    break;
+                case 3:
+                    _NESW[i]['x']=roadLast['x']-1;
+                    _NESW[i]['y']=roadLast['y'];
+                    break;
+            }
+        }
+        //判断4点是否可走
+        var _nextRaod=new Array();
+        for(var i in _NESW){
+            if(_NESW[i]['x']>=0&&_NESW[i]['x']<mapItemX&&_NESW[i]['y']>=0&&_NESW[i]['y']<mapItemY){  //是不是在地图上
+                //判断是不是已在路上
+                var inRoad=false;
+                for(var j in road){
+                    if(road[j]['x']==_NESW[i]['x']&&road[j]['y']==_NESW[i]['y']){
+                        inRoad=true;
+                    }
+                }
+                if(inRoad==false){
+                    var _nextRaodLen=_nextRaod.length;
+                    _nextRaod[_nextRaodLen]=new Array();
+                    _nextRaod[_nextRaodLen]['x']=_NESW[i]['x'];
+                    _nextRaod[_nextRaodLen]['y']=_NESW[i]['y'];
+                }
+            }
+        }
+        //随机选择一个方向
+        if(_nextRaod.length>0){
+            var f=Math.floor(Math.random()*(_nextRaod.length));
+            return [_nextRaod[f]['x'],_nextRaod[f]['y']];
+        }else{
+            return false;
+        }
+    }
+}
+
+function showTips(id,t,p){
+    var o=$("#person").offset();
+    if(p=='r'){
+        var left=o.left+50;
+        var top=o.top+20;
+    }
+    if(p=='l'){
+        var left=o.left-80;
+        var top=o.top+20;
+    }
+    $("#"+id+'_txt').html(t);
+    $("#"+id).css({'left':left,'top':top,'display':'block'});
+}
+
+function hiddenTips(obj){
+    obj.css({'display':'none'});
+}
+
+function roll(){
+    $("#game_p").unbind('click').click(function(){
+        var _this=$(this);
+        if(roadNow>=roadCount-1){
+            alert('end');
+            return false;
+        }
+        if(_clickDice==false){
+            _clickDice=true;
+            var l=1;
+            var n;
+            hiddenTips($("#tips"));
+            var timer=setInterval(function(){
+                if(l<20){
+                    if(l==19){
+                        n=getRandomNum();
+                    }else{
+                        n=l>6?(l%6==0?6:l%6):l;
+                    }
+                    $("#dice").attr('class','dice'+n);
+                    l++;
+                }else{
+                    clearInterval(timer);
+                    showTips('tips',n+'点','r');
+                    setTimeout(function(){
+                        _this.css('display','none');
+                        hiddenTips($("#tips"));
+                        getDice(n);
+                        _clickDice=false;
+                    },1200);
+                }
+            },100);
+        }
+    });
+}
+
+function shRoadAnswer(o1,o2){
+    o1.fadeOut(500);
+    o2.fadeIn(1000);
+}
+})
+</script>
+<p>
+    完整游戏地址：<a href="http://www.baosse.com/ttxs" target="_blank">http://www.baosse.com/ttxs</a>
+</p>
 
 
 <h2 class="content_h2">
@@ -25,225 +345,235 @@ keywords: javascript,jquery,game,tianchao
 </h2>
 <ul>
     <li>
-        1、随机棋盘（路）的生成
+        随机棋盘（路）的生成
     </li>
     <li>
-        2、投骰子
+        投骰子
     </li>
     <li>
-        3、沿路径移动
+        沿路径移动
     </li>
     <li>
-        4、倒计时进度条
+        倒计时进度条
     </li>
 </ul>
 <h2 class="content_h2">
 思路
 </h2>
+<h4>1、随机棋盘的生成</h4>
+<p>
+    之所以叫棋盘，其实它是在一张布满格子的平面生成的，只不过不是真正的布满了格子，想像的。比如，整个平面是10*10的大小，也就是横向10个格子，纵向10个格子，那每一个格子的坐标就是固定的，之后，就可以利用坐标，把生成的棋盘放到对应的位置上。
+</p>
+<p>
+    这其实是了为小人儿在移动的时候，走得更平滑，因为页面元素越多，越影响速度，特别是IE。所以这里就不像以前<a href="http://www.fuweiyi.com/game/2013/08/14/a-javascript-game-snake.html" target="_blank">《贪食蛇》</a>那样，整屏的小DIV。也算是一个进步。当然，《贪食蛇》也是可以这样改进的。
+</p>
+<p>
+    在生成的时候，为了最大化的不确定位置，起始位置就是在这10*10的平面随机一个点。之后就有四个方向可走，所以，随机取一个方向生成第二个点，到第三个点的时候，就只有3个方向了，因为不可能回头。那就从剩下的3个方向里取一个方向生成下一个点。之后的点都和它类似，但有一点，就是到边界的时候或是旁边已经有格子了，这时候就要判断可走的方向，如果有，继续，如果没有，就终止棋盘的生成。
+</p>
+<p>
+    这样的方式基本上能达到要求，但有两个问题：
+</p>
 <ul>
-<li>每一种颜色由RGB组成，每两位为一个16进制数</li>
-<li>当前颜色代码和目标颜色代码，转换成10进制数后，是有差值的，利用差值，设定总执行次数的步长，计算每一步变更颜色的10进制数</li>
-<li>利用定时器执行</li>
+    <li>
+        因为没有考虑位置问题，有可能在没有生成规定个数的棋盘时，就结束了。因为程序很可能走进四面都是死路的情况。和<a href="http://www.fuweiyi.com/game/2013/04/01/a-javascript-jquery-game-lianliankan-2.html" target="_blank">《连连看》</a>类似
+    </li>
+    <li>
+        路不好看，在不考虑相隔位置的情况，很有可能，所有的路都帖在一块儿，让你无法判断前进的方向
+    </li>
 </ul>
 <p>
-简单的讲，就是将6位颜色代码以每两位转换为10进制数，然后计算两对RGB值的差，根据设定的步长（执行次数），计算每一步需要增加或减少的RGB值，最后变为目标颜色的RGB值
+    这些都还需要去改进，这里就先这样了。
+</p>
+<h4>2、投骰子</h4>
+<p>
+    投骰子很简单，1-6，随机取一个。动画也就是把这6张图片来回的显示，最后停止在取到的数字上就可以了。也就是一个定时器。
+</p>
+<p>
+    可以说，游戏，就是定时器的天下（有点过了）。
+</p>
+<h4>3、沿路移动</h4>
+<p>
+    移动最大的问题是转弯。不过按着一次移动一个格子，每次计算下次移动位置的方式进行，也就不用考虑这个转弯的问题了。意思就是说，当小人儿移动到一个格子后，再计算下一个格子的位置，然后再移到下一个格子上，以此类推，最后停在目标格子上。
+</p>
+<h4>4、倒计时进度条</h4>
+<p>
+    这里没有涉及这一块，所以就不讲了，这里只是列出来这是一个需要在JS上考虑的地方。其实也就是个计时器，加上前一篇<a href="http://www.fuweiyi.com/javascript/2013/09/30/a-javascript-color-gradient.html" target="_blank">《颜色渐变》</a>a>来实现效果。没什么特别的，只需要考虑长度和时间的换算。
 </p>
 <h2 class="content_h2">
-需要解决的问题
-</h2>
-<ul>
-<li>将6位颜色代码转换为10进制</li>
-<li>根据步长计算每一步增加或减少数值</li>
-<li>使用定时器执行这个增加或减少的过程</li>
-</ul>
-<h2 class="content_h2">
-1、将6位颜色代码转换为10进制
+实现
 </h2>
 <p>
-关于16进制转为10进制，学校课本上就已经讲过了。个位*16的0次方，十位*16的1次方，以此类推。颜色是由RGB组成，每两位为一组，如：#123456，R=12，G=34，B=56，但实际上RGB值是10进制，所以，R=12只能说是对应的位置，12转为10进制：2*1+1*16=18，34：4*1+3*16=52，56：6*1+5*16=96，所以RGB=[18,52,96]。
-</p>
-<p>
-这是数字的，但16进制还有A-F，所以还得先将A-F转为10-15，可以先用一个数组来保存整个16进制对应的数
+    首先得设定一个最大格子数，以便来生成棋盘
 </p>
 <pre class="prettyprint lang-javascript">
-var f=new Array();
-f['0']=0;
-f['1']=1;
-f['2']=2;
-f['3']=3;
-f['4']=4;
-f['5']=5;
-f['6']=6;
-f['7']=7;
-f['8']=8;
-f['9']=9;
-f['A']=10;
-f['B']=11;
-f['C']=12;
-f['D']=13;
-f['E']=14;
-f['F']=15;
+var roadNum=30;  //最多30个格子
 </pre>
 <p>
-因为颜色代码是不区分大小写的，所以可以先把颜色全部转换为大写
+    接着确认一下每个格子的大小和总平台的大小
 </p>
 <pre class="prettyprint lang-javascript">
-code=code.toLocaleUpperCase();//转换为大写
+var mapItemX=14;  //横向一共14个
+var mapItemY=7;   //纵向一共7个
 </pre>
 <p>
-接着就是16进制转为10进制
+    还需要一个数组来存放格子（路）的坐标
 </p>
 <pre class="prettyprint lang-javascript">
-//code即为6位颜色代码，如：f07786;
-var r=f[code[0]]*16+f[code[1]];
-var g=f[code[2]]*16+f[code[3]];
-var b=f[code[4]]*16+f[code[5]];
+var road=new Array();
 </pre>
-<p>
-整个转换的代码，写成一个方法
-</p>
+<h3>
+    循环生成棋盘
+</h3>
 <pre class="prettyprint lang-javascript">
-function colorConversion(code){
-    var len=code.length;
-    var f=new Array();
-    f['0']=0;
-    f['1']=1;
-    f['2']=2;
-    f['3']=3;
-    f['4']=4;
-    f['5']=5;
-    f['6']=6;
-    f['7']=7;
-    f['8']=8;
-    f['9']=9;
-    f['A']=10;
-    f['B']=11;
-    f['C']=12;
-    f['D']=13;
-    f['E']=14;
-    f['F']=15;
-    code=code.toLocaleUpperCase();//转换为大写
-    var s=code.substr(0,1);
-    if(s=='#'){
-        code=code.substr(1,6);
+for(var i=0;i&lt;roadNum;i++){
+    var newRoad=randomRoad();
+    if(newRoad==false){
+        break;
     }
-    var r=f[code[0]]*16+f[code[1]];
-    var g=f[code[2]]*16+f[code[3]];
-    var b=f[code[4]]*16+f[code[5]];
-    return [r,g,b];
+    road[i]=new Array();
+    road[i]['x']=newRoad[0];
+    road[i]['y']=newRoad[1];
+    var txt=categorys[Math.floor(Math.random()*cateLen)];
+    maps+="&lt;li id='mapItem_"+road[i]['x']+"_"+road[i]['y']+"' class='radius' style='background-color:none;left:"+road[i]['x']*55+"px;top:"+road[i]['y']*55+"px;'&gt;"+txt+"&lt;/li&gt;";
 }
 </pre>
 <p>
-代码中的s，是用来判断颜色代码是否带有#号，有就去掉，最后返回一个包含RGB值的数组
+    这里先就使用了一个randomRoad()函数，用于寻找下一格子的位置，返回值就是下一个格子坐标，如果返回为false，那么说明没路可走了，直接退出循环。
 </p>
-<h2 class="content_h2">
-计算增加或减少的步长
-</h2>
 <p>
-比如，设定颜色变化次数为10次，那就需要计算这10次变化，每一次RGB值的增减数值是多少。利用当前颜色的RGB值和目标颜色的RGB的差取绝对值，然后除以10，可以得到一个步长，但这个值很可能是小数，可以把小数舍去，那么在最后一步增减数值的时候，直接变到目标颜色的RGB值就行了
+    有值，则将格子坐标放进路的数组里。然后利用坐标，生成一个li，用以表示格子。当然根据游戏需求，每个格子是有题目类型的，所以，前置的会随机的坐已有的题目类型里取一个，如：var txt=categorys[Math.floor(Math.random()*cateLen)];categorys是开始定义的一个对象，里面放着各类题止的名字，cateLen则是这个对象的长度。
+</p>
+<p>
+    循环生成后，就将html放到页面里。
 </p>
 <pre class="prettyprint lang-javascript">
-var _step=10;
-var _R_step=parseInt(Math.abs(_thisRGB[0]-_toRGB[0])/_step); //R的增减步长
-var _G_step=parseInt(Math.abs(_thisRGB[1]-_toRGB[1])/_step); //G的增减步长
-var _B_step=parseInt(Math.abs(_thisRGB[2]-_toRGB[2])/_step); //B的增减步长
+$("#map").html(maps);
 </pre>
-<h2 class="content_h2">
-每次执行增减
-</h2>
+<h3>
+    创建小人儿和骰子
+</h3>
 <p>
-如果执行次数为10，也就是要连续的执行10次，当_step=1的时候，就算执行完成。那么在增减步长上，就会出现，如果_step=10，那么增减就是1倍步长，如果_step=9，也就是执行到第二步，那增减的就是2倍步长，一直到_step=1，增减9倍步长。这里可以使用这么一句简单的计算
+    小人儿的初始位置是第一个格子，所以取到第一个格子的坐标，将小人儿放上去
 </p>
 <pre class="prettyprint lang-javascript">
-var step=10;
-var _step=step;
-//循环体内
-var s=(step-_step)+1;
-_step--;
+$("#mapItem_"+road[0]['x']+'_'+road[0]['y']).addClass('roadstart');
+var startPostion=$("#mapItem_"+road[0]['x']+'_'+road[0]['y']).position();
+roadCount=road.length;
+var person="&lt;div id='person'&gt;&lt;div id='game_p'&gt;&lt;div class='ttips radius'&gt;&lt;b class='arr'&gt;&lt;/b&gt;点击骰子前进&lt;/div&gt;&lt;div class='dice1' id='dice'&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;";
+$("#map").append(person);
+$("#person").css({'left':startPostion.left+_leftX,'top':startPostion.top-_topX});
 </pre>
 <p>
-接着判断当前颜色RGB值和目标RGB的是增加还是减少
+    也许还需要改变一下最后一个格子的外观或是什么，直接根据格子（路）的长度，取最后一个就好
 </p>
 <pre class="prettyprint lang-javascript">
-var r=_step==1?_toRGB[0]:(_thisRGB[0]>_toRGB[0]?_thisRGB[0]-_R_step*s:_thisRGB[0]+_R_step*s);
-var g=_step==1?_toRGB[1]:(_thisRGB[1]>_toRGB[1]?_thisRGB[1]-_G_step*s:_thisRGB[1]+_G_step*s);
-var b=_step==1?_toRGB[2]:(_thisRGB[2]>_toRGB[2]?_thisRGB[2]-_B_step*s:_thisRGB[2]+_B_step*s);
+roadCount=road.length;
+var end=road.length-1;
+$("#mapItem_"+road[end]['x']+'_'+road[end]['y']).css({'background':'none','background-color':'#009900'});
+$("#mapItem_"+road[end]['x']+'_'+road[end]['y']).html('奖品');
 </pre>
 <p>
-最后，将颜色输出
-</p>
-<pre class="prettyprint lang-javascript">
-obj.css({'background-color':'rgb('+r+','+g+','+b+')'});
-</pre>
-<p>
-这里输出的是rgb()的方式，没关系，和颜色代码同理，如果觉得还是输出6位代码，那就将10进制转成16进制就好了
+    比如，这里改变了一下它的颜色，写了一个奖品到上面
 </p>
 <p>
-最后就是用定时器来执行，中间还有对速度和计算，这里就不讲了。最后的执行代码：
+    这样，游戏的初始化就完成了。
+</p>
+<h3>
+    接着是投骰子
+</h3>
+<p>
+    投骰子只有一个需要注意的地方，就是当剩余格子不足6的时候，上限只能是剩余格子数，例如：还剩4个格子，那就只能取1-4的随机数，如果只剩1个格子，那就是1了。
 </p>
 <pre class="prettyprint lang-javascript">
-/*
-参数：
-obj：目标对象
-thisRGB：当前背景颜色的6位代码
-toRGB：目标背景颜色的6位代码
-thisColor：当前文字颜色的6位代码
-toColor：目标文字颜色的6位代码
-step：执行次数
-speed：执行速度
-*/
-function colorGradient(obj,thisRGB,toRGB,thisColor,toColor,step,speed){
-    var _thisRGB=colorConversion(thisRGB); //16进制转换10进制
-    var _toRGB=colorConversion(toRGB);
-    if(thisColor&&toColor){
-        var _thisColor=colorConversion(thisColor,1);
-        var _toColor=colorConversion(toColor,1);
-    }
-    
-    var step=step?step:3;
-    var _step=step;
-    var _speed=speed?parseInt(speed/step):30;  //根据总时间计算每次执行的速度
-    var _R_step=parseInt(Math.abs(_thisRGB[0]-_toRGB[0])/_step);
-    var _G_step=parseInt(Math.abs(_thisRGB[1]-_toRGB[1])/_step);
-    var _B_step=parseInt(Math.abs(_thisRGB[2]-_toRGB[2])/_step);
-
-    var timer=setInterval(function(){
-        if(_step&gt;0){
-            var s=(step-_step)+1;
-            var r=_step==1?_toRGB[0]:(_thisRGB[0]&gt;_toRGB[0]?_thisRGB[0]-_R_step*s:_thisRGB[0]+_R_step*s);
-            var g=_step==1?_toRGB[1]:(_thisRGB[1]&gt;_toRGB[1]?_thisRGB[1]-_G_step*s:_thisRGB[1]+_G_step*s);
-            var b=_step==1?_toRGB[2]:(_thisRGB[2]&gt;_toRGB[2]?_thisRGB[2]-_B_step*s:_thisRGB[2]+_B_step*s);
-            obj.css({'background-color':'rgb('+r+','+g+','+b+')'});
-            if(thisColor&&toColor){
-                var cr=_step==1?_toColor[0]:(_thisColor[0]&gt;_toColor[0]?_thisColor[0]-_R_step*s:_thisColor[0]+_R_step*s);
-                var cg=_step==1?_toColor[1]:(_thisColor[1]&gt;_toColor[1]?_thisColor[1]-_G_step*s:_thisColor[1]+_G_step*s);
-                var cb=_step==1?_toColor[2]:(_thisColor[2]&gt;_toColor[2]?_thisColor[2]-_B_step*s:_thisColor[2]+_B_step*s);
-                obj.css({'color':'rgb('+cr+','+cg+','+cb+')'});
-            }
-            _step--;
-        }else{
-            clearInterval(timer);
-            return true;
+function roll(){
+    $("#game_p").unbind('click').click(function(){
+        var _this=$(this);
+        if(roadNow&gt;=roadCount-1){  //判断是否已经是最后一个
+            alert('end');
+            return false;
         }
-    },_speed);
+        if(_clickDice===false){  //防止重复点击
+            _clickDice=true;
+            var l=1;
+            var n;
+            hiddenTips($("#tips"));
+            var timer=setInterval(function(){  //定时器
+                if(l&lt;20){
+                    if(l===19){
+                        n=getRandomNum();
+                    }else{
+                        n=l&gt;6?(l%6===0?6:l%6):l;
+                    }
+                    $("#dice").attr('class','dice'+n);
+                    l++;
+                }else{
+                    clearInterval(timer);
+                    showTips('tips',n+'点','r');
+                    setTimeout(function(){
+                        _this.css('display','none');
+                        hiddenTips($("#tips"));
+                        getDice(n);  //移动小人儿
+                    },1200);
+                }
+            },100);
+        }
+    });
+}
+</pre>
+<h3>
+    移动小人儿
+</h3>
+<p>
+    根据上面的代码，getDice(n)方法用来移动小人儿，它有一个参数，表明下一个格子是第几个。除了下一个格子是第几个外，还有一个小人儿所在格子的数，这个数在每次移动后都要更新，这样可以根据总格子数，计算还剩多少个格子，以便下次生成随机数。
+</p>
+<pre class="prettyprint lang-javascript">
+function getDice(n){
+    var _r=n;  //目标格子
+    var _i=1;  
+
+    //移动对象
+     var moveTimer=setInterval(function(){  //定时器
+        var _p=roadNow+_i;  //目标格子的索引
+        var toPosition=$("#mapItem_"+road[_p]['x']+'_'+road[_p]['y']).position();  //目标格子的坐标
+        var thisPostion=$("#person").position();  //小人儿的坐标
+        var _toPositionLeft=Math.ceil(toPosition.left);  //计算目标格子的横坐标
+        var _toPositionTop=Math.ceil(toPosition.top);   //计算目标格子的纵坐标
+        var _thisPostionLeft=Math.ceil(thisPostion.left);//计算小人儿的横坐标
+        var _thisPostionTop=Math.ceil(thisPostion.top);//计算小人儿的纵坐标
+        if(_toPositionLeft+_leftX===_thisPostionLeft&&_toPositionTop-_topX===_thisPostionTop){  //判断小人的坐标是否和目标格子的坐标相同
+            if(_i&lt;_r){  //如果_i小于目标格，自加
+                _i++;
+            }else{  //如果等于，则停止移动小人儿，并执行后续工作
+                roadNow+=_r;
+                var txt=$("#map li").eq(roadNow).html();
+                var tid=$("#map li").eq(roadNow).attr('action-tid');
+                clearInterval(moveTimer);
+                //$("#game_p").css('display','block');
+                showTips('tips',txt,'r');
+                showTips('load','选题中...','l');
+                setTimeout(function(){
+                    hiddenTips($(".tips"));
+                    $("#game_p").css('display','block');
+                },1000);
+            }
+        }else{  //如果小人的坐标没有和目标格子坐标相同，继续移动
+            var _nextLeft=_toPositionLeft+_leftX&gt;_thisPostionLeft?_thisPostionLeft+1:(_toPositionLeft+_leftX&lt;_thisPostionLeft?_thisPostionLeft-1:_thisPostionLeft);
+            var _nextTop=_toPositionTop-_topX&gt;_thisPostionTop?_thisPostionTop+1:(_toPositionTop-_topX&lt;_thisPostionTop?_thisPostionTop-1:_thisPostionTop);
+            $("#person").css({'left':_nextLeft,'top':_nextTop});
+        }
+        
+    },10);
 }
 </pre>
 <p>
-这个方法很简单，但渐变的平滑度一般，特别是在一组对象连续执行的时候。只能说，这是一种很吊丝，很笨的方法，大神都是用Tween算法
-</p>
-<h2 class="content_h2" id="animate-colors">
-jQuery颜色渐变插件
-</h2>
-<p>
-<a href="http://www.dinlei.com/app/script/jquery.animate-colors-min.js">jquery.animate-colors-min.js</a>
+    这里呢只演示到移动，所以后续的加载题目就没有，小人儿移动到位置后，可以继续投骰子移动，至到最后一个格子。
 </p>
 <p>
-使用方法，直接使用jquery的animate就可以了，只是不用指定当前颜色，程序会自动取当前颜色，不过必须在样式里设定background
+    关于《天朝教育委员会》游戏，基本上也就前面这一部分稍微的要考虑一下，但利用前面所撑握的一些东西，可以很轻松的实现。如果想看完整的代码，可以看看给出的完整游戏示例：<a href="http://www.baosse.com/ttxs" target="_blank">http://www.baosse.com/ttxs</a>。
 </p>
-<pre class="prettyprint lang-javascript">
-obj.animate({'background-color':'#ff0000','color':'#000000'});
-</pre>
-
+<p>
+    天朝，就这样了。
+</p>
 <script type="text/javascript">
 jQuery(function($){
     window.prettyPrint && prettyPrint();
