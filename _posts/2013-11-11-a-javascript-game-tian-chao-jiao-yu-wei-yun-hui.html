@@ -1,0 +1,251 @@
+---
+layout: post
+title: 一起来做webgame，《Javascript仿天朝教育委员会》
+category: javascript
+description: 天朝教育委员会》，一个很简单很有意思的游戏。简单的来说，它分为两个部分，1、投骰子走棋盘。2、倒计时答题。倒计时答题就是一个计时器，可能从效果上说，需要做一个进度条，进度条要做得好看，加个颜色渐变。上一篇的内容也可以用上。
+img: 20131111/2013111101.jpg
+keywords: javascript,jquery,game,tianchao
+---
+<p>
+《天朝教育委员会》，一个很简单很有意思的游戏。简单的来说，它分为两个部分，1、投骰子走棋盘。2、倒计时答题。倒计时答题就是一个计时器，可能从效果上说，需要做一个进度条，进度条要做得好看，加个颜色渐变。上一篇的内容也可以用上。
+</p>
+<p>
+这里只涉及一些JS的内容，关于题目数据的读取相关的东西就不讲了。同样，先放上测试
+</p>
+<h2 class="content_h2">
+    测试
+</h2>
+
+
+
+
+
+<h2 class="content_h2">
+需要解决的问题
+</h2>
+<ul>
+    <li>
+        1、随机棋盘（路）的生成
+    </li>
+    <li>
+        2、投骰子
+    </li>
+    <li>
+        3、沿路径移动
+    </li>
+    <li>
+        4、倒计时进度条
+    </li>
+</ul>
+<h2 class="content_h2">
+思路
+</h2>
+<ul>
+<li>每一种颜色由RGB组成，每两位为一个16进制数</li>
+<li>当前颜色代码和目标颜色代码，转换成10进制数后，是有差值的，利用差值，设定总执行次数的步长，计算每一步变更颜色的10进制数</li>
+<li>利用定时器执行</li>
+</ul>
+<p>
+简单的讲，就是将6位颜色代码以每两位转换为10进制数，然后计算两对RGB值的差，根据设定的步长（执行次数），计算每一步需要增加或减少的RGB值，最后变为目标颜色的RGB值
+</p>
+<h2 class="content_h2">
+需要解决的问题
+</h2>
+<ul>
+<li>将6位颜色代码转换为10进制</li>
+<li>根据步长计算每一步增加或减少数值</li>
+<li>使用定时器执行这个增加或减少的过程</li>
+</ul>
+<h2 class="content_h2">
+1、将6位颜色代码转换为10进制
+</h2>
+<p>
+关于16进制转为10进制，学校课本上就已经讲过了。个位*16的0次方，十位*16的1次方，以此类推。颜色是由RGB组成，每两位为一组，如：#123456，R=12，G=34，B=56，但实际上RGB值是10进制，所以，R=12只能说是对应的位置，12转为10进制：2*1+1*16=18，34：4*1+3*16=52，56：6*1+5*16=96，所以RGB=[18,52,96]。
+</p>
+<p>
+这是数字的，但16进制还有A-F，所以还得先将A-F转为10-15，可以先用一个数组来保存整个16进制对应的数
+</p>
+<pre class="prettyprint lang-javascript">
+var f=new Array();
+f['0']=0;
+f['1']=1;
+f['2']=2;
+f['3']=3;
+f['4']=4;
+f['5']=5;
+f['6']=6;
+f['7']=7;
+f['8']=8;
+f['9']=9;
+f['A']=10;
+f['B']=11;
+f['C']=12;
+f['D']=13;
+f['E']=14;
+f['F']=15;
+</pre>
+<p>
+因为颜色代码是不区分大小写的，所以可以先把颜色全部转换为大写
+</p>
+<pre class="prettyprint lang-javascript">
+code=code.toLocaleUpperCase();//转换为大写
+</pre>
+<p>
+接着就是16进制转为10进制
+</p>
+<pre class="prettyprint lang-javascript">
+//code即为6位颜色代码，如：f07786;
+var r=f[code[0]]*16+f[code[1]];
+var g=f[code[2]]*16+f[code[3]];
+var b=f[code[4]]*16+f[code[5]];
+</pre>
+<p>
+整个转换的代码，写成一个方法
+</p>
+<pre class="prettyprint lang-javascript">
+function colorConversion(code){
+    var len=code.length;
+    var f=new Array();
+    f['0']=0;
+    f['1']=1;
+    f['2']=2;
+    f['3']=3;
+    f['4']=4;
+    f['5']=5;
+    f['6']=6;
+    f['7']=7;
+    f['8']=8;
+    f['9']=9;
+    f['A']=10;
+    f['B']=11;
+    f['C']=12;
+    f['D']=13;
+    f['E']=14;
+    f['F']=15;
+    code=code.toLocaleUpperCase();//转换为大写
+    var s=code.substr(0,1);
+    if(s=='#'){
+        code=code.substr(1,6);
+    }
+    var r=f[code[0]]*16+f[code[1]];
+    var g=f[code[2]]*16+f[code[3]];
+    var b=f[code[4]]*16+f[code[5]];
+    return [r,g,b];
+}
+</pre>
+<p>
+代码中的s，是用来判断颜色代码是否带有#号，有就去掉，最后返回一个包含RGB值的数组
+</p>
+<h2 class="content_h2">
+计算增加或减少的步长
+</h2>
+<p>
+比如，设定颜色变化次数为10次，那就需要计算这10次变化，每一次RGB值的增减数值是多少。利用当前颜色的RGB值和目标颜色的RGB的差取绝对值，然后除以10，可以得到一个步长，但这个值很可能是小数，可以把小数舍去，那么在最后一步增减数值的时候，直接变到目标颜色的RGB值就行了
+</p>
+<pre class="prettyprint lang-javascript">
+var _step=10;
+var _R_step=parseInt(Math.abs(_thisRGB[0]-_toRGB[0])/_step); //R的增减步长
+var _G_step=parseInt(Math.abs(_thisRGB[1]-_toRGB[1])/_step); //G的增减步长
+var _B_step=parseInt(Math.abs(_thisRGB[2]-_toRGB[2])/_step); //B的增减步长
+</pre>
+<h2 class="content_h2">
+每次执行增减
+</h2>
+<p>
+如果执行次数为10，也就是要连续的执行10次，当_step=1的时候，就算执行完成。那么在增减步长上，就会出现，如果_step=10，那么增减就是1倍步长，如果_step=9，也就是执行到第二步，那增减的就是2倍步长，一直到_step=1，增减9倍步长。这里可以使用这么一句简单的计算
+</p>
+<pre class="prettyprint lang-javascript">
+var step=10;
+var _step=step;
+//循环体内
+var s=(step-_step)+1;
+_step--;
+</pre>
+<p>
+接着判断当前颜色RGB值和目标RGB的是增加还是减少
+</p>
+<pre class="prettyprint lang-javascript">
+var r=_step==1?_toRGB[0]:(_thisRGB[0]>_toRGB[0]?_thisRGB[0]-_R_step*s:_thisRGB[0]+_R_step*s);
+var g=_step==1?_toRGB[1]:(_thisRGB[1]>_toRGB[1]?_thisRGB[1]-_G_step*s:_thisRGB[1]+_G_step*s);
+var b=_step==1?_toRGB[2]:(_thisRGB[2]>_toRGB[2]?_thisRGB[2]-_B_step*s:_thisRGB[2]+_B_step*s);
+</pre>
+<p>
+最后，将颜色输出
+</p>
+<pre class="prettyprint lang-javascript">
+obj.css({'background-color':'rgb('+r+','+g+','+b+')'});
+</pre>
+<p>
+这里输出的是rgb()的方式，没关系，和颜色代码同理，如果觉得还是输出6位代码，那就将10进制转成16进制就好了
+</p>
+<p>
+最后就是用定时器来执行，中间还有对速度和计算，这里就不讲了。最后的执行代码：
+</p>
+<pre class="prettyprint lang-javascript">
+/*
+参数：
+obj：目标对象
+thisRGB：当前背景颜色的6位代码
+toRGB：目标背景颜色的6位代码
+thisColor：当前文字颜色的6位代码
+toColor：目标文字颜色的6位代码
+step：执行次数
+speed：执行速度
+*/
+function colorGradient(obj,thisRGB,toRGB,thisColor,toColor,step,speed){
+    var _thisRGB=colorConversion(thisRGB); //16进制转换10进制
+    var _toRGB=colorConversion(toRGB);
+    if(thisColor&&toColor){
+        var _thisColor=colorConversion(thisColor,1);
+        var _toColor=colorConversion(toColor,1);
+    }
+    
+    var step=step?step:3;
+    var _step=step;
+    var _speed=speed?parseInt(speed/step):30;  //根据总时间计算每次执行的速度
+    var _R_step=parseInt(Math.abs(_thisRGB[0]-_toRGB[0])/_step);
+    var _G_step=parseInt(Math.abs(_thisRGB[1]-_toRGB[1])/_step);
+    var _B_step=parseInt(Math.abs(_thisRGB[2]-_toRGB[2])/_step);
+
+    var timer=setInterval(function(){
+        if(_step&gt;0){
+            var s=(step-_step)+1;
+            var r=_step==1?_toRGB[0]:(_thisRGB[0]&gt;_toRGB[0]?_thisRGB[0]-_R_step*s:_thisRGB[0]+_R_step*s);
+            var g=_step==1?_toRGB[1]:(_thisRGB[1]&gt;_toRGB[1]?_thisRGB[1]-_G_step*s:_thisRGB[1]+_G_step*s);
+            var b=_step==1?_toRGB[2]:(_thisRGB[2]&gt;_toRGB[2]?_thisRGB[2]-_B_step*s:_thisRGB[2]+_B_step*s);
+            obj.css({'background-color':'rgb('+r+','+g+','+b+')'});
+            if(thisColor&&toColor){
+                var cr=_step==1?_toColor[0]:(_thisColor[0]&gt;_toColor[0]?_thisColor[0]-_R_step*s:_thisColor[0]+_R_step*s);
+                var cg=_step==1?_toColor[1]:(_thisColor[1]&gt;_toColor[1]?_thisColor[1]-_G_step*s:_thisColor[1]+_G_step*s);
+                var cb=_step==1?_toColor[2]:(_thisColor[2]&gt;_toColor[2]?_thisColor[2]-_B_step*s:_thisColor[2]+_B_step*s);
+                obj.css({'color':'rgb('+cr+','+cg+','+cb+')'});
+            }
+            _step--;
+        }else{
+            clearInterval(timer);
+            return true;
+        }
+    },_speed);
+}
+</pre>
+<p>
+这个方法很简单，但渐变的平滑度一般，特别是在一组对象连续执行的时候。只能说，这是一种很吊丝，很笨的方法，大神都是用Tween算法
+</p>
+<h2 class="content_h2" id="animate-colors">
+jQuery颜色渐变插件
+</h2>
+<p>
+<a href="http://www.dinlei.com/app/script/jquery.animate-colors-min.js">jquery.animate-colors-min.js</a>
+</p>
+<p>
+使用方法，直接使用jquery的animate就可以了，只是不用指定当前颜色，程序会自动取当前颜色，不过必须在样式里设定background
+</p>
+<pre class="prettyprint lang-javascript">
+obj.animate({'background-color':'#ff0000','color':'#000000'});
+</pre>
+
+<script type="text/javascript">
+jQuery(function($){
+    window.prettyPrint && prettyPrint();
+});
+</script>
