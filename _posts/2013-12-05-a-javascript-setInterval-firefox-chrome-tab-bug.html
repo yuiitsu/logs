@@ -1,0 +1,82 @@
+---
+layout: post
+title: setInterval在firefox和chrome切换标签时出现的混乱问题及解决办法
+category: javascript
+description: 关于setInterval在firefox和chrome切换标签时出现的这个问题，其实是浏览器的关系，也许是为了什么吧，这个我也不知道，反正就是出问题了，虽然不是JS或代码的问题，但仍然可以用代码来解决
+img: 201312/0501.jpg
+keywords: javascript,setInterval,firefox,chrome,标签,tab,bug
+---
+<p>
+关于setInterval在firefox和chrome切换标签时出现的这个问题，其实是浏览器的关系，也许是为了什么吧，这个我也不知道，反正就是出问题了，虽然不是JS或代码的问题，但仍然可以用代码来解决
+</p>
+<h2 class="content_h2">
+    产生问题的条件
+</h2>
+<p>
+    我这里是为了做一个div的展开效果，每隔5秒，随机抓一个div展开，并渐显里面的内容，而前一个展开的div和内容同时关闭。
+</p>
+<p>
+    很简单的一东西，效果可以看这里：<a href="http://www.dinlei.com" target="_blank">www.dinlei.com</a>
+</p>
+<p>
+    这里有用了两个定时器setInterval，第一个是用来控制每隔5秒的操作，另一个是用来展开和关闭Div，它的间隔时间为10毫秒。也就是一个“画中画”的模式，定时器里包含定时器。
+</p>
+<p>
+    网上有不少这个问题，有人说是因为setInterval时间小于1000毫秒的时候会出现这个问题。但我发现并不一定是这个问题，因为我有不少小于1000毫秒的代码，都没有问题。
+</p>
+<p>
+    最后我发现，其实是setInterval的嵌套，浏览器所产生的问题。解决的办法也很简单，就是判断setInterval是不是在执行，如果在执行中，就不进行外层和内层的setInterval执行，如果没有，再执行。也就是给一个变量，里层的setInterval开始执行前判断这个变量是不是为真，如果为真，则执行这个setInterval，如果为假，就不执行。而当里层的setInterval开始执行时，就将该变量附值为假，同样外层的setInterval也做一个这样的判断。就能解决firefox和chrome在切换标签时产生的这个问题。
+</p>
+<p>
+    不过这里是不是需要在内层的setInterval也进行是否在执行的判断，我不是很确定，没有测试，但里外层都加上，是肯定能解决这个问题，所以就懒得去测试了。
+</p>
+<p>
+    下面看看这段代码
+</p>
+<pre class="prettyprint lang-javascript">
+var _do=true;
+var timer=setInterval(function(){
+    if(_do==true){
+        doLights();
+    }
+
+},5000);
+
+function doLights(){
+    var _TL=lights.slice(0);
+    var _nextIndex=getLightsNum(_TL);
+    var _i=0;
+    var _minW=minW;
+    var _maxW=maxW;
+    clearInterval(_t);
+    if(_do==true){
+        _do=false;
+        _t=setInterval(function(){
+            if(_i==40){
+                _i=0;
+                preIndex=_nextIndex;
+                _do=true;
+                clearInterval(_t);
+                return;
+            }
+            if(preIndex&gt;=0){
+                _maxW--;
+                $(".lights").eq(preIndex).css({'width':_maxW+'px'});
+            }
+            _minW++;
+            $(".lights").eq(_nextIndex).css({'width':_minW+'px'});
+            _i++;
+        },10);
+        $(".lightsTxt").eq(preIndex).stop(true).fadeOut(1000);
+        $(".lightsTxt").eq(_nextIndex).stop(true).fadeIn(1000);
+    }
+}
+</pre>
+<p>
+   这段代码很简单，主要就是利用_do这个变量来判断setInterval是否在运行
+</p>
+<script type="text/javascript">
+jQuery(function($){
+    window.prettyPrint && prettyPrint();
+});
+</script>
