@@ -1,0 +1,68 @@
+---
+layout: post
+title: 关于获取浏览器窗口可见高宽的问题
+category: javascript
+description: 这是一个很悲剧的问题，浏览器太多的悲剧。--）我们知道，获取浏览器窗口可见区域的高(宽同理)可以用
+img: 201404/0101.png
+keywords: javascript,documentElement,document,body,clientHeight,clientWidth
+---
+<p>
+这是一个很悲剧的问题，浏览器太多的悲剧。--）
+</p>
+<p>
+我们知道，获取浏览器窗口可见区域的高(宽同理)可以用
+</p>
+<pre class="prettyprint lang-javascript">
+document.documentElement.clientHeight
+document.body.clientHeight
+</pre>
+<p>
+   为什么有两个，很显然，IE和其它的浏览器有点区别。但这不仅仅是IE的区别，这里还有个特别的情况，就是文档的doctype，当文档有定义doctype时，可见区域的高需要用document.documentElement.clientHeight，如果没有，则要用document.body.clientHeight
+</p>
+<pre class="prettyprint lang-javascript">
+document.documentElement.clientHeight  //有doctype
+document.body.clientHeight  //无doctype
+</pre>
+<p>
+    这样子，看上去没什么问题了，但有一天，我根据这样的判断来测试amazon.com和jomashop.com的首页是，却发现，它们同时有doctype，但amazon的可见区域得用documentElement.clientHeight，而jomashop的可见区域得用document.body.clientHeight。
+</p>
+<p>
+    为啥？不懂，查了一下w3schools.com，发现有这样一段
+</p>
+<h2>Window Size</h2>
+<p>
+Three different properties can be used to determine the size of the browser window (the browser viewport, NOT including toolbars and scrollbars).
+</p>
+<p>
+For Internet Explorer, Chrome, Firefox, Opera, and Safari:
+</p>
+<pre class="prettyprint lang-javascript">
+window.innerHeight - the inner height of the browser window
+window.innerWidth - the inner width of the browser window
+</pre>
+<p>
+For Internet Explorer 8, 7, 6, 5:
+</p>
+<pre class="prettyprint lang-javascript">
+document.documentElement.clientHeight
+document.documentElement.clientWidth
+</pre>
+<p>
+or
+</p>
+<pre class="prettyprint lang-javascript">
+document.body.clientHeight
+document.body.clientWidth
+</pre>
+<p>
+说明，这里还有一种方法来获取可见区域的高，就是window.innerHeight。经测试发现window.innerHeight在amazon和jomashop上获取的值是相同的，所以可以这样调整一下，也就是最终的获取方法：
+</p>
+<pre class="prettyprint lang-javascript">
+var w=window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;
+var h=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;
+</pre>
+<script type="text/javascript">
+jQuery(function($){
+    window.prettyPrint && prettyPrint();
+});
+</script>
