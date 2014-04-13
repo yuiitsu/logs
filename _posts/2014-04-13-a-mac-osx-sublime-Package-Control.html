@@ -1,0 +1,41 @@
+---
+layout: post
+title: OSX版sublime text 2/3安装Package Control
+category: mac
+description: 方法来自https://sublime.wbond.net/installation
+img: 201404/1301.png
+keywords: mac,osx,sublimetext 3,sublimetext 2,Package Control,安装
+---
+<p>
+方法来自https://sublime.wbond.net/installation
+</p>
+<h2 class="content_h2">
+    自动安装：
+</h2>
+<blockquote class="content_quote">
+1、使用control+`或点击View>Show Console打开控制台（会出现在编辑器底部）<br/>
+2、拷贝以下代码，粘贴到控制台中
+</blockquote>
+<pre class="prettyprint lang-javascript">
+//Sublime Text 3
+import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)
+
+//Sublime Text 2
+import urllib2,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); os.makedirs( ipp ) if not os.path.exists(ipp) else None; urllib2.install_opener( urllib2.build_opener( urllib2.ProxyHandler()) ); by = urllib2.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); open( os.path.join( ipp, pf), 'wb' ).write(by) if dh == h else None; print('Error validating download (got %s instead of %s), please try manual install' % (dh, h) if dh != h else 'Please restart Sublime Text to finish installation')
+</pre>
+<p>
+	回车后，会自动安装
+</p>
+<h2 class="content_h2">
+    手动安装：
+</h2>
+<blockquote class="content_quote">
+1、点击Preferences > Browse Packages…打开Packages文件夹<br/>
+2、下载<a href="https://sublime.wbond.net/Package%20Control.sublime-package" target="_blank">Package Control.sublime-package</a>，将它拷贝到Packages文件夹中<br/>
+3、重启Sublime Text
+</blockquote>
+<script type="text/javascript">
+jQuery(function($){
+    window.prettyPrint && prettyPrint();
+});
+</script>
