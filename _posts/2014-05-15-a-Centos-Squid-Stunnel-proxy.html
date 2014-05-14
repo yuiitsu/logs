@@ -26,7 +26,7 @@ CentOS 6.5（随意）
     访问过程：
 </h2>
 <blockquote class="content_quote">
-1、用户设置代理指向B服务器的Stunnel服务监听的商品，访问网站<br/>
+1、用户设置代理指向B服务器的Stunnel服务监听的端口，访问网站<br/>
 2、B服务器的Stunnel会将信息做加密处理，然后发送到A服务器的Stunnel服务上<br/>
 3、A服务器的Stunnel会将加密的信息做解密处理，然后发送给A服务器的Squid服务上<br/>
 4、A服务器的Squid会向目标网站请求数据，然后将信息返回。
@@ -110,7 +110,7 @@ make时报错：ext_file_userip_acl.cc:254: error: 'errno' was not declared in t
 在#include "util.h"下面加一行
 </p>
 <pre class="prettyprint lang-javascript">
-#include <cerrno>
+#include &lt;cerrno&gt;
 </pre>
 <blockquote class="content_quote">
 外网访问提示：Access Denied
