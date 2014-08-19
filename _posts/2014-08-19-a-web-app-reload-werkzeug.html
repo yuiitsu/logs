@@ -1,0 +1,28 @@
+---
+layout: post
+title: 使用werkzeug，修改文件不需要重启服务
+category: python
+description: 在使用Python写WEB应用的时候，会遇到服务运行后，修改文件必须要重启服务才会生效的问题，很不方便。通过查看Flask的源码，发现它使用的是werkzeug来实现的。
+img: 201408/01.png
+keywords: werkzeug,web,app,python
+---
+<p>
+在使用Python写WEB应用的时候，会遇到服务运行后，修改文件必须要重启服务才会生效的问题，很不方便。通过查看Flask的源码，发现它使用的是werkzeug来实现的。
+</p>
+<p>
+使用非常的简单（官网示例）
+</p>
+<pre class="prettyprint lang-python">
+from werkzeug.serving import run_simple
+
+def hello(environ, start_response):
+	start_response('200 OK', [('Content-Type', 'text/html')])
+	return '<h1>Hello, %s</h1>' % (environ['PATH_INFO'][1:] or 'web!')
+
+run_simple('localhost', 8080, hello, use_reloader=True)
+</pre>
+<script type="text/javascript">
+jQuery(function($){
+    window.prettyPrint && prettyPrint();
+});
+</script>
