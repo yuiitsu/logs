@@ -17,7 +17,7 @@ from werkzeug.serving import run_simple
 
 def hello(environ, start_response):
 	start_response('200 OK', [('Content-Type', 'text/html')])
-	return '<h1>Hello, %s</h1>' % (environ['PATH_INFO'][1:] or 'web!')
+	return '&lt;h1&gt;Hello, %s&lt;/h1&gt;' % (environ['PATH_INFO'][1:] or 'web!')
 
 run_simple('localhost', 8080, hello, use_reloader=True)
 </pre>
