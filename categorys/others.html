@@ -1,13 +1,6 @@
 ---
 layout: default
 title: others_分类_
-name: others
+catename: others
 ---
-<div class="news">
-	<h3>others({{ site.categories['others'] | size }})</h3>
-	<ul class="index_ul">
-		{% for post in site.categories['others'] %}
-		<li><span>[{{ post.date | date:"%Y-%m-%d"  }}]</span><a href="{{ site:url  }}{{ post.url  }}" target="_blank">{{post.title}}</a> </li>
-		{% endfor %}
-	</ul>
-</div>
+{% include category.html  %}
