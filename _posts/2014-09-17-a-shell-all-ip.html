@@ -3,10 +3,34 @@ layout: post
 title: shell脚本获取本机所有IP地址
 category: linux
 description: 在多IP服务器上，将所有IP打印出来
-img: 201409/01.png
+img: 201409/1701.png
 keywords: linux,shell,ip
 ---
-
+<p>
+在多IP服务器上，将所有IP打印出来
+</p>
+<h2 class="content_h2">
+将以下代码保存为ip.sh（文件名随意）
+</h2>
+<pre class="prettyprint lang-python">
+#!/bin/bash
+for i in $(echo $(ifconfig | grep 'inet addr' | awk -F ' *|:' '{print $4}'))
+do
+	echo $i
+done
+</pre>
+<h2 class="content_h2">
+修改ip.sh的执行权限
+</h2>
+<pre class="prettyprint lang-python">
+chmod +x ip.sh
+</pre>
+<h2 class="content_h2">
+运行
+</h2>
+<pre class="prettyprint lang-python">
+./ip.sh
+</pre>
 <script type="text/javascript">
 jQuery(function($){
     window.prettyPrint && prettyPrint();
