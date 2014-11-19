@@ -2,6 +2,7 @@
 * 
 *  DragList.js
 *  @author fuweiyi <fuwy@foxmail.com>
+*
 *  
 */
 (function($){
