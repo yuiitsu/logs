@@ -16,6 +16,47 @@ content_script
 <p>
 从名字里就知道，content_script是植入型的，它会被植入到符合匹配的网站页面上。在页面加载完成后执行。content_script最有用的地方是操作网站页面上的DOM。一切平时做前端的一些操作它都可以做，像什么添加、修改、删除DOM，获取DOM值，监听事件等等，都可以很容易的做到。所以，如果想获取人家的登录帐户和密码，就是件非常容易的事，只需要添加content_script，监听帐户和密码的文本框，获得值后将数据发送到自己的服务器就可以了。因此，<strong>特别说明，别乱装扩展，特别是不从官方扩展库里下载的扩展。</strong>
 </p>
+<h3>
+使用content_script
+</h3>
+<p>
+要使用content_script，需要在manifest.json中配置，如下：
+</p>
+<pre class="prettyprint lang-python">
+{
+	"manifest_version": 2,
+	"name": "My Extension",
+	"description": "Extension description",
+	"version": "1.0",
+
+	"content_scripts": {
+		"js": [
+			"content.js"
+		]
+	}
+}
+</pre>
+<p>
+这样，在页面加载完成后，就会加载content.js，在content.js里，就可以控制页面元素。除了可以加载js，content_scripts里还可以加载CSS文件，如：
+</p>
+<pre class="prettyprint lang-python">
+{
+	"manifest_version": 2,
+	"name": "My Extension",
+	"description": "Extension description",
+	"version": "1.0",
+
+	"content_scripts": {
+		"js": [
+			"content.js"
+		],
+		"css": ["style.css"]
+	}
+}
+</pre>>
+<p>
+这样可以让你的扩展漂亮一点
+</p>
 <h2 class="content_h2">
 background_script
 </h2>
@@ -42,8 +83,21 @@ background_script
 	}
 }
 </pre>
-<script type="text/javascript">
-jQuery(function($){
-    window.prettyPrint && prettyPrint();
-});
-</script>
+<p>
+如果要在background.js中使用jquery或是一些其它的文件，可以把jquery加到background.js的前面，代码会按着先后顺序加载，这样就可以使用jquery的方法了
+</p>
+<pre class="prettyprint lang-python">
+{
+	"manifest_version": 2,
+	"name": "My Extension",
+	"description": "Extension description",
+	"version": "1.0",
+
+	"background": {
+		"scripts": [
+			"jquery.js",
+			"background.js"
+		]
+	}
+}
+</pre>
