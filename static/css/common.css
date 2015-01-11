@@ -15,7 +15,8 @@ h2.blog-post-title{margin-bottom:25px;}
 .blog-footer{padding:40px 0;color:#999;border-top:1px solid #111;text-align:center;}
 .pager li>a {background-color:#333;border:1px solid #444;}
 .pager li>a:hover {background-color:#444;}
-.panel{background-color:#444;}
+.panel{background-color:#444;border:1px solid #555;}
+.list-group-item{background-color:#555;color:#fff;}
 
 .content_h2{padding:10px 0px 10px 0px;border-bottom:1px solid #333;color:#00b0cd;}
 .content_pre{overflow:auto;background:#333;padding:10px;border-bottom: 1px solid #E4E5E7;border-radius: 5px 5px 5px 5px;border-right: 1px solid #E4E5E7;font-family:"Monaco","Hiragino Sans GB","Microsoft YaHei",Trebuchet,"Trebuchet MS",Tahoma,"Lucida Grande","Lucida Sans Unicode",Verdana,sans-serif;word-spacing:1px;line-height:1.5;font-size:14px;}
