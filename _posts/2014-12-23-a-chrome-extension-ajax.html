@@ -37,7 +37,7 @@ content_script
 }
 </pre>
 <p>
-这样，在页面加载完成后，就会加载content.js，在content.js里，就可以控制页面元素。除了可以加载js，content_scripts里还可以加载CSS文件，如：
+这样，在页面加载完成后，就会加载content.js，在content.js里，就可以控制页面元素。除了可以加载js，content_scripts里还可以加载CSS文件，这样可以让你的扩展漂亮一点，如：
 </p>
 <pre class="prettyprint lang-python">
 {
@@ -53,10 +53,51 @@ content_script
 		"css": ["style.css"]
 	}
 }
-</pre>>
+</pre>
 <p>
-这样可以让你的扩展漂亮一点
+在content_scripts中，还有一项重要的设置就是matches，它是用来配置，符合扩展使用的网址，如：我只想这个扩展在打开<a href="http://www.jgb.cn" target="_blank">www.jgb.cn</a>时才启用，那么matches就要这样写：
 </p>
+<pre class="prettyprint lang-python">
+{
+	"manifest_version": 2,
+	"name": "My Extension",
+	"description": "Extension description",
+	"version": "1.0",
+
+	"content_scripts": {
+		"js": [
+			"content.js"
+		],
+		"css": ["style.css"]
+	},
+	"matches": [
+		"http://*.jgb.cn/*"
+	]
+}
+</pre>
+<p>
+如果还要匹配www.amazon.com，那就加上：
+</p>
+<pre class="prettyprint lang-python">
+{
+	"matches": [
+		"http://*.jgb.cn/*",
+		"http://*.amazon.com/*"
+	]
+}
+</pre>
+<p>
+注意，http只适用于http，像amazon.com这样的站即有http也有https，所以得把https也加上，如下：
+</p>
+<pre class="prettyprint lang-python">
+{
+	"matches": [
+		"http://*.jgb.cn/*",
+		"http://*.amazon.com/*",
+		"https://*.amazon.com/*"
+	]
+}
+</pre>
 <h2 class="content_h2">
 background_script
 </h2>
