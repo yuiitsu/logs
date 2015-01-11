@@ -20,8 +20,8 @@ keywords: chrome,extensions,ajax,扩展,基础
 				<a href="#background_jquery" class="list-group-item">6. 在background_script中使用jquery</a>
 				<a href="#ajax_cross_domain" class="list-group-item">7. 跨域配置</a>
 				<a href="#content_to_background" class="list-group-item">8. 向background_script发送请求</a>
-				<a href="#background_lis_content" class="list-group-item">9. 在background中监听content请求</a>
-				<a href="#background_ajax" class="list-group-item">10. 在background中执行ajax请求</a>
+				<a href="#background_lis_content" class="list-group-item">9. 在background中监听content请求，并执行ajax请求</a>
+				<a href="#background_lis_content" class="list-group-item">10. 通过修改chrome启动参数，实现可在https页面向http页面发起ajax请求</a>
 			</div>
 		</div>
 	</div>
@@ -199,7 +199,7 @@ chrome.extension.sendMessage({}, callBack);
 <p>
 sendMessage()方法，它有两个参数，第一个要发送的数据，就像post请求一样，第二个是回调函数。如在content_script中，点击一个按钮，将一个字符串发送到background_script
 </p>
-<pre class="prettyprint lang-python">
+<pre class="prettyprint lang-javascript">
 $(function(){
 	$("#button").click(function(){
 		chrome.extension.sendMessage({'txt': '这里是发送的内容'}, function(d){
@@ -208,3 +208,55 @@ $(function(){
 	});
 })
 </pre>
+<h2 id="background_lis_content" class="content_h2">
+在background中监听content请求
+</h2>
+<p>
+在background中监听content请求，使用chrome.extension.onMessage.addListener()，示例如下：
+</p>
+<pre class="prettyprint lang-javascript">
+chrome.extension.onMessage.addListener(function(objRequest, _, sendResponse){});
+</pre>
+<p>
+objRequest，即为请求的参数，在上一个例子就是{'txt': '这里是发送的内容'}，可以通过objRequest.txt来获取内容。其实就是一个字典。
+</p>
+<p>
+sendResponse，为返回值方法，可以将数据返回给content_script，那么一个简单的例子就是：
+</p>
+<pre class="prettyprint lang-javascript">
+chrome.extension.onMessage.addListener(function(objRequest, _, sendResponse){
+	var strText = objRequest.txt;
+	// 将信息能过Ajax发送到服务器
+	$.ajax({
+		url: 'http://www.jgb.cn/',
+		type: 'POST',
+		data: {'txt': strText},
+		dataType: 'json',
+	}).then(function(){
+		// 将正确信息返回content_script
+		sendResponse({'status': 200});
+	}, function(){
+		// 将错误信息返回content_script
+		sendResponse({'status': 500});
+	});
+});
+</pre>
+<p>
+这样一去一来，也就实现content_script向background_script发送请求，并使用background_script执行ajax请求的目的，非常的简单好用
+</p>
+<p>
+在此基础上，增加一些条件和数据，就可以很好的实现接收，发送数据的操作。比如向自己的服务器请求或发送数据。
+</p>
+<h2 id="background_lis_content" class="content_h2">
+通过修改chrome启动参数，实现可在https页面向http页面发起ajax请求
+</h2>
+<p>
+除了使用background_script来发起Ajax请求外，还可以通过修改chrome的启动参数来达到这个目的。参数为：--allow-file-access-from-files，操作方法：
+</p>
+<blockquote class="content_quote">
+1、右键chrome快捷方式，选择属性<br/>
+2、在目标的最后，输入--allow-file-access-from-files，中间有个空格
+</blockquote>
+<p>
+这样chrome就可以允许你在https页面向http发起ajax请求了。这个方法可以达到目的，但不推荐，因为不科学。
+</p>
