@@ -1,8 +1,8 @@
-<div class="side radius left">
-	<h2>分类(Categorys)</h2>
-	<ul class="side_ul">
+<div class="sidebar-module">
+	<h4>分类(Categorys)</h4>
+	<ol class="list-unstyled">
 		{% for category in site.categories  %}
 		<li><a href="{{ site.url }}/categorys/{{ category | first  }}.html">{{ category | first  }}({{ category | last | size  }})</a></li>
 		{% endfor  %}
-	</ul>
+	</ol>
 </div>

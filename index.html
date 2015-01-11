@@ -2,23 +2,15 @@
 layout: default
 title: 
 ---
-<h2 class="first_title">
-	<a href="{{ site:url  }}/code/">*.* 查看我的代码 ***</a> 
-</h2>
-<div class="news">
 	<h3>日志数({{ paginator.total_posts}})</h3>
 	{% for post in paginator.posts %}
+	<div class="blog-post">
 	<div class="index_lists radius">
-		<h4><cite>[{{ post.date | date:"%Y-%m-%d"  }}]</cite><a href="{{ site:url  }}{{ post.url  }}" target="_blank">{{post.title}}</a></h4>
-		<div class="index_des">
-			<div class="index_img">
-				{% if post.img %}
-				<img src="{{ site:url }}/images/{{ post.img }}" alt="" />
-				{% endif %}
-			</div>
-			{{ post.description }}
-			<div class="blank10"></div>
-		</div>
+		<h2 class="blog-post-title">
+			<a href="{{ site:url  }}{{ post.url  }}" target="_blank">{{post.title}}</a>
+		</h2>
+		<p class="blog-post-meta">{{ post.date | date:"%Y-%m-%d"  }}</p>
+		<p>{{ post.description }}</p>
 	</div>
 	{% endfor %}
 	<div class="index_page">
