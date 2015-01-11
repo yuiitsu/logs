@@ -187,3 +187,24 @@ background_script
 <p>
 有了以上的配置，这时候就可以来看看怎样通过background_scripts来实现Ajax请求了。
 </p>
+<h2 id="content_to_background" class="content_h2">
+向background发送请求
+</h2>
+<p>
+在content_script中向background_script发送请求有好几种方式，这里只列出我常的一种，应该来讲，能满足大多数情况的使用，其它方法，请查询文档，方法如下：
+</p>
+<pre class="prettyprint lang-python">
+chrome.extension.sendMessage({}, callBack);
+</pre>
+<p>
+sendMessage()方法，它有两个参数，第一个要发送的数据，就像post请求一样，第二个是回调函数。如在content_script中，点击一个按钮，将一个字符串发送到background_script
+</p>
+<pre class="prettyprint lang-python">
+$(function(){
+	$("#button").click(function(){
+		chrome.extension.sendMessage({'txt': '这里是发送的内容'}, function(d){
+			console.log(d); // 将返回信息打印到控制台里
+		});
+	});
+})
+</pre>
