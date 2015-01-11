@@ -4,7 +4,7 @@ body{background-color:#000;padding:0px;margin:0px;font-family:"Monaco","Hiragino
 .header h1 a:hover{text-decoration:none;}
 .blog-main{font-size:18px;}
 .blog-post{margin-bottom:60px;}
-h2 .blog-post-title{margin-bottom:25px;}
+h2.blog-post-title{margin-bottom:25px;}
 .blog-post-title{color:#55ff55;}
 .blog-post-title a.blog-post-title-link{color:#55ff55;}
 .blog-post-meta{text-align:right;color:#00b0cd;}
