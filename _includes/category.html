@@ -2,7 +2,7 @@
 	<h2 class="blog-post-title">{{ page.catename }}({{ site.categories[page.catename] | size }})</h2>
 	<ol class="list-unstyled">
 		{% for post in site.categories[page.catename] %}
-		<li><label class="glyphicon glyphicon-asterisk"></label><span>[{{ post.date | date:"%Y-%m-%d"  }}]</span><a href="{{ site:url  }}{{ post.url  }}" target="_blank">{{post.title}}</a> </li>
+		<li><label class="glyphicon glyphicon-asterisk"></label><span>[{{ post.date | date:"%Y-%m-%d"  }}]</span> <a href="{{ site:url  }}{{ post.url  }}" target="_blank">{{post.title}}</a> </li>
 		{% endfor %}
 	</ol>
 </div>
