@@ -19,6 +19,29 @@ content_script
 <h2 class="content_h2">
 background_script
 </h2>
+<p>
+它在chrome扩展启动的时候就启动了，做着它的事，而且等待着你给他的指令。它没办法控制页面元素，但可以通过content_script告诉它。ajax同理，如果要在页面打开时向别的服务器请求数据，这时就可以告诉background_script，让它去请求，然后把返回的数据发送给content_script。这样就不会受到浏览器的安全限制影响。
+</p>
+<h3>
+使用background_script
+</h3>
+<p>
+要使用background_script，需要在manifest.json中配置，如下：
+</p>
+<pre class="prettyprint lang-python">
+{
+	"manifest_version": 2,
+	"name": "My Extension",
+	"description": "Extension description",
+	"version": "1.0",
+
+	"background": {
+		"scripts": [
+			"background.js"
+		]
+	}
+}
+</pre>
 <script type="text/javascript">
 jQuery(function($){
     window.prettyPrint && prettyPrint();
