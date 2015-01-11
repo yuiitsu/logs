@@ -12,9 +12,13 @@ keywords: chrome,extensions,ajax,扩展,基础
 		<div class="panel-heading">目录</div>
 		<div class="panel-body">
 			<div class="list-group">
-				<a href="" class="list-group-item">使用content_script</a>
-				<a href="" class="list-group-item">在content_script使用jquery</a>
-				<a href="" class="list-group-item">在content_script使用css</a>
+				<a href="#use_content_script" class="list-group-item">使用content_script</a>
+				<a href="#content_jquery" class="list-group-item">在content_script使用中jquery</a>
+				<a href="#content_css" class="list-group-item">在content_script使用css</a>
+				<a href="#content_matches" class="list-group-item">设置匹配网站</a>
+				<a href="#use_background_script" class="list-group-item">使用background_script</a>
+				<a href="#background_jquery" class="list-group-item">在background_script中使用jquery</a>
+				<a href="#ajax_cross_domain" class="list-group-item">跨域配置</a>
 			</div>
 		</div>
 	</div>
@@ -28,7 +32,7 @@ content_script
 <p>
 从名字里就知道，content_script是植入型的，它会被植入到符合匹配的网站页面上。在页面加载完成后执行。content_script最有用的地方是操作网站页面上的DOM。一切平时做前端的一些操作它都可以做，像什么添加、修改、删除DOM，获取DOM值，监听事件等等，都可以很容易的做到。所以，如果想获取人家的登录帐户和密码，就是件非常容易的事，只需要添加content_script，监听帐户和密码的文本框，获得值后将数据发送到自己的服务器就可以了。因此，<strong>特别说明，别乱装扩展，特别是不从官方扩展库里下载的扩展。</strong>
 </p>
-<h3>
+<h3 id="use_content_script">
 使用content_script
 </h3>
 <p>
@@ -51,6 +55,9 @@ content_script
 <p>
 这样，在页面加载完成后，就会加载content.js，在content.js里，就可以控制页面元素。如果要在content.js中使用jquery，需要将jquery文件加到content.js前面，如：
 </p>
+<h3 id="content_jquery">
+content_script使用jquery
+</h3>
 <pre class="prettyprint lang-python">
 {
 	"content_scripts": {
@@ -64,6 +71,9 @@ content_script
 <p>
 除了可以加载js，content_scripts里还可以加载CSS文件，这样可以让你的扩展漂亮一点，如：
 </p>
+<h3 id="content_css">
+content_script使用CSS
+</h3>
 <pre class="prettyprint lang-python">
 {
 	"content_scripts": {
@@ -77,6 +87,9 @@ content_script
 <p>
 在content_scripts中，还有一项重要的设置就是matches，它是用来配置，符合扩展使用的网址，如：我只想这个扩展在打开<a href="http://www.jgb.cn" target="_blank">www.jgb.cn</a>时才启用，那么matches就要这样写：
 </p>
+<h3 id="content_matches">
+设置匹配网站
+</h3>
 <pre class="prettyprint lang-python">
 {
 	"content_scripts": {
@@ -119,7 +132,7 @@ background_script
 <p>
 它在chrome扩展启动的时候就启动了，做着它的事，而且等待着你给他的指令。它没办法控制页面元素，但可以通过content_script告诉它。ajax同理，如果要在页面打开时向别的服务器请求数据，这时就可以告诉background_script，让它去请求，然后把返回的数据发送给content_script。这样就不会受到浏览器的安全限制影响。
 </p>
-<h3>
+<h3 id="use_background_script">
 使用background_script
 </h3>
 <p>
@@ -142,6 +155,9 @@ background_script
 <p>
 使用jquery和content_scripts同理，需要把jquery文件加到background.js前面，如：
 </p>
+<h3 id="background_jquery">
+在background_script中使用jquery
+</h3>
 <pre class="prettyprint lang-python">
 {
 	"background": {
@@ -152,7 +168,7 @@ background_script
 	}
 }
 </pre>
-<h2 class="content_h2">
+<h2 class="content_h2" id="ajax_cross_domain">
 跨域
 </h2>
 <p>
