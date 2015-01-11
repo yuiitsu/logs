@@ -12,15 +12,21 @@ title:
 		<p class="blog-post-meta">{{ post.date | date:"%Y-%m-%d"  }}</p>
 	</div>
 	{% endfor %}
-	<div class="index_page">
+	<nav>
+		<ul>
         {% if paginator.previous_page %}
 			{% if paginator.previous_page == 1  %}
+			<li>
 	        &laquo;&nbsp;<a href="{{ site:url  }}/" class="page">Previous</a>
 			{% else  %}
 			&laquo;&nbsp;<a href="{{ site:url  }}/page{{ paginator.previous_page }}" class="page">Previous</a>
 			{% endif  %}
+			</li>
         {% endif %}
         {% if paginator.next_page %}
+		<li>
         <a href="{{ site:url  }}/page{{ paginator.next_page  }}" class="page">Next</a>&nbsp;&raquo;
+		</li>
         {% endif %}
-    </div>
+		</ul>
+	</nav>
