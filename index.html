@@ -17,15 +17,15 @@ title:
         {% if paginator.previous_page %}
 			{% if paginator.previous_page == 1  %}
 			<li>
-	        &laquo;&nbsp;<a href="{{ site:url  }}/" class="page">Previous</a>
+	        <a href="{{ site:url  }}/">上一页</a>
 			{% else  %}
-			&laquo;&nbsp;<a href="{{ site:url  }}/page{{ paginator.previous_page }}" class="page">Previous</a>
+			<a href="{{ site:url  }}/page{{ paginator.previous_page }}">上一页</a>
 			{% endif  %}
 			</li>
         {% endif %}
         {% if paginator.next_page %}
 		<li>
-        <a href="{{ site:url  }}/page{{ paginator.next_page  }}" class="page">Next</a>&nbsp;&raquo;
+        <a href="{{ site:url  }}/page{{ paginator.next_page  }}">下一页</a>
 		</li>
         {% endif %}
 		</ul>
