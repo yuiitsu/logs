@@ -4,7 +4,7 @@ body{background-color:#000;padding:0px;margin:0px;font-family:"Monaco","Hiragino
 .blog-main{font-size:18px;}
 .blog-post{margin-bottom:60px;}
 .blog-post-title{color:#55ff55;}
-.blog-post-title li span{float:right;}
+.list-unstyled li span{float:right;}
 .sidebar-module{padding:15px;margin:0 -15px 15px;}
 .sidebar-module-inset{padding:15px;background-color:#333;border-radius:4px;}
 .blog-footer{padding:40px 0;color:#999;border-top:1px solid #111;text-align:center;}
