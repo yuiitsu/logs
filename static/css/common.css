@@ -1,5 +1,5 @@
 body{padding:0px;margin:0px;font-family:"Monaco","Hiragino Sans GB","Microsoft YaHei",Trebuchet,"Trebuchet MS",Tahoma,"Lucida Grande","Lucida Sans Unicode",Verdana,sans-serif;word-spacing:1px;color:#ccc;font-size:16px;background:url('../images/bg.png') no-repeat center top;background-color:#000;}
-.header{margin-bottom:25px;}
+.header{margin-bottom:80px;}
 .header h1 a{color:#c8af00;}
 .header h1 a:hover{text-decoration:none;}
 .blog-main{font-size:18px;}
