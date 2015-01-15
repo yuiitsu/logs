@@ -14,7 +14,7 @@ keywords: chrome,extensions,localStorage,本地存储,扩展
 			<div class="list-group">
 				<a href="#localStorage" class="list-group-item">1. localStorage基础</a>
 				<a href="#chrome_extensions_localStorage" class="list-group-item">2. chrome扩展的localStorage</a>
-				<a href="#chrome_extensions_localStorage_view" class="list-group-item">3. 查看chrome的localStorage</a>
+				<a href="#chrome_extensions_localStorage_view" class="list-group-item">3. 查看localStorage</a>
 				<a href="#ex" class="list-group-item">4. 简单示例</a>
 			</div>
 		</div>
@@ -60,7 +60,7 @@ var name = localStorage.name;
 var name = localStorage['name'];
 </pre>
 <p>
-localStorage是不能跨域的，所以不同域名的localStorage是互不干扰的。比如在jgb.com上存储了一个值，在www.jgb.com是访问不了它的，反之亦然。
+localStorage是不能跨域的，所以不同域名的localStorage是互不干扰的。比如在<a href="http://www.jgb.cn" target="_blank">jgb.com</a>上存储了一个值，在<a href="http://www.jgb.cn" target="_blank">www.jgb.com</a>是访问不了它的，反之亦然。
 </p>
 
 <h2 class="content_h2" id="chrome_extensions_localStorage">
@@ -68,4 +68,32 @@ chrome扩展中的localStorage
 </h2>
 <p>
 扩展中的localStorage没什么不同，只是有一个注意点，content_script中的localStorage是存储在对应域名下的，所以别的域名是不能访问的。background_script中的localStorage是存储在chrome扩展下的，所以不管什么域名都可以访问它。这一点很重要，如果没有这个特性，扩展的应用场景就会少很多很多。
+</p>
+
+<h2 class="content_h2" id="chrome_extensions_localStorage_view">
+查看localStorage
+</h2>
+<p>
+查看对应域名的localStorage
+</p>
+<p>
+右键选择审查元素，如图选择
+</p>
+<p>
+<img src="/images/201501/02.png" alt="查看对应域名的localStorgae" />
+</p>
+<p>
+查看扩展的localStorage
+</p>
+<p>
+打开扩展界面，打开你扩展的背景页
+</p>
+<p>
+<img src="/images/201501/03.png" alt="打开扩展的背景页" />
+</p>
+<p>
+如图选择
+</p>
+<p>
+<img src="/images/201501/04.png" alt="选择Resoures,local Storage" />
 </p>
