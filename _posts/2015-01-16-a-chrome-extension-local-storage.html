@@ -1,0 +1,71 @@
+---
+layout: post
+title: 一起来做chrome扩展《本地存储》
+category: chrome扩展
+description: chrome中的本地存储其实也是用的HTML5中localStorage，唯一区别是chrome扩展有自己的localStorage，它属于这个扩展，而不属于一个域名。得用这一点可以很好的处理扩展自己的一些数据，而不受访问网站和域名的影响。
+img: 201501/01.png
+keywords: chrome,extensions,localStorage,本地存储,扩展
+---
+
+<div class="col-sm-5">
+	<div class="panel panel-success">
+		<div class="panel-heading">目录</div>
+		<div class="panel-body">
+			<div class="list-group">
+				<a href="#localStorage" class="list-group-item">1. localStorage基础</a>
+				<a href="#chrome_extensions_localStorage" class="list-group-item">2. chrome扩展的localStorage</a>
+				<a href="#chrome_extensions_localStorage_view" class="list-group-item">3. 查看chrome的localStorage</a>
+				<a href="#ex" class="list-group-item">4. 简单示例</a>
+			</div>
+		</div>
+	</div>
+</div>
+<p>
+chrome中的本地存储其实也是用的HTML5中localStorage，唯一区别是chrome扩展有自己的localStorage，它属于这个扩展，而不属于一个域名。得用这一点可以很好的处理扩展自己的一些数据，而不受访问网站和域名的影响。
+</p>
+
+<h2 class="content_h2" id="localStorage">
+localStorage基础
+</h2>
+<p>
+localStorage是HTML5特性，所以有些浏览器不一定支持，不过我们这里讲的是chrome扩展，所以完全不用担心这个问题。如果想在WEB页面上使用，那就要检查一下是不是支持它
+</p>
+<p>
+可以这样的检测：
+</p>
+<pre class="prettyprint lang-javascript">
+if(window.localStorage){
+	console.log('支持');
+}else{
+	console.log('不支持');
+}
+</pre>
+<p>
+localStorage和memcache一样，是key/value的存储类型，所以，除非你只存字符串，不然就得以json的形式来存储。之后解析成数组，就可以很好的使用里面的值。
+</p>
+<p>
+增删改查：
+</p>
+<pre class="prettyprint lang-javascript">
+// 存储/修改
+localStorage.name = 'only';
+localStorage['name'] = 'only';
+
+// 删除
+localStorage['name'] = null; 删除一个
+localStorage.clear(); 删除所有
+
+// 查
+var name = localStorage.name;
+var name = localStorage['name'];
+</pre>
+<p>
+localStorage是不能跨域的，所以不同域名的localStorage是互不干扰的。比如在jgb.com上存储了一个值，在www.jgb.com是访问不了它的，反之亦然。
+</p>
+
+<h2 class="content_h2" id="chrome_extensions_localStorage">
+chrome扩展中的localStorage
+</h2>
+<p>
+扩展中的localStorage没什么不同，只是有一个注意点，content_script中的localStorage是存储在对应域名下的，所以别的域名是不能访问的。background_script中的localStorage是存储在chrome扩展下的，所以不管什么域名都可以访问它。这一点很重要，如果没有这个特性，扩展的应用场景就会少很多很多。
+</p>
