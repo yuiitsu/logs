@@ -146,3 +146,37 @@ chrome扩展中的localStorage
 	}]
 }
 </pre>
+<p>
+如果对这个文件不熟悉，可以看看<a href="http://fuweiyi.com/chrome%E6%89%A9%E5%B1%95/2014/12/18/a-chrome-extension-01.html" target="_blank">一起来做chrome扩展《基础介绍》</a>
+</p>
+<p>
+把jquery拷贝到include中，再到scripts目录建立main.js和background.js
+</p>
+<h3>
+第三步：创建界面
+</h3>
+<p>
+这里我们创建一个简单的界面，在目标网站的正中间，显示一个500*300的浮云层，正常js，写法随意
+</p>
+<pre class="prettyprint lang-javascript">
+var main = {
+	
+	/**
+	 * 创建界面
+	 */
+	createHtml: function(){
+		var _html = '<div id="ls_box">'+
+			'<h3>'+
+				'本地存储 local storage'+
+			'</h3>'+
+			'<div id="ls_list">'+
+				'正在加载数据...'+
+			'</div>'+
+			'<div>'+
+				''+
+			'</div>'+
+		'</div>';
+		$('body').append(_html);
+	}
+}
+</pre>
