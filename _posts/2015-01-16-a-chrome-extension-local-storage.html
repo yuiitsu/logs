@@ -103,3 +103,46 @@ chrome扩展中的localStorage
 <p>
 这个示例很简单，扩展将匹配<a href="http://www.jgb.cn" target="_blank">www.jgb.cn</a>和www.amazon.com，打开两个网站后，会在页面中间显示一个列表和一个表单，列表是以前填入的名字，表单可以填入你名字另外的名字。列表里，可以删除一条，也可以删除所有名字。简单也讲，就是一个增删查。在这个例子中，可以看到，在<a href="http://www.jgb.cn" target="_blank">www.jgb.cn</a>和www.amazon.com中都是可以读取和操作这些存储内容的，不受域名的限制。
 </p>
+<h3>
+第一步：建立文件夹
+</h3>
+<p>
+目录名就叫localstorage，目录中的结构基本如图：
+</p>
+<p>
+<img src="/images/201501/05.png" alt="localstorage目录结构" />
+</p>
+<p>
+里面除了mainfest.json是必须的，其它东西都可以按自己的习惯来
+</p>
+<h3>
+第二步：建立mainfest.json文件
+</h3>
+<p>
+之前的日志已经讲过这个文件，所以这里就直接帖内容
+</p>
+<pre class="prettyprint lang-javascript">
+{
+	"manifest_version": 2,
+	"name": "一起来做chrome扩展之本地存储",
+	"version": "0.1",
+	"description": "一个简单的本地存储例子",
+	"background": {
+		"scripts": [
+			"include/jquery-1.11.0.min.js",	
+			"scripts/background.js"
+		]
+	},
+	"content_scripts": [{
+		"matches": [
+			"http://*.jgb.cn/*",
+			"http://*.amazon.com/*"
+		],
+		"css": ["css/common.css"],
+		"js": [
+			"include/jquery-1.11.0.min.js",
+			"scripts/main.js"
+		]
+	}]
+}
+</pre>
