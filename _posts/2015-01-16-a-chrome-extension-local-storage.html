@@ -156,7 +156,7 @@ chrome扩展中的localStorage
 第三步：创建界面
 </h3>
 <p>
-这里我们创建一个简单的界面，在目标网站的正中间，显示一个500*300的浮云层，正常js，写法随意
+这里我们创建一个简单的界面，在目标网站的正中间，显示一个500*300的浮动层，正常js，写法随意
 </p>
 <pre class="prettyprint lang-javascript">
 var main = {
@@ -172,8 +172,12 @@ var main = {
 			'&lt;div id="ls_list"&gt;'+
 				'正在加载数据...'+
 			'&lt;/div&gt;'+
-			'&lt;div&gt;'+
-				''+
+			'&lt;div id="ls_form"&gt;'+
+				'&lt;label&gt;'+
+					'新增: '+
+				'&lt;/label&gt;'+
+				'&lt;input type="text" id="ls_message" /&gt;'+
+				'&lt;button id="ls_save"&gt;保存&lt;/button&gt;'+
 			'&lt;/div&gt;'+
 		'&lt;/div&gt;';
 		$('body').append(_html);
