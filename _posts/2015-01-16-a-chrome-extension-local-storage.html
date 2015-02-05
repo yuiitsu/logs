@@ -16,6 +16,7 @@ keywords: chrome,extensions,localStorage,本地存储,扩展
 				<a href="#chrome_extensions_localStorage" class="list-group-item">2. chrome扩展的localStorage</a>
 				<a href="#chrome_extensions_localStorage_view" class="list-group-item">3. 查看localStorage</a>
 				<a href="#ex" class="list-group-item">4. 简单示例</a>
+				<a href="#github" class="list-group-item">5. 源代码</a>
 			</div>
 		</div>
 	</div>
@@ -262,3 +263,97 @@ listenSave: function(){
 	});
 },
 </pre>
+<h3>
+第七步：监听删除
+</h3>
+<p>
+删除和保存同理，只是发送到background的请求方法不同，正常JS操作，这里就不帖代码，最后看看background.js的监听与返回消息
+</p>
+<h3>
+第八步：background监听消息与返回
+</h3>
+<pre class="prettyprint lang-javascript">
+/**
+ * 监听content_script发送的消息
+ */
+chrome.extension.onMessage.addListener(function(request, _, sendResponse){
+	// 返回数据
+	var dicReturn;
+
+	// 读取已存数据
+	if(request.action == 'list'){
+		// 从localstorage中读取数据
+		var strList = localStorage['list'];
+		if(strList){
+			// 将json字符串转为对象
+			var dicList = JSON.parse(strList)
+			dicReturn = {'status': 200, 'data': dicList}
+		}else{
+			dicReturn = {'status': 404}
+		}
+
+		// 向content_script返回信息
+		sendResponse(dicReturn);
+	}
+
+	// 保存
+	if(request.action == 'save'){
+		// content_script传来message
+		var strMessage = request.data.message;
+		// 从localstorage中读取数据
+		var strList = localStorage['list'];
+		var dicList = [];
+		if(strList){
+			// 将json字符串转为对象
+			dicList = JSON.parse(strList)
+		}
+		dicList.push(strMessage);
+		localStorage['list'] = JSON.stringify(dicList);
+
+		dicReturn = {'status': 200, 'data': dicList};
+		// 向content_script返回信息
+		sendResponse(dicReturn);
+	}
+
+	// 删除
+	if(request.action == 'del'){
+		// content_script传来的message
+		var strMessage = request.data.message;
+		// 从localstorage中读取数据
+		var strList = localStorage['list'];
+		if(strList){
+			// 将json字符串转为对象
+			dicList = JSON.parse(strList);
+			// 遍历数据，找到对应值
+			for(var i in dicList){
+				if(dicList[i] == strMessage){
+					// 删除该值
+					dicList.splice(i, 1);
+				}
+			}
+
+			// 重新存储
+			localStorage['list'] = JSON.stringify(dicList);
+			// 向content_script返回信息
+			sendResponse({'status': 200});
+		}else{
+			sendResponse({'status': 501, 'msg': '删除失败，未有数据'});
+		}
+	}
+})
+</pre>
+<p>
+接收content_script发来的数据，使用request.data.message，data.message都是自己定义的key，所以想传什么，都可以自己定
+</p>
+<p>
+返回值使用sendResponse()方法，内容为一个对象，content_script接受到后，可以直接使用，所以就有了if(response.status == 200){}这样的写法。
+</p>
+<p>
+一个简单的本地存储就是这样了，加载到chrome或是同一内核的浏览器中，打开<a href="http://www.jgb.cn" target="_blank">www.jgb.cn</a>或是www.amazon.com，就可以看到扩展界面，保存一些数据，在两个网站刷新，会发现，数据都是可以获取的。
+</p>
+<h2 class="content_h2" id="github">
+源代码
+</h2>
+<p>
+本示例代码：<a href="https://github.com/onlyfu/localstorage" target="_blank">https://github.com/onlyfu/localstorage</a>
+</p>
