@@ -190,3 +190,75 @@ var main = {
 <p>
 <img src="/images/201501/06.png" alt="localstorage eg 界面示例" />
 </p>
+<h3>
+第四步：向background发送消息
+</h3>
+<p>
+方法很简单
+</p>
+<pre class="prettyprint lang-javascript">
+/**
+ * 向background发送消息
+ * @params strAction string 执行方法
+ * @params dicData dict 数据字典
+ * @params callback function 回调函数
+ */
+sendMessageBack: function(strAction, dicData, callback){
+	chrome.extension.sendMessage({'action': strAction, 'data': dicData}, callback);
+},
+</pre>
+<h3>
+第五步：将存储内容输出到页面
+</h3>
+<pre class="prettyprint lang-javascript">
+/**
+ * 将已有数据写到页面上
+ */
+showList: function(dicList){
+	if(!dicList || dicList.length == 0){
+		$("#ls_list").html('&lt;p&gt;没有找到数据&lt;/p&gt;');
+		return;
+	}
+
+	// 遍历对象，构建输出html
+	var _html = ['&lt;ul&gt;'];
+	for(var i in dicList){
+		_html.push('&lt;li&gt;&lt;span class="ls_del" data-item="'+dicList[i]+'"&gt;X&lt;/span&gt;'+dicList[i]+'&lt;/li&gt;');
+	}
+	_html.push('&lt;/ul&gt;');
+	$("#ls_list").html(_html.join(''));
+
+	// 监听删除
+	_this.listenDel();
+},
+</pre>
+<h3>
+第六步：监听保存
+</h3>
+<p>
+一个简单的单击事件，把文本内容发送给background.js，然后将返回的数据利用上面的方法输出到页面上
+</p>
+<pre class="prettyprint lang-javascript">
+/**
+ * 监听保存事件
+ */
+listenSave: function(){
+	_this = this;
+
+	$("#ls_save").click(function(){
+		// 获取message
+		var strMessage = $.trim($('#ls_message').val());
+		if(!strMessage){
+			return false;
+		}
+		// 通知background，保存数据
+		_this.sendMessageBack('save', {'message': strMessage}, function(response){
+			if(response.status == 200){
+				// 将内容输出到页面
+				_this.showList(response.data);
+				$('#ls_message').val('');
+			}
+		});
+	});
+},
+</pre>
