@@ -2,14 +2,13 @@
 layout: default
 title: 
 ---
-	<h3 style="display:none;">日志数({{ paginator.total_posts}})</h3>
 	{% for post in paginator.posts %}
-	<div class="blog-post">
-		<h2 class="blog-post-title">
+	<div class="v3_blog_post">
+		<h2 class="v3_blog_post_title">
 			<a href="{{ site:url  }}{{ post.url  }}" class="blog-post-title-link" target="_blank">{{post.title}}</a>
 		</h2>
 		<p>{{ post.description }}</p>
-		<p class="blog-post-meta">{{ post.date | date:"%Y-%m-%d"  }}</p>
+		<p class="v3_blog_post_meta">{{ post.date | date:"%Y-%m-%d"  }}</p>
 	</div>
 	{% endfor %}
 	<nav>
