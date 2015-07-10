@@ -1,11 +1,10 @@
 {% include header.html  %}
-	<div class="row">
 		<div class="blog-main">
-			<div class="blog-post">
-				<h2 class="blog-post-title">
+			<div class="v3_blog_post">
+				<h2 class="v3_blog_post_title">
 					{{ page.title  }}
 				</h2>
-				<p class="blog-post-meta">posted by 傅唯一 on {{ page.date | date:"%Y-%m-%d"  }} 分类: <a href="{{ site:url }}/categorys/{{ page.category }}.html">{{ page.category }}</a></p>
+				<p class="v3_blog_post_meta">posted by 傅唯一 on {{ page.date | date:"%Y-%m-%d"  }} 分类: <a href="{{ site:url }}/categorys/{{ page.category }}.html">{{ page.category }}</a></p>
 				{{ content}}
 			</div>
 			<div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a><a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a><a href="#" class="bds_weixin" data-cmd="weixin"></a></div>
@@ -34,7 +33,6 @@
             <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
             <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 		</div>
-	</div>
 <script type="text/javascript">
 jQuery(function($){
     window.prettyPrint && prettyPrint();
