@@ -1,8 +1,11 @@
 body{padding:0px;margin:0px;font-family:"Monaco","Hiragino Sans GB","Microsoft YaHei",Trebuchet,"Trebuchet MS",Tahoma,"Lucida Grande","Lucida Sans Unicode",Verdana,sans-serif;word-spacing:1px;color:#ccc;font-size:16px;background:url('../images/bg.png') no-repeat center top;background-color:#000;}
 
+a{text-decoration:none;}
+
 .v3_body{width:15.555rem;margin:0 auto;padding:0.222rem;}
 .v3_header{}
-.v3_site_title{color:#c8af00;font-size:1.155rem;}
+.v3_site_title{}
+.v3_site_title a{color:#c8af00;font-size:1.155rem;}
 
 .v3_blog_post{border:1px solid #222;margin-bottom:0.444rem;padding:0.222rem;background-color:#333;}
 .v3_blog_post_title{padding:0;margin:0;padding-bottom:0.222rem;border-bottom:1px solid #2d2d2d;}
